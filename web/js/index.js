@@ -1,6 +1,6 @@
 import {getClasses} from "./api.js";
 
-function constructTableRow(schoolClass) {
+function constructClassTableRow(schoolClass) {
     let row = document.createElement("tr");
 
     let grade = document.createElement("td");
@@ -18,6 +18,7 @@ function constructTableRow(schoolClass) {
     return row;
 }
 
+
 $(window).on("load", function () {
     const classesElement = document.querySelector("#classes");
     const errorElement = document.querySelector("#error");
@@ -25,7 +26,7 @@ $(window).on("load", function () {
     getClasses()
         .then(classes => {
             classes.forEach((schoolClass) => {
-                let row = constructTableRow(schoolClass);
+                let row = constructClassTableRow(schoolClass);
                 classesElement.appendChild(row);
             });
         })
@@ -34,4 +35,3 @@ $(window).on("load", function () {
             $(errorElement).slideDown("slow").delay(1500).slideUp("slow");
         })
 });
-
