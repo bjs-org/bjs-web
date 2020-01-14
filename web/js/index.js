@@ -2,6 +2,9 @@ import {getClasses} from "./api.js";
 
 function constructClassTableRow(schoolClass) {
     let row = document.createElement("tr");
+    row.onclick = () => {
+            window.location.href = `students_of_class.html?schoolClass=${schoolClass._links.self.href}`;
+    };
 
     let grade = document.createElement("td");
     grade.innerText = schoolClass.grade;
@@ -20,14 +23,14 @@ function constructClassTableRow(schoolClass) {
 
 
 $(window).on("load", function () {
-    const classesElement = document.querySelector("#classes");
+    const classTableBody = document.querySelector("#class-tbody");
     const errorElement = document.querySelector("#error");
 
     getClasses()
         .then(classes => {
             classes.forEach((schoolClass) => {
                 let row = constructClassTableRow(schoolClass);
-                classesElement.appendChild(row);
+                classTableBody.appendChild(row);
             });
         })
         .catch(err => {

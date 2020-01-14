@@ -13,14 +13,14 @@ export async function getClasses() {
 }
 
 export async function getClass(schoolClass) {
-    return fetch(`${api_url}/classes/${schoolClass}`, {
+    return fetch(schoolClass, {
         credentials: "include"
     })
         .then(response => response.json());
 }
 
 export async function getStudents(schoolClass) {
-    return fetch(`${api_url}/students/search/findAllBySchoolClass?schoolClass=${schoolClass}` , {
+    return fetch(`${api_url}/students/search/findAllBySchoolClass?schoolClass=${schoolClass}`, {
         credentials: "include"
     })
         .then(response => {
