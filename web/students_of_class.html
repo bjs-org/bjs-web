@@ -37,6 +37,42 @@
     </table>
 </div>
 
+<div class="modal fade" id="sportresultModal" tabindex="-1" role="dialog" aria-labelledby="sportresultModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sportresultModalLabel">Ergebnisse</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="sportResult_Run-headline"> Zeit beim Sprint </label>
+                        <input type="sportResult_Run" class="form-control" id="sportResult_Run-headline" aria-describedby="Run">
+                    </div>
+                    <div class="form-group">
+                        <label for="sportResult_Jump-headline"> Weite / Höhe beim Sprung </label>
+                        <input type="sportResult_Run" class="form-control" id="sportResult_Jump-headline" aria-describedby="Run">
+                    </div>
+                    <div class="form-group">
+                        <label for="sportResult_Throw-headline"> Weite beim Werfen </label>
+                        <input type="sportResult_Run" class="form-control" id="sportResult_Throw-headline" aria-describedby="Run">
+                    </div>
+                    <div class="form-group">
+                        <label for="sportResult_Run_long-headline"> Zeit beim Ausdauerlauf </label>
+                        <input type="sportResult_Run" class="form-control" id="sportResult_Run_long-headline" aria-describedby="Run">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="module" src="js/students_of_class.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

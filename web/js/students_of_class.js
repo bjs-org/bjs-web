@@ -1,7 +1,15 @@
 import {getClass, getStudents} from "./api.js";
 
 function constructStudentTableRow(student) {
+    var modalSportresult = $('#sportresultModal').modal({
+                        keyboard: true,
+                        show:false
+                    });
     let row = document.createElement("tr");
+        row.onclick = () => {
+                modalSportresult.modal('show');
+                return false;
+        };
 
     let firstName = document.createElement("td");
     firstName.innerText = student.firstName;
