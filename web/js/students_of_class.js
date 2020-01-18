@@ -14,6 +14,17 @@ function constructStudentTableRow(student) {
     let birthday = document.createElement("td");
     birthday.innerText = student.birthDay;
     row.appendChild(birthday);
+
+    let gender = document.createElement("td");
+    if(student.female == true){
+        gender.innerText = "W";
+    }
+    else
+    {
+        gender.innerText = "M";
+    }
+    row.appendChild(gender);
+
     return row;
 }
 
