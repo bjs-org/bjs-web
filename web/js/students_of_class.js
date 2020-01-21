@@ -6,10 +6,6 @@ function constructStudentTableRow(student) {
                         show:false
                     });
     let row = document.createElement("tr");
-        row.onclick = () => {
-                modalSportresult.modal('show');
-                return false;
-        };
 
     let firstName = document.createElement("td");
     firstName.innerText = student.firstName;
@@ -34,17 +30,46 @@ function constructStudentTableRow(student) {
     row.appendChild(gender);
 
     let edit = document.createElement("td");
-    let buttonEdit = document.createElement("button");
-    buttonEdit.class ="btn btn-default";
-    let editSpan = document.createElement("span");
-    editSpan.class = "glyphicon glyphicon-pencil";
-    edit.appendChild(editSpan);
+    let buttonEdit = document.createElement("span");
+        buttonEdit.onclick = () => {
+            modalSportresult.modal('show');
+            return false;
+        }
+    buttonEdit.title = "Edit this student";
+    let iconEdit = document.createElement("i");
+    iconEdit.className = "fas fa-user-edit";
+    buttonEdit.appendChild(iconEdit);
     edit.appendChild(buttonEdit);
     row.appendChild(edit);
 
+    let remove = document.createElement("td");
+    let buttonRemove = document.createElement("span");
+            buttonRemove.onclick = () => {
+               // TODO implement Remove function
+        }
+    buttonRemove.title = "Remove this student"
+    let iconRemove = document.createElement("i");
+    iconRemove.className = "fas fa-trash-alt";
+    buttonRemove.appendChild(iconRemove);
+    remove.appendChild(buttonRemove);
+    row.appendChild(remove);
+
+    let addSportResult = document.createElement("td");
+    let addSportResultButton = document.createElement("span");
+    addSportResultButton.onclick = () => {
+                modalSportresult.modal('show');
+                return false;
+         }
+    addSportResultButton.title = "Add a Sportresult";
+    let iconASR = document.createElement("i");
+    iconASR.className = "fas fa-running";
+    addSportResultButton.appendChild(iconASR);
+    addSportResult.appendChild(addSportResultButton);
+    row.appendChild(addSportResult);
 
     return row;
 }
+
 
 $(window).on("load", function () {
     const studentsTableBody = document.querySelector("#students-tbody");
@@ -75,6 +100,6 @@ $(window).on("load", function () {
                     });
                 })
         })
-
-
 });
+
+
