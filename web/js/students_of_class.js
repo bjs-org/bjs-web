@@ -33,6 +33,16 @@ function constructStudentTableRow(student) {
     }
     row.appendChild(gender);
 
+    let edit = document.createElement("td");
+    let buttonEdit = document.createElement("button");
+    buttonEdit.class ="btn btn-default";
+    let editSpan = document.createElement("span");
+    editSpan.class = "glyphicon glyphicon-pencil";
+    edit.appendChild(editSpan);
+    edit.appendChild(buttonEdit);
+    row.appendChild(edit);
+
+
     return row;
 }
 
