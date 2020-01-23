@@ -30,3 +30,21 @@ export async function getStudents(schoolClass) {
             return data._embedded.students;
         })
 }
+
+export async function postSportResult(sportresult) {
+    const data = {sportresult};
+    fetch(`${api_url}/sport_results`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        console.log('Success', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    })
+}

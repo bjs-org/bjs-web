@@ -1,4 +1,5 @@
-import {getClass, getStudents} from "./api.js";
+import {getClass, getStudents, postSportResult} from "./api.js";
+const active_student = null;
 
 function constructStudentTableRow(student) {
     var modalSportresult = $('#sportresultModal').modal({
@@ -57,6 +58,7 @@ function constructStudentTableRow(student) {
     let addSportResult = document.createElement("td");
     let addSportResultButton = document.createElement("span");
     addSportResultButton.onclick = () => {
+                //active_student = $(student);
                 modalSportresult.modal('show');
                 return false;
          }
@@ -70,6 +72,10 @@ function constructStudentTableRow(student) {
     return row;
 }
 
+function addSportResult() {
+    const sportresult = {result: document.getElementById("sportResult_result").value ,  discipline: document.getElementById("discipline").value , student: active_student};
+    postSportResult(sportresult);
+}
 
 $(window).on("load", function () {
     const studentsTableBody = document.querySelector("#students-tbody");

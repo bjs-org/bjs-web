@@ -61,28 +61,21 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <div class="btn-group" id="sportResult-discipline">
-                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <!-- Replace the title with selected item -->
-                            Wähle eine Disziplin aus
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <button class="dropdown-item" type="button" id="RUN50">50 Meter Sprint</button>
-                            <button class="dropdown-item" type="button" id="RUN75">75 Meter Sprint</button>
-                            <button class="dropdown-item" type="button" id="RUN100">100 Meter Sprint</button>
-                            <div class="dropdown-divider"></div>
-                            <button class="dropdown-item" type="button" id="RUN800">800 Meter Lauf</button>
-                            <button class="dropdown-item" type="button" id="RUN2000">2000 Meter Lauf</button>
-                            <button class="dropdown-item" type="button" id="RUN3000">3000 Meter Lauf</button>
-                            <div class="dropdown-divider"></div>
-                            <button class="dropdown-item" type="button" id="HIGHJUMP">Hochsprung</button>
-                            <button class="dropdown-item" type="button" id="LONGJUMP">Weitsprung</button>
-                            <div class="dropdown-divider"></div>
-                            <button class="dropdown-item" type="button" id="SHOTPUT">Kugelstoßen</button>
-                            <button class="dropdown-item" type="button" id="SLINGBALL">Schleuderball</button>
-                            <button class="dropdown-item" type="button" id="BALLTHROW80">Weitwurf 80 Gramm</button>
-                            <button class="dropdown-item" type="button" id="BALLTHROW200">Weitwurf 200 Gramm</button>
-                        </div>
+                        <select class="custom-select" id="discipline">
+                            <option selected>Wähle eine Disziplin aus</option>
+                            <option value="RUN_50">50 Meter Sprint</option>
+                            <option value="RUN_75">75 Meter Sprint</option>
+                            <option value="RUN_100">100 Meter Sprint</option>
+                            <option value="RUN_800">800 Meter Lauf</option>
+                            <option value="RUN_2000">2000 Meter Lauf</option>
+                            <option value="RUN_3000">3000 Meter Lauf</option>
+                            <option value="HIGH_JUMP">Hochsprung</option>
+                            <option value="LONG_JUMP">Weitsprung</option>
+                            <option value="SHOT_PUT">Kugelstoßen</option>
+                            <option value="SLING_BALL">Schleuderball</option>
+                            <option value="BALL_THROWING_80">Weitwurf 80 Gramm</option>
+                            <option value="BALL_THROWING_200">Weitwurf 200 Gramm</option>
+                        </select>
                     </div>
                         <div style="margin-top: 15px">
                             <input type="sportResult_result" class="form-control" id="sportResult_result" aria-describedby="result">
@@ -92,7 +85,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveButton">Save changes</button>
+                <button type="button" class="btn btn-primary" id="saveButton" onclick="addSportResult()">Save changes</button>
             </div>
         </div>
     </div>
