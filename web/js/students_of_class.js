@@ -1,16 +1,17 @@
 import {getClass, getStudents, postSportResult, deleteStudent} from "./api.js";
+var modalDeletion = $('#deletionModal').modal({
+    keyboard: true,
+    show: false
+});
+
+var modalSportresult = $('#sportresultModal').modal({
+    keyboard: true,
+    show:false
+});
 
 function constructStudentTableRow(student) {
-    const studentURL = "http://raspberry-balena.gtdbqv7ic1ie9w3s.myfritz.net:8080/api/v1/students/"+ student.id;
-    var modalDeletion = $('#deletionModal').modal({
-        keyboard: true,
-        show: false
-        });
+   const studentURL = student._links.self.href;
 
-    var modalSportresult = $('#sportresultModal').modal({
-        keyboard: true,
-        show:false
-        });
     let row = document.createElement("tr");
 
     let firstName = document.createElement("td");
@@ -78,8 +79,10 @@ function constructStudentTableRow(student) {
 
     return row;
 }
-function deleteStudentRequest(student) {
+function deleteStudentRequest() {
+    modalDeletion.modal('hide');
     const errorElement = document.querySelector("#error");
+    const student = document.getElementById("studentURL").value;
     deleteStudent(student)
         .catch(() => {
             errorElement.innerHTML = "The delete request was not successful.";
@@ -88,6 +91,7 @@ function deleteStudentRequest(student) {
 }
 
 function addSportResult() {
+    modalSportresult.modal('hide');
     const errorElement = document.querySelector("#error");
     const sportresult = {result: document.getElementById("sportResult_result").value ,  discipline: document.getElementById("discipline").value , student: document.getElementById("studentURL").value};
     postSportResult(sportresult)
@@ -109,7 +113,7 @@ $(window).on("load", function () {
     post.addEventListener('click', addSportResult ,true);
 
     const remove = document.getElementById('confirmationDelete');
-    post.addEventListener('click', deleteStudentRequest, true);
+    remove.addEventListener('click', deleteStudentRequest, true);
 
     getClass(schoolClass)
         .catch(() => {
