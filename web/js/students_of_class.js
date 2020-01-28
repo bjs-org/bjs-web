@@ -73,8 +73,14 @@ function constructStudentTableRow(student) {
 }
 
 function addSportResult() {
-    const sportresult = {result: document.getElementById("sportResult_result").value ,  discipline: document.getElementById("discipline").value , student: active_student};
-    postSportResult(sportresult);
+    const errorElement = document.querySelector("#error");
+    //const sportresult = {result: document.getElementById("sportResult_result").value ,  discipline: document.getElementById("discipline").value , student: active_student};
+    const sportresult = {result: '11.2' ,  discipline: 'RUN_100' , student: 'http://raspberry-balena.gtdbqv7ic1ie9w3s.myfritz.net:8080/api/v1/students/24'};
+    postSportResult(sportresult)
+        .catch(() => {
+            errorElement.innerHTML = "The post request was not successfull.";
+            $(errorElement).slideDown().delay(3000).slideUp();
+        })
 }
 
 $(window).on("load", function () {
@@ -84,6 +90,9 @@ $(window).on("load", function () {
 
     const urlSearchParams = new URLSearchParams(window.location.search);
     const schoolClass = urlSearchParams.get("schoolClass");
+
+    const post = document.getElementById('saveButton');
+    post.addEventListener('click', addSportResult ,true);
 
     getClass(schoolClass)
         .catch(() => {

@@ -28,6 +28,7 @@ $(window).on("load", function () {
 
     getClasses()
         .then(classes => {
+            classes.sort();
             classes.forEach((schoolClass) => {
                 let row = constructClassTableRow(schoolClass);
                 classTableBody.appendChild(row);
