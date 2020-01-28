@@ -48,3 +48,16 @@ export async function postSportResult(sportresult) {
             console.error('Error:', error);
         })
 }
+
+export async function deleteStudent(student) {
+   return fetch(`${student}`,   {
+        credentials: "include",
+        method: 'DELETE',
+    })
+    .then((data) => {
+        console.log('Success', data);
+    })
+       .catch((error) => {
+           console.error('Error', error);
+       })
+}

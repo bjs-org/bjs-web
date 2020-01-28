@@ -1,11 +1,16 @@
-import {getClass, getStudents, postSportResult} from "./api.js";
-const active_student = null;
+import {getClass, getStudents, postSportResult, deleteStudent} from "./api.js";
 
 function constructStudentTableRow(student) {
+    const studentURL = "http://raspberry-balena.gtdbqv7ic1ie9w3s.myfritz.net:8080/api/v1/students/"+ student.id;
+    var modalDeletion = $('#deletionModal').modal({
+        keyboard: true,
+        show: false
+        });
+
     var modalSportresult = $('#sportresultModal').modal({
-                        keyboard: true,
-                        show:false
-                    });
+        keyboard: true,
+        show:false
+        });
     let row = document.createElement("tr");
 
     let firstName = document.createElement("td");
@@ -21,7 +26,7 @@ function constructStudentTableRow(student) {
     row.appendChild(birthday);
 
     let gender = document.createElement("td");
-    if(student.female == true){
+    if(student.female === true){
         gender.innerText = "W";
     }
     else
@@ -46,7 +51,9 @@ function constructStudentTableRow(student) {
     let remove = document.createElement("td");
     let buttonRemove = document.createElement("span");
             buttonRemove.onclick = () => {
-               // TODO implement Remove function
+                document.getElementById("studentURL").value = studentURL;
+                modalDeletion.modal('show');
+                return false;
         }
     buttonRemove.title = "Remove this student"
     let iconRemove = document.createElement("i");
@@ -58,7 +65,7 @@ function constructStudentTableRow(student) {
     let addSportResult = document.createElement("td");
     let addSportResultButton = document.createElement("span");
     addSportResultButton.onclick = () => {
-                //active_student = $(student);
+                document.getElementById("studentURL").value = studentURL;
                 modalSportresult.modal('show');
                 return false;
          }
@@ -71,14 +78,21 @@ function constructStudentTableRow(student) {
 
     return row;
 }
+function deleteStudentRequest(student) {
+    const errorElement = document.querySelector("#error");
+    deleteStudent(student)
+        .catch(() => {
+            errorElement.innerHTML = "The delete request was not successful.";
+            $(errorElement).slideDown().delay(3000).slideUp();
+        })
+}
 
 function addSportResult() {
     const errorElement = document.querySelector("#error");
-    //const sportresult = {result: document.getElementById("sportResult_result").value ,  discipline: document.getElementById("discipline").value , student: active_student};
-    const sportresult = {result: '11.2' ,  discipline: 'RUN_100' , student: 'http://raspberry-balena.gtdbqv7ic1ie9w3s.myfritz.net:8080/api/v1/students/24'};
+    const sportresult = {result: document.getElementById("sportResult_result").value ,  discipline: document.getElementById("discipline").value , student: document.getElementById("studentURL").value};
     postSportResult(sportresult)
         .catch(() => {
-            errorElement.innerHTML = "The post request was not successfull.";
+            errorElement.innerHTML = "The post request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         })
 }
@@ -93,6 +107,9 @@ $(window).on("load", function () {
 
     const post = document.getElementById('saveButton');
     post.addEventListener('click', addSportResult ,true);
+
+    const remove = document.getElementById('confirmationDelete');
+    post.addEventListener('click', deleteStudentRequest, true);
 
     getClass(schoolClass)
         .catch(() => {
