@@ -1,4 +1,4 @@
-import {getClass, getStudents, postSportResult, deleteStudent} from "./api.js";
+import {getClass, getStudents, postSportResult, deleteStudent, addStudent} from "./api.js";
 var modalDeletion = $('#deletionModal').modal({
     keyboard: true,
     show: false
@@ -101,6 +101,17 @@ function addSportResult() {
         })
 }
 
+function addNewStudent(){
+    const errorElement = document.querySelector("#error");
+    const newStudent = {firstName: "Platz", lastName: "Halter", birthDay: "2020-01-29", female: false, schoolClass: document.getElementById("classURL").value};
+    addStudent(newStudent)
+        .catch(() => {
+            errorElement.innerHTML = "The post request was not successful.";
+            $(errorElement).slideDown().delay(3000).slideUp();
+        })
+}
+
+
 $(window).on("load", function () {
     const studentsTableBody = document.querySelector("#students-tbody");
     const errorElement = document.querySelector("#error");
@@ -115,6 +126,9 @@ $(window).on("load", function () {
     const remove = document.getElementById('confirmationDelete');
     remove.addEventListener('click', deleteStudentRequest, true);
 
+    const addStudent = document.getElementById('addStudentButton');
+    addStudent.addEventListener('click',addNewStudent, true);
+
     getClass(schoolClass)
         .catch(() => {
             errorElement.innerHTML = "This element probably does not exists or is not accessible";
@@ -126,6 +140,9 @@ $(window).on("load", function () {
 
             const classTeacher = classInformation.querySelector("#class-teacher");
             classTeacher.innerHTML = value.classTeacherName === undefined ? '' : value.classTeacherName;
+
+            const classURL = value._links.self.href;
+            document.getElementById("classURL").value = classURL;
         })
         .then(() => {
             getStudents(schoolClass)

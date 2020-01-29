@@ -31,6 +31,24 @@ export async function getStudents(schoolClass) {
         })
 }
 
+export async function addStudent(student_data)  {
+    fetch(`${api_url}/students`,    {
+        credentials: "include",
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(student_data),
+    })
+        .then((response)    => response.json())
+        .then((data) => {
+            console.log('Success', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        })
+}
+
 export async function postSportResult(sportresult) {
     fetch(`${api_url}/sport_results`, {
         credentials: "include",
