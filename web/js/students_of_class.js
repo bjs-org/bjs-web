@@ -1,4 +1,4 @@
-import {getClass, getStudents, postSportResult, deleteStudent, addStudent} from "./api.js";
+import {getClass, getStudents, postSportResult, deleteStudent, addStudent, patchStudent} from "./api.js";
 var modalDeletion = $('#deletionModal').modal({
     keyboard: true,
     show: false
@@ -39,8 +39,10 @@ function constructStudentTableRow(student) {
     let edit = document.createElement("td");
     let buttonEdit = document.createElement("span");
         buttonEdit.onclick = () => {
-            modalSportresult.modal('show');
-            return false;
+            //modalSportresult.modal('show');
+            //return false;
+            document.getElementById("studentURL").value = studentURL
+            editStudent();
         }
     buttonEdit.title = "Edit this student";
     let iconEdit = document.createElement("i");
@@ -111,6 +113,16 @@ function addNewStudent(){
         })
 }
 
+function editStudent(){
+    const errorElement = document.querySelector("#error");
+    const edits = {firstName: "Patch", lastName: "Test", birthDay: "2001-04-20", female: true};
+    const studentURL = document.getElementById("studentURL").value;
+    patchStudent(studentURL,edits)
+        .catch(() => {
+            errorElement.innerHTML = "The patch request was not successful.";
+            $(errorElement).slideDown().delay(3000).slideUp();
+        })
+}
 
 $(window).on("load", function () {
     const studentsTableBody = document.querySelector("#students-tbody");
@@ -125,6 +137,9 @@ $(window).on("load", function () {
 
     const remove = document.getElementById('confirmationDelete');
     remove.addEventListener('click', deleteStudentRequest, true);
+
+    //const edit = document.getElementById("editStudentButton");
+    //edit.addEventListener('click',editStudent,true);
 
     const addStudent = document.getElementById('addStudentButton');
     addStudent.addEventListener('click',addNewStudent, true);

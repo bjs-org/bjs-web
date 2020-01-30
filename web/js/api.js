@@ -31,6 +31,24 @@ export async function getStudents(schoolClass) {
         })
 }
 
+export async function patchStudent(student, data) {
+    fetch(`${student}`,{
+        credentials: "include",
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then((response)    => response.json())
+        .then((data) => {
+            console.log('Success', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+    })
+}
+
 export async function addStudent(student_data)  {
     fetch(`${api_url}/students`,    {
         credentials: "include",
