@@ -97,3 +97,29 @@ export async function deleteStudent(student) {
            console.error('Error', error);
        })
 }
+
+export async function getScore(student) {
+    return fetch(`${student}/score`,   {
+        credentials: "include",
+        method: 'GET',
+    })
+        .then((data) => {
+            console.log('Success', data);
+        })
+        .catch((error) => {
+            console.error('Error', error);
+        })
+}
+
+export async function getTopStudents(grade){
+    return fetch(`${api_url}/students/best/${grade}`,{
+        credentials: "include",
+            method: 'GET',
+    })
+        .then((data) => {
+            console.log('Success', data);
+        })
+        .catch((error) => {
+            console.error('Error', error);
+        })
+}
