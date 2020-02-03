@@ -32,6 +32,10 @@ function constructStudentTableRow(student) {
     birthday.innerText = student.birthDay;
     row.appendChild(birthday);
 
+    let score = document.createElement("td");
+    score.innerText = getStudentsScore(studentURL);
+    row.appendChild(score);
+
     let gender = document.createElement("td");
     if(student.female === true){
         gender.innerText = "W";
@@ -110,7 +114,6 @@ function addSportResult() {
 }
 
 function addNewStudent(){
-    modalAddStudent.modal("show");
     const errorElement = document.querySelector("#error");
     const newStudent = {firstName: "Platz", lastName: "Halter", birthDay: "2020-01-29", female: false, schoolClass: document.getElementById("classURL").value};
     addStudent(newStudent)
@@ -129,6 +132,10 @@ function editStudent(){
             errorElement.innerHTML = "The patch request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         })
+}
+
+function getStudentsScore(studentURL){
+   return getScore(studentURL).toString();
 }
 
 $(window).on("load", function () {
