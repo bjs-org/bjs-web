@@ -1,10 +1,16 @@
 import {getClass, getStudents, postSportResult, deleteStudent, addStudent, patchStudent} from "./api.js";
-var modalDeletion = $('#deletionModal').modal({
+
+const modalDeletion = $('#deletionModal').modal({
     keyboard: true,
     show: false
 });
 
-var modalSportresult = $('#sportresultModal').modal({
+const modalSportresult = $('#sportresultModal').modal({
+    keyboard: true,
+    show:false
+});
+
+const modalAddStudent = $('#addstudentModal').modal({
     keyboard: true,
     show:false
 });
@@ -104,6 +110,7 @@ function addSportResult() {
 }
 
 function addNewStudent(){
+    modalAddStudent.modal("show");
     const errorElement = document.querySelector("#error");
     const newStudent = {firstName: "Platz", lastName: "Halter", birthDay: "2020-01-29", female: false, schoolClass: document.getElementById("classURL").value};
     addStudent(newStudent)

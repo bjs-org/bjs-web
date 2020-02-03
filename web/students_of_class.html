@@ -29,7 +29,7 @@
             </div>
            <!--- Noch nicht final --->
             <div class="col-md-4 offset-md-4">
-                <span onclick="" id="addStudentButton">
+                <span id="addStudentButton">
                      <i class="fas fa-user-plus" style="font-size: 70px"></i>
                 </span>
             </div>
@@ -64,6 +64,36 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Nein</button>
                 <button type="button" class="btn btn-primary" id="confirmationDelete">Ja</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="addstudentModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">hinzufügen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Schüler hinzufügen</p>
+            </div>
+            <div class="modal-footer">
+                <label for="Stufe" class="col-form-label">Stufe:</label>
+                <input type="number" class="form-control" id="Stufe">
+                <label for="Klasse" class="col-form-label">Klasse:</label>
+                <input type="text" class="form-control" id="Klasse">                
+                <label for="firstname" class="col-form-label">Vorname:</label>
+                <input type="text" class="form-control" id="firstname"> 
+                <label for="name" class="col-form-label">Nachname:</label>
+                <input type="text" class="form-control" id="name"> 
+                <label for="birthday" class="col-form-label">Geburtstag:</label>
+                <input type="date" class="form-control" id="birthday"> 
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">abbrechen</button>
+                <button type="button" class="btn btn-primary" id="confirmationAdd">hinzufügen</button>
             </div>
         </div>
     </div>
