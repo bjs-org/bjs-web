@@ -29,7 +29,7 @@
             </div>
            <!--- Noch nicht final --->
             <div class="col-md-4 offset-md-4">
-                <span id="addStudentButton">
+                <span id="addStudentButton" data-toggle="modal" data-target="#addstudentModal">
                      <i class="fas fa-user-plus" style="font-size: 70px"></i>
                 </span>
             </div>
@@ -83,10 +83,6 @@
                 <p>Schüler hinzufügen</p>
             </div>
             <div class="modal-footer">
-              <!--  <label for="addStufe" class="col-form-label">Stufe:</label>
-                <input type="number" class="form-control" id="addStufe">
-                <label for="addKlasse" class="col-form-label">Klasse:</label>
-                <input type="text" class="form-control" id="addKlasse"> -->
                 <label for="addFirstname" class="col-form-label">Vorname:</label>
                 <input type="text" class="form-control" id="addFirstname">
                 <label for="addLastname" class="col-form-label">Nachname:</label>
@@ -94,10 +90,10 @@
                 <label for="addBirthday" class="col-form-label">Geburtstag:</label>
                 <input type="text" class="form-control" id="addBirthday" placeholder="YYYY-MM-DD">
                 <label for="addfemale" class="col-form-label">Geschlecht:</label>
-                <select class="custom-select" id="addfemale">
+                <select class="custom-select" id="addFemale">
                     <option selected>Wähle ein Geschlecht</option>
-                    <option value="false">Männlich</option>
-                    <option value="true">Weiblich</option>
+                    <option value="male">Männlich</option>
+                    <option value="female">Weiblich</option>
                 </select>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">abbrechen</button>
                 <button type="button" class="btn btn-primary" id="confirmationAdd">hinzufügen</button>

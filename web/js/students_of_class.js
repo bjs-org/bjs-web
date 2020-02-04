@@ -105,7 +105,10 @@ function deleteStudentRequest() {
 function addSportResult() {
     modalSportresult.modal('hide');
     const errorElement = document.querySelector("#error");
-    const sportresult = {result: document.getElementById("sportResult_result").value ,  discipline: document.getElementById("discipline").value , student: document.getElementById("studentURL").value};
+    const result = document.getElementById("sportResult_result").value;
+    const discipline = document.getElementById("discipline").value;
+    const student = document.getElementById("studentURL").value;
+    const sportresult = {result: result ,  discipline: discipline , student: student};
     postSportResult(sportresult)
         .catch(() => {
             errorElement.innerHTML = "The post request was not successful.";
@@ -116,13 +119,28 @@ function addSportResult() {
 function addNewStudent(){
     modalAddStudent.modal('hide');
     const errorElement = document.querySelector("#error");
-    const femaleOption = document.getElementById("addFemale");
-    const newStudent = {firstName: document.getElementById("addFirstname").value, lastName: document.getElementById("addLastname").value, birthDay: document.getElementById("addBirthday").value, female: femaleOption.value, schoolClass: document.getElementById("classURL").value};
+    const firstName = document.getElementById("addFirstname").value;
+    const lastName = document.getElementById("addLastname").value;
+    const birthDay = document.getElementById("addBirthday").value;
+    const female = isFemale();
+    const schoolClass = document.getElementById("classURL").value;
+
+    const newStudent = {firstName: firstName, lastName: lastName, birthDay: birthDay, female: female, schoolClass: schoolClass};
     addStudent(newStudent)
         .catch(() => {
             errorElement.innerHTML = "The post request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         })
+}
+
+function isFemale(){
+    const femaleOption = document.getElementById("addFemale");
+    if(femaleOption.value === "female"){
+        return true;
+    }
+    else if(femaleOption.value === "male"){
+        return false;
+    }
 }
 
 function editStudent(){
@@ -137,7 +155,7 @@ function editStudent(){
 }
 
 function getStudentsScore(studentURL){
-   return getScore(studentURL).toString();
+    return getScore(studentURL);
 }
 
 $(window).on("load", function () {
@@ -156,9 +174,6 @@ $(window).on("load", function () {
 
     //const edit = document.getElementById("editStudentButton");
     //edit.addEventListener('click',editStudent,true);
-
-    const addStudentModal = document.getElementById('addStudentButton');
-    addStudentModal.addEventListener('click',modalAddStudent.modal('show'), true);
 
     const addStudent = document.getElementById('confirmationAdd');
     addStudent.addEventListener('click',addNewStudent,true);
