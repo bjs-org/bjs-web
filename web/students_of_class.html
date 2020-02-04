@@ -83,16 +83,22 @@
                 <p>Schüler hinzufügen</p>
             </div>
             <div class="modal-footer">
-                <label for="Stufe" class="col-form-label">Stufe:</label>
-                <input type="number" class="form-control" id="Stufe">
-                <label for="Klasse" class="col-form-label">Klasse:</label>
-                <input type="text" class="form-control" id="Klasse">                
-                <label for="firstname" class="col-form-label">Vorname:</label>
-                <input type="text" class="form-control" id="firstname"> 
-                <label for="name" class="col-form-label">Nachname:</label>
-                <input type="text" class="form-control" id="name"> 
-                <label for="birthday" class="col-form-label">Geburtstag:</label>
-                <input type="date" class="form-control" id="birthday"> 
+              <!--  <label for="addStufe" class="col-form-label">Stufe:</label>
+                <input type="number" class="form-control" id="addStufe">
+                <label for="addKlasse" class="col-form-label">Klasse:</label>
+                <input type="text" class="form-control" id="addKlasse"> -->
+                <label for="addFirstname" class="col-form-label">Vorname:</label>
+                <input type="text" class="form-control" id="addFirstname">
+                <label for="addLastname" class="col-form-label">Nachname:</label>
+                <input type="text" class="form-control" id="addLastname">
+                <label for="addBirthday" class="col-form-label">Geburtstag:</label>
+                <input type="text" class="form-control" id="addBirthday" placeholder="YYYY-MM-DD">
+                <label for="addfemale" class="col-form-label">Geschlecht:</label>
+                <select class="custom-select" id="addfemale">
+                    <option selected>Wähle ein Geschlecht</option>
+                    <option value="false">Männlich</option>
+                    <option value="true">Weiblich</option>
+                </select>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">abbrechen</button>
                 <button type="button" class="btn btn-primary" id="confirmationAdd">hinzufügen</button>
             </div>

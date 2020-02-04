@@ -114,8 +114,10 @@ function addSportResult() {
 }
 
 function addNewStudent(){
+    modalAddStudent.modal('hide');
     const errorElement = document.querySelector("#error");
-    const newStudent = {firstName: "Platz", lastName: "Halter", birthDay: "2020-01-29", female: false, schoolClass: document.getElementById("classURL").value};
+    const femaleOption = document.getElementById("addFemale");
+    const newStudent = {firstName: document.getElementById("addFirstname").value, lastName: document.getElementById("addLastname").value, birthDay: document.getElementById("addBirthday").value, female: femaleOption.value, schoolClass: document.getElementById("classURL").value};
     addStudent(newStudent)
         .catch(() => {
             errorElement.innerHTML = "The post request was not successful.";
@@ -155,8 +157,11 @@ $(window).on("load", function () {
     //const edit = document.getElementById("editStudentButton");
     //edit.addEventListener('click',editStudent,true);
 
-    const addStudent = document.getElementById('addStudentButton');
-    addStudent.addEventListener('click',addNewStudent, true);
+    const addStudentModal = document.getElementById('addStudentButton');
+    addStudentModal.addEventListener('click',modalAddStudent.modal('show'), true);
+
+    const addStudent = document.getElementById('confirmationAdd');
+    addStudent.addEventListener('click',addNewStudent,true);
 
     getClass(schoolClass)
         .catch(() => {
