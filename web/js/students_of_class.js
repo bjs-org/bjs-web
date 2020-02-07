@@ -1,4 +1,4 @@
-import {getClass, getStudents, postSportResult, deleteStudent, addStudent, patchStudent} from "./api.js";
+import {addStudent, deleteStudent, getClass, getStudents, patchStudent, postSportResult} from "./api.js";
 
 const modalDeletion = $('#deletionModal').modal({
     keyboard: true,
@@ -7,16 +7,16 @@ const modalDeletion = $('#deletionModal').modal({
 
 const modalSportresult = $('#sportresultModal').modal({
     keyboard: true,
-    show:false
+    show: false
 });
 
 const modalAddStudent = $('#addstudentModal').modal({
     keyboard: true,
-    show:false
+    show: false
 });
 
 function constructStudentTableRow(student) {
-   const studentURL = student._links.self.href;
+    const studentURL = student._links.self.href;
 
     let row = document.createElement("tr");
 
@@ -33,27 +33,25 @@ function constructStudentTableRow(student) {
     row.appendChild(birthday);
 
     let score = document.createElement("td");
-    score.innerText = getStudentsScore(studentURL);
+    score.innerText = student.score;
     row.appendChild(score);
 
     let gender = document.createElement("td");
-    if(student.female === true){
+    if (student.female === true) {
         gender.innerText = "W";
-    }
-    else
-    {
+    } else {
         gender.innerText = "M";
     }
     row.appendChild(gender);
 
     let edit = document.createElement("td");
     let buttonEdit = document.createElement("span");
-        buttonEdit.onclick = () => {
-            //modalSportresult.modal('show');
-            //return false;
-            document.getElementById("studentURL").value = studentURL
-            editStudent();
-        }
+    buttonEdit.onclick = () => {
+        //modalSportresult.modal('show');
+        //return false;
+        document.getElementById("studentURL").value = studentURL
+        editStudent();
+    }
     buttonEdit.title = "Edit this student";
     let iconEdit = document.createElement("i");
     iconEdit.className = "fas fa-user-edit";
@@ -63,11 +61,11 @@ function constructStudentTableRow(student) {
 
     let remove = document.createElement("td");
     let buttonRemove = document.createElement("span");
-            buttonRemove.onclick = () => {
-                document.getElementById("studentURL").value = studentURL;
-                modalDeletion.modal('show');
-                return false;
-        }
+    buttonRemove.onclick = () => {
+        document.getElementById("studentURL").value = studentURL;
+        modalDeletion.modal('show');
+        return false;
+    }
     buttonRemove.title = "Remove this student"
     let iconRemove = document.createElement("i");
     iconRemove.className = "fas fa-trash-alt";
@@ -78,10 +76,10 @@ function constructStudentTableRow(student) {
     let addSportResult = document.createElement("td");
     let addSportResultButton = document.createElement("span");
     addSportResultButton.onclick = () => {
-                document.getElementById("studentURL").value = studentURL;
-                modalSportresult.modal('show');
-                return false;
-         }
+        document.getElementById("studentURL").value = studentURL;
+        modalSportresult.modal('show');
+        return false;
+    }
     addSportResultButton.title = "Add a Sportresult";
     let iconASR = document.createElement("i");
     iconASR.className = "fas fa-running";
@@ -91,6 +89,7 @@ function constructStudentTableRow(student) {
 
     return row;
 }
+
 function deleteStudentRequest() {
     modalDeletion.modal('hide');
     const errorElement = document.querySelector("#error");
@@ -108,7 +107,7 @@ function addSportResult() {
     const result = document.getElementById("sportResult_result").value;
     const discipline = document.getElementById("discipline").value;
     const student = document.getElementById("studentURL").value;
-    const sportresult = {result: result ,  discipline: discipline , student: student};
+    const sportresult = {result: result, discipline: discipline, student: student};
     postSportResult(sportresult)
         .catch(() => {
             errorElement.innerHTML = "The post request was not successful.";
@@ -116,7 +115,7 @@ function addSportResult() {
         })
 }
 
-function addNewStudent(){
+function addNewStudent() {
     modalAddStudent.modal('hide');
     const errorElement = document.querySelector("#error");
     const firstName = document.getElementById("addFirstname").value;
@@ -125,7 +124,13 @@ function addNewStudent(){
     const female = isFemale();
     const schoolClass = document.getElementById("classURL").value;
 
-    const newStudent = {firstName: firstName, lastName: lastName, birthDay: birthDay, female: female, schoolClass: schoolClass};
+    const newStudent = {
+        firstName: firstName,
+        lastName: lastName,
+        birthDay: birthDay,
+        female: female,
+        schoolClass: schoolClass
+    };
     addStudent(newStudent)
         .catch(() => {
             errorElement.innerHTML = "The post request was not successful.";
@@ -133,29 +138,24 @@ function addNewStudent(){
         })
 }
 
-function isFemale(){
+function isFemale() {
     const femaleOption = document.getElementById("addFemale");
-    if(femaleOption.value === "female"){
+    if (femaleOption.value === "female") {
         return true;
-    }
-    else if(femaleOption.value === "male"){
+    } else if (femaleOption.value === "male") {
         return false;
     }
 }
 
-function editStudent(){
+function editStudent() {
     const errorElement = document.querySelector("#error");
     const edits = {firstName: "Patch", lastName: "Test", birthDay: "2001-04-20", female: true};
     const studentURL = document.getElementById("studentURL").value;
-    patchStudent(studentURL,edits)
+    patchStudent(studentURL, edits)
         .catch(() => {
             errorElement.innerHTML = "The patch request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         })
-}
-
-function getStudentsScore(studentURL){
-    return getScore(studentURL);
 }
 
 $(window).on("load", function () {
@@ -167,7 +167,7 @@ $(window).on("load", function () {
     const schoolClass = urlSearchParams.get("schoolClass");
 
     const post = document.getElementById('saveButton');
-    post.addEventListener('click', addSportResult ,true);
+    post.addEventListener('click', addSportResult, true);
 
     const remove = document.getElementById('confirmationDelete');
     remove.addEventListener('click', deleteStudentRequest, true);

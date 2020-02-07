@@ -20,7 +20,7 @@ export async function getClass(schoolClass) {
 }
 
 export async function getStudents(schoolClass) {
-    return fetch(`${api_url}/students/search/findAllBySchoolClass?schoolClass=${schoolClass}`, {
+    return fetch(`${schoolClass}/students?projection=calculation`, {
         credentials: "include"
     })
         .then(response => {
@@ -28,6 +28,15 @@ export async function getStudents(schoolClass) {
         })
         .then(data => {
             return data._embedded.students;
+        })
+        .then(data =>{
+            return data.sort((a,b) =>{
+                const compareLastName = a.lastName.localeCompare(b.lastName);
+                if(compareLastName === 0){
+                    return a.firstName.localeCompare(b.firstName);
+                }
+                return compareLastName;
+            })
         })
 }
 
