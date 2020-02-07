@@ -29,7 +29,7 @@ function constructStudentTableRow(student) {
     row.appendChild(lastName);
 
     let birthday = document.createElement("td");
-    birthday.innerText = student.birthDay;
+    birthday.innerText = new Date(student.birthDay).toLocaleDateString();
     row.appendChild(birthday);
 
     let score = document.createElement("td");
