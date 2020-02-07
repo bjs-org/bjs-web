@@ -21,17 +21,19 @@
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-sm-4">
                 <div class="container" id="class-information">
                     <h1 class="display-4" id="class-name"></h1>
                     <p class="lead" id="class-teacher"></p>
                 </div>
             </div>
             <!--- Noch nicht final --->
-            <div class="col-md-4 offset-md-4">
-                <span id="addStudentButton" data-toggle="modal" data-target="#addstudentModal">
-                     <i class="fas fa-user-plus" style="font-size: 70px"></i>
-                </span>
+            <div class="col-sm-4">
+                <button class="btn btn-outline-dark">
+                    <span id="addStudentButton" data-toggle="modal" data-target="#addstudentModal">
+                         <i class="fas fa-user-plus" style="font-size: 70px"></i>
+                    </span>
+                </button>
             </div>
         </div>
     </div>
@@ -39,10 +41,13 @@
         <thead>
         <tr>
             <th scope="col">Vorname</th>
-            <th scope="col" id="LastName">Nachname</th>
+            <th scope="col">Nachname</th>
             <th scope="col">Geburtstag</th>
             <th scope="col">Punkte</th>
             <th scope="col">Geschlecht</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
         </tr>
         </thead>
         <tbody id="students-tbody">
@@ -113,6 +118,18 @@
                 </button>
             </div>
             <div class="modal-body">
+                <div id="sportResultsTable">
+                    <table class="table">
+                        <thead>
+                        <th>Disziplin</th>
+                        <th>Ergebnis</th>
+                        <th></th>
+                        <th></th>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="collapse" id="addSportResult">
                 <form>
                     <div class="form-group">
                         <select class="custom-select" id="discipline">
@@ -139,8 +156,9 @@
                     </div>
                 </form>
             </div>
+            </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#addSportResult">Add Sport Result</button>
                 <button type="button" class="btn btn-primary" id="saveButton">Save</button>
             </div>
         </div>

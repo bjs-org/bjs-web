@@ -42,12 +42,14 @@ function constructStudentTableRow(student) {
 
     let edit = document.createElement("td");
     let buttonEdit = document.createElement("span");
+
+
     buttonEdit.onclick = () => {
         //modalSportresult.modal('show');
         //return false;
         document.getElementById("studentURL").value = studentURL
         editStudent();
-    }
+    };
     buttonEdit.title = "Edit this student";
     let iconEdit = document.createElement("i");
     iconEdit.className = "fas fa-user-edit";
@@ -61,11 +63,12 @@ function constructStudentTableRow(student) {
         document.getElementById("studentURL").value = studentURL;
         modalDeletion.modal('show');
         return false;
-    }
-    buttonRemove.title = "Remove this student"
+    };
+    buttonRemove.title = "Remove this student";
     let iconRemove = document.createElement("i");
     iconRemove.className = "fas fa-trash-alt";
     buttonRemove.appendChild(iconRemove);
+
     remove.appendChild(buttonRemove);
     row.appendChild(remove);
 
@@ -75,7 +78,7 @@ function constructStudentTableRow(student) {
         document.getElementById("studentURL").value = studentURL;
         modalSportresult.modal('show');
         return false;
-    }
+    };
     addSportResultButton.title = "Add a Sportresult";
     let iconASR = document.createElement("i");
     iconASR.className = "fas fa-running";
