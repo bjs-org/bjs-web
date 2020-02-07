@@ -37,11 +37,7 @@ function constructStudentTableRow(student) {
     row.appendChild(score);
 
     let gender = document.createElement("td");
-    if (student.female === true) {
-        gender.innerText = "W";
-    } else {
-        gender.innerText = "M";
-    }
+    gender.innerText = student.female ?  "Weiblich" : "Männlich";
     row.appendChild(gender);
 
     let edit = document.createElement("td");
