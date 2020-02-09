@@ -19,6 +19,18 @@ export async function getClass(schoolClass) {
         .then(response => response.json());
 }
 
+export async function getSportResults(student) {
+    return fetch(`${student}/sportResults`,{
+        credentials: "include"
+    })
+        .then(response =>   {
+            return response.json();
+        })
+        .then(data => {
+            return data._embedded.sport_results;
+        })
+}
+
 export async function getStudents(schoolClass) {
     return fetch(`${schoolClass}/students?projection=calculation`, {
         credentials: "include"
@@ -105,19 +117,6 @@ export async function deleteStudent(student) {
        .catch((error) => {
            console.error('Error', error);
        })
-}
-
-export async function getScore(student) {
-    return fetch(`${student}/score`,   {
-        credentials: "include",
-        method: 'GET',
-    })
-        .then((data) => {
-            console.log('Success', data);
-        })
-        .catch((error) => {
-            console.error('Error', error);
-        })
 }
 
 export async function getTopStudents(grade){

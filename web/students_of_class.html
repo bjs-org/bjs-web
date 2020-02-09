@@ -113,7 +113,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="sportresultModalLabel">Füge ein Ergebnis hinzu</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeSportResult">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -121,12 +121,14 @@
                 <div id="sportResultsTable">
                     <table class="table">
                         <thead>
-                        <th>Disziplin</th>
-                        <th>Ergebnis</th>
-                        <th></th>
-                        <th></th>
+                            <tr>
+                                <th>Disziplin</th>
+                                <th>Ergebnis</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody id="sportResults-tbody"></tbody>
                     </table>
                 </div>
                 <div class="collapse" id="addSportResult">

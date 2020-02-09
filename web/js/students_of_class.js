@@ -1,4 +1,4 @@
-import {addStudent, deleteStudent, getClass, getStudents, patchStudent, postSportResult} from "./api.js";
+import {addStudent, deleteStudent, getClass, getStudents, patchStudent, postSportResult, getSportResults} from "./api.js";
 
 const modalDeletion = $('#deletionModal').modal({
     keyboard: true,
@@ -14,6 +14,40 @@ const modalAddStudent = $('#addstudentModal').modal({
     keyboard: true,
     show: false
 });
+
+function createSportResultTable(student) {
+    const errorElement = document.querySelector("#error");
+    const SportResultsTableBody = document.querySelector("#sportResults-tbody");
+    getSportResults(student)
+    .then(sportResults => {
+        sportResults.forEach((sportResult) => {
+            let row = constructSportResultTableRow(sportResult);
+            SportResultsTableBody.appendChild(row);
+        });
+    })
+}
+
+function clearSportResultTable() {
+    const SportResultsTableBody = document.querySelector("#sportResults-tbody");
+
+    while(SportResultsTableBody.hasChildNodes()){
+        SportResultsTableBody.removeChild(SportResultsTableBody.firstChild);
+    }
+}
+
+function constructSportResultTableRow(sportResult) {
+    let row = document.createElement("tr");
+
+    let discipline = document.createElement("td");
+    discipline.innerText = sportResult.discipline;
+    row.appendChild(discipline);
+
+    let result = document.createElement("td");
+    result.innerText = sportResult.result;
+    row.appendChild(result);
+
+    return row;
+}
 
 function constructStudentTableRow(student) {
     const studentURL = student._links.self.href;
@@ -47,7 +81,7 @@ function constructStudentTableRow(student) {
     buttonEdit.onclick = () => {
         //modalSportresult.modal('show');
         //return false;
-        document.getElementById("studentURL").value = studentURL
+        document.getElementById("studentURL").value = studentURL;
         editStudent();
     };
     buttonEdit.title = "Edit this student";
@@ -77,6 +111,8 @@ function constructStudentTableRow(student) {
     addSportResultButton.onclick = () => {
         document.getElementById("studentURL").value = studentURL;
         modalSportresult.modal('show');
+        createSportResultTable(studentURL);
+
         return false;
     };
     addSportResultButton.title = "Add a Sportresult";
@@ -167,6 +203,10 @@ $(window).on("load", function () {
 
     const post = document.getElementById('saveButton');
     post.addEventListener('click', addSportResult, true);
+    post.addEventListener('click', clearSportResultTable, true);
+
+    const closeSportResult = document.getElementById("closeSportResult");
+    closeSportResult.addEventListener('click', clearSportResultTable, true);
 
     const remove = document.getElementById('confirmationDelete');
     remove.addEventListener('click', deleteStudentRequest, true);
@@ -175,7 +215,7 @@ $(window).on("load", function () {
     //edit.addEventListener('click',editStudent,true);
 
     const addStudent = document.getElementById('confirmationAdd');
-    addStudent.addEventListener('click',addNewStudent,true);
+    addStudent.addEventListener('click', addNewStudent, true);
 
     getClass(schoolClass)
         .catch(() => {
