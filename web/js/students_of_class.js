@@ -1,4 +1,4 @@
-import {addStudent, deleteStudent, getClass, getStudents, patchStudent, postSportResult, getSportResults} from "./api.js";
+import {addStudent, deleteStudent, getClass, getStudents, patchStudent, postSportResult, getSportResults, patchSportResult, deleteSportResult} from "./api.js";
 
 const modalDeletion = $('#deletionModal').modal({
     keyboard: true,
@@ -14,6 +14,7 @@ const modalAddStudent = $('#addstudentModal').modal({
     keyboard: true,
     show: false
 });
+
 
 function createSportResultTable(studentURL,student) {
     const labelScore = document.getElementById("labelScore");
@@ -38,6 +39,8 @@ function clearSportResultTable() {
 }
 
 function constructSportResultTableRow(sportResult) {
+    const SportResultCollapse = document.getElementById("addSportResultCollapse");
+    const sportResultURL = sportResult._links.self;
     let row = document.createElement("tr");
 
     let discipline = document.createElement("td");
@@ -51,7 +54,9 @@ function constructSportResultTableRow(sportResult) {
     let editSportResult = document.createElement("td");
     let editSportResultButton = document.createElement("span");
     editSportResultButton.onclick = () => {
-
+        document.getElementById("sportResultURL").value = sportResultURL;
+        document.getElementById("EditOrAdd").value = "edit";
+        SportResultCollapse.collapse(true);
     };
     editSportResultButton.title = "Edit Sportresult";
     let iconASR = document.createElement("i");
@@ -63,9 +68,7 @@ function constructSportResultTableRow(sportResult) {
     let removeSportResult = document.createElement("td");
     let removeSportResultButton = document.createElement("span");
     removeSportResultButton.onclick = () => {
-        //document.getElementById("studentURL").value = studentURL;
-        modalDeletion.modal('show');
-        return false;
+
     };
     removeSportResultButton.title = "Remove this Sportresult";
     let iconRemove = document.createElement("i");
@@ -75,6 +78,21 @@ function constructSportResultTableRow(sportResult) {
     row.appendChild(removeSportResult);
 
     return row;
+}
+
+function editSportResult() {
+    modalSportresult.modal('hide');
+    const sportResultURL = document.getElementById("sportResultURL");
+    const errorElement = document.querySelector("#error");
+    const result = document.getElementById("sportResult_result").value;
+    const discipline = document.getElementById("discipline").value;
+    const student = document.getElementById("studentURL").value;
+    const sportresult = {result: result, discipline: discipline};
+    patchSportResult(sportresult, sportResultURL)
+        .catch(() => {
+            errorElement.innerHTML = "The post request was not successful.";
+            $(errorElement).slideDown().delay(3000).slideUp();
+        })
 }
 
 function changingNamesOfDisciplines(discipline) {
@@ -239,6 +257,16 @@ function isFemale() {
     }
 }
 
+function EditOrAdd() {
+    const editOption = document.getElementById("EditOrAdd");
+    if (editOption.value === "edit"){
+        return true;
+    }
+    else if(editOption.value === "add"){
+        return false;
+    }
+}
+
 function editStudent() {
     const errorElement = document.querySelector("#error");
     const edits = {firstName: "Patch", lastName: "Test", birthDay: "2001-04-20", female: true};
@@ -259,16 +287,23 @@ $(window).on("load", function () {
     const errorElement = document.querySelector("#error");
     const classInformation = document.querySelector("#class-information");
 
+    const SportResultCollapse = document.getElementById("addSportResultCollapse");
     const SportResultSaveButton = document.getElementById("saveButton");
     SportResultSaveButton.style.visibility="hidden";
-
-    const SportResultCollapse = document.getElementById("addSportResultCollapse");
 
     const urlSearchParams = new URLSearchParams(window.location.search);
     const schoolClass = urlSearchParams.get("schoolClass");
 
     const post = document.getElementById('saveButton');
-    post.addEventListener('click', addSportResult, true);
+    post.addEventListener('click', function () {
+       const EditOrAddSportResult = EditOrAdd();
+        if(EditOrAddSportResult){
+            editSportResult();
+        }
+        else{
+            addSportResult();
+        }
+        }, true);
     post.addEventListener('click', clearSportResultTable, true);
     post.addEventListener('click', function () {
         ShowHideSaveButton(false);

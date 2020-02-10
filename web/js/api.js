@@ -70,6 +70,24 @@ export async function patchStudent(student, data) {
     })
 }
 
+export async function patchSportResult(sportResult, data) {
+    fetch(`${sportResult}`,{
+        credentials: "include",
+        method:'PATCH',
+        headers:{
+            'Content-Type':'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then((response)    => response.json())
+        .then((data) => {
+            console.log('Success', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        })
+}
+
 export async function addStudent(student_data)  {
     fetch(`${api_url}/students`,    {
         credentials: "include",
@@ -117,6 +135,19 @@ export async function deleteStudent(student) {
        .catch((error) => {
            console.error('Error', error);
        })
+}
+
+export async function deleteSportResult(sportResult) {
+    return fetch(`${sportResult}`,{
+        credentials:"include",
+        method:'DELETE',
+    })
+        .then((data) => {
+            console.log('Success', data);
+        })
+        .catch((error) => {
+            console.error('Error', error);
+        })
 }
 
 export async function getTopStudents(grade){
