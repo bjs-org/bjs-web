@@ -15,10 +15,12 @@ const modalAddStudent = $('#addstudentModal').modal({
     show: false
 });
 
-function createSportResultTable(student) {
-    const errorElement = document.querySelector("#error");
+function createSportResultTable(studentURL,student) {
+    const labelScore = document.getElementById("labelScore");
+    labelScore.innerText = "Punkte:" + student.score;
+
     const SportResultsTableBody = document.querySelector("#sportResults-tbody");
-    getSportResults(student)
+    getSportResults(studentURL)
     .then(sportResults => {
         sportResults.forEach((sportResult) => {
             let row = constructSportResultTableRow(sportResult);
@@ -39,14 +41,69 @@ function constructSportResultTableRow(sportResult) {
     let row = document.createElement("tr");
 
     let discipline = document.createElement("td");
-    discipline.innerText = sportResult.discipline;
+    discipline.innerText = changingNamesOfDisciplines(sportResult.discipline);
     row.appendChild(discipline);
 
     let result = document.createElement("td");
     result.innerText = sportResult.result;
     row.appendChild(result);
 
+    let editSportResult = document.createElement("td");
+    let editSportResultButton = document.createElement("span");
+    editSportResultButton.onclick = () => {
+
+    };
+    editSportResultButton.title = "Edit Sportresult";
+    let iconASR = document.createElement("i");
+    iconASR.className = "fas fa-edit";
+    editSportResultButton.appendChild(iconASR);
+    editSportResult.appendChild(editSportResultButton);
+    row.appendChild(editSportResult);
+
+    let removeSportResult = document.createElement("td");
+    let removeSportResultButton = document.createElement("span");
+    removeSportResultButton.onclick = () => {
+        //document.getElementById("studentURL").value = studentURL;
+        modalDeletion.modal('show');
+        return false;
+    };
+    removeSportResultButton.title = "Remove this Sportresult";
+    let iconRemove = document.createElement("i");
+    iconRemove.className = "fas fa-trash-alt";
+    removeSportResultButton.appendChild(iconRemove);
+    removeSportResult.appendChild(removeSportResultButton);
+    row.appendChild(removeSportResult);
+
     return row;
+}
+
+function changingNamesOfDisciplines(discipline) {
+    if(discipline === "RUN_50")
+        {return "Sprint 50 Meter"}
+    else if(discipline === "RUN_75")
+        {return "Sprint 75 Meter"}
+    else if(discipline === "RUN_100")
+        {return "Sprint 100 Meter"}
+    else if(discipline === "RUN_800")
+        {return "Lauf 800 Meter"}
+    else if(discipline === "RUN_2000")
+        {return "Lauf 2000 Meter"}
+    else if(discipline === "RUN_3000")
+        {return "Lauf 3000 Meter"}
+    else if(discipline === "LONG_JUMP")
+        {return "Weitsprung"}
+    else if(discipline === "HIGH_JUMP")
+        {return "Hochsprung"}
+    else if(discipline === "BALL_THROWING_80")
+        {return "Weitwurf 80 Gramm"}
+    else if(discipline === "BALL_THROWING_200")
+        {return "Weitwurf 200 Gramm"}
+    else if(discipline === "SHOT_PUT")
+        {return "Kugelstoßen"}
+    else if(discipline === "SLING_BALL")
+        {return "Schleuderball"}
+    else
+        {return "Fehler!"}
 }
 
 function constructStudentTableRow(student) {
@@ -111,7 +168,7 @@ function constructStudentTableRow(student) {
     addSportResultButton.onclick = () => {
         document.getElementById("studentURL").value = studentURL;
         modalSportresult.modal('show');
-        createSportResultTable(studentURL);
+        createSportResultTable(studentURL,student);
 
         return false;
     };
@@ -193,10 +250,19 @@ function editStudent() {
         })
 }
 
+function ShowHideSaveButton(promise){
+    promise ? document.getElementById("saveButton").style.visibility='visible': document.getElementById("saveButton").style.visibility='hidden';
+}
+
 $(window).on("load", function () {
     const studentsTableBody = document.querySelector("#students-tbody");
     const errorElement = document.querySelector("#error");
     const classInformation = document.querySelector("#class-information");
+
+    const SportResultSaveButton = document.getElementById("saveButton");
+    SportResultSaveButton.style.visibility="hidden";
+
+    const SportResultCollapse = document.getElementById("addSportResultCollapse");
 
     const urlSearchParams = new URLSearchParams(window.location.search);
     const schoolClass = urlSearchParams.get("schoolClass");
@@ -204,12 +270,33 @@ $(window).on("load", function () {
     const post = document.getElementById('saveButton');
     post.addEventListener('click', addSportResult, true);
     post.addEventListener('click', clearSportResultTable, true);
+    post.addEventListener('click', function () {
+        ShowHideSaveButton(false);
+            }, true);
+    post.addEventListener('click', function () {
+        SportResultCollapse.collapse(false);
+    }, true);
 
     const closeSportResult = document.getElementById("closeSportResult");
     closeSportResult.addEventListener('click', clearSportResultTable, true);
+    closeSportResult.addEventListener('click',function () {
+        ShowHideSaveButton(false);
+            },false);
+    closeSportResult.addEventListener('click', function () {
+        SportResultCollapse.collapse(false);
+    }, true);
 
     const remove = document.getElementById('confirmationDelete');
     remove.addEventListener('click', deleteStudentRequest, true);
+
+    const addSportResultButton = document.getElementById("addSportResultButton");
+    addSportResultButton.addEventListener('click', function () {
+        ShowHideSaveButton(true)
+            }, true);
+    addSportResultButton.addEventListener('click', function () {
+        SportResultCollapse.collapse(false);
+    }, true);
+
 
     //const edit = document.getElementById("editStudentButton");
     //edit.addEventListener('click',editStudent,true);

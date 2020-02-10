@@ -131,7 +131,7 @@
                         <tbody id="sportResults-tbody"></tbody>
                     </table>
                 </div>
-                <div class="collapse" id="addSportResult">
+                <div class="collapse" id="addSportResultCollapse">
                 <form>
                     <div class="form-group">
                         <select class="custom-select" id="discipline">
@@ -160,7 +160,8 @@
             </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#addSportResult">Add Sport Result</button>
+                <label id="labelScore"></label>
+                <button type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#addSportResultCollapse" id="addSportResultButton">Add Sport Result</button>
                 <button type="button" class="btn btn-primary" id="saveButton">Save</button>
             </div>
         </div>
