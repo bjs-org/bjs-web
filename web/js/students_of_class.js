@@ -56,7 +56,7 @@ function constructSportResultTableRow(sportResult) {
     editSportResultButton.onclick = () => {
         document.getElementById("sportResultURL").value = sportResultURL;
         document.getElementById("EditOrAdd").value = "edit";
-        SportResultCollapse.collapse(true);
+        triggerCollapse(true);
     };
     editSportResultButton.title = "Edit Sportresult";
     let iconASR = document.createElement("i");
@@ -282,12 +282,17 @@ function ShowHideSaveButton(promise){
     promise ? document.getElementById("saveButton").style.visibility='visible': document.getElementById("saveButton").style.visibility='hidden';
 }
 
+function triggerCollapse(on){
+    const SportResultCollapse = document.getElementById("addSportResultCollapse");
+    SportResultCollapse.collapse('toggle');
+}
+
 $(window).on("load", function () {
     const studentsTableBody = document.querySelector("#students-tbody");
     const errorElement = document.querySelector("#error");
     const classInformation = document.querySelector("#class-information");
 
-    const SportResultCollapse = document.getElementById("addSportResultCollapse");
+    //const SportResultCollapse = document.getElementById("addSportResultCollapse");
     const SportResultSaveButton = document.getElementById("saveButton");
     SportResultSaveButton.style.visibility="hidden";
 
@@ -309,7 +314,7 @@ $(window).on("load", function () {
         ShowHideSaveButton(false);
             }, true);
     post.addEventListener('click', function () {
-        SportResultCollapse.collapse(false);
+        triggerCollapse(true);
     }, true);
 
     const closeSportResult = document.getElementById("closeSportResult");
@@ -318,7 +323,7 @@ $(window).on("load", function () {
         ShowHideSaveButton(false);
             },false);
     closeSportResult.addEventListener('click', function () {
-        SportResultCollapse.collapse(false);
+        triggerCollapse(false);
     }, true);
 
     const remove = document.getElementById('confirmationDelete');
@@ -329,7 +334,7 @@ $(window).on("load", function () {
         ShowHideSaveButton(true)
             }, true);
     addSportResultButton.addEventListener('click', function () {
-        SportResultCollapse.collapse(false);
+        triggerCollapse(true)
     }, true);
 
 
