@@ -10,6 +10,15 @@ export async function getClasses() {
         .then(data => {
             return data._embedded.classes;
         })
+        .then(data =>{
+            return data.sort((a,b) =>{
+                const compareClassName = a.grade.localeCompare(b.grade,undefined,{numeric: true});
+                if(compareClassName === 0){
+                    return a.className.localeCompare(b.className);
+                }
+                return compareClassName;
+            })
+        })
 }
 
 export async function getClass(schoolClass) {
