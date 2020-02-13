@@ -79,31 +79,36 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">hinzufügen</h5>
+                <h5 class="modal-title">Schüler hinzufügen</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-            </div>
-            <div class="modal-body">
-                <p>Schüler hinzufügen</p>
-            </div>
             <div class="modal-footer">
-               <div class="form-group">
-                   <label for="addFirstname" class="col-form-label">Vorname:</label>
-                   <input type="text" class="form-control" id="addFirstname">
-               </div>
-                <label for="addLastname" class="col-form-label">Nachname:</label>
-                <input type="text" class="form-control" id="addLastname">
-                <label for="addBirthday" class="col-form-label">Geburtstag:</label>
-                <input type="date" class="form-control" id="addBirthday">
-                <label for="addfemale" class="col-form-label">Geschlecht:</label>
-                <select class="custom-select" id="addFemale">
-                    <option selected>Wähle ein Geschlecht</option>
-                    <option value="male">Männlich</option>
-                    <option value="female">Weiblich</option>
-                </select>
+                <form>
+                <div class="form-row">
+                    <div class="col">
+                        <label for="addFirstname" >Vorname:</label>
+                        <input type="text" class="form-control" id="addFirstname">
+                    </div>
+                    <div class="col">
+                        <label for="addLastname" >Nachname:</label>
+                        <input type="text" class="form-control" id="addLastname">
+                    </div> 
+                    <div class="form-group">
+                        <label for="addBirthday" >Geburtstag:</label>
+                        <input type="text" class="form-control" id="addBirthday">
+                        </div>
+                        <div class="form-group">
+                            <label for="addFemale" >Geschlecht:</label>
+                            <select class="custom-select" id="addFemale">
+                            <option selected>Wähle ein Geschlecht</option>
+                            <option value="male">Männlich</option>
+                            <option value="female">Weiblich</option>
+                            </select>
+                        </div>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">abbrechen</button>
                 <button type="button" class="btn btn-primary" id="confirmationAdd">hinzufügen</button>
+                </form>
             </div>
         </div>
     </div>
