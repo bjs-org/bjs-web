@@ -63,9 +63,10 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Nein</button>
-                <button type="button" class="btn btn-primary" id="confirmationDelete">Ja</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Nein</button>
+                    <button type="button" class="btn btn-primary" id="confirmationDelete">Ja</button>
+                </div>
             </div>
         </div>
     </div>
@@ -79,31 +80,33 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+            </div>
             <div class="modal-footer">
                 <form>
-                <div class="form-row">
-                    <div class="col">
-                        <label for="addFirstname" >Vorname:</label>
-                        <input type="text" class="form-control" id="addFirstname">
-                    </div>
-                    <div class="col">
-                        <label for="addLastname" >Nachname:</label>
-                        <input type="text" class="form-control" id="addLastname">
-                    </div> 
-                    <div class="form-group">
-                        <label for="addBirthday" >Geburtstag:</label>
-                        <input type="text" class="form-control" id="addBirthday">
+                    <div class="form-row">
+                        <div class="col">
+                            <label for="addFirstname">Vorname:</label>
+                            <input type="text" class="form-control" id="addFirstname">
                         </div>
-                        <div class="form-group">
-                            <label for="addFemale" >Geschlecht:</label>
-                            <select class="custom-select" id="addFemale">
+                        <div class="col">
+                            <label for="addLastname">Nachname:</label>
+                            <input type="text" class="form-control" id="addLastname">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="addBirthday">Geburtstag:</label>
+                        <input type="text" class="form-control" id="addBirthday">
+                    </div>
+                    <div class="form-group">
+                        <label for="addFemale">Geschlecht:</label>
+                        <select class="custom-select" id="addFemale">
                             <option selected>Wähle ein Geschlecht</option>
                             <option value="male">Männlich</option>
                             <option value="female">Weiblich</option>
-                            </select>
-                        </div>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">abbrechen</button>
-                <button type="button" class="btn btn-primary" id="confirmationAdd">hinzufügen</button>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">abbrechen</button>
+                    <button type="button" class="btn btn-primary" id="confirmationAdd">hinzufügen</button>
                 </form>
             </div>
         </div>
@@ -116,7 +119,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="sportresultModalLabel">Füge ein Ergebnis hinzu</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeSportResult" data-toggle="collapse" data-target="#addSportResultCollapse">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeSportResult"
+                        data-toggle="collapse" data-target="#addSportResultCollapse">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -124,47 +128,50 @@
                 <div id="sportResultsTable">
                     <table class="table">
                         <thead>
-                            <tr>
-                                <th>Disziplin</th>
-                                <th>Ergebnis</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
+                        <tr>
+                            <th>Disziplin</th>
+                            <th>Ergebnis</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
                         </thead>
                         <tbody id="sportResults-tbody"></tbody>
                     </table>
                 </div>
                 <div class="collapse" id="addSportResultCollapse">
-                <form>
-                    <div class="form-group">
-                        <select class="custom-select" id="discipline">
-                            <option selected>Wähle eine Disziplin aus</option>
-                            <option value="RUN_50">50 Meter Sprint</option>
-                            <option value="RUN_75">75 Meter Sprint</option>
-                            <option value="RUN_100">100 Meter Sprint</option>
-                            <option value="RUN_800">800 Meter Lauf</option>
-                            <option value="RUN_2000">2000 Meter Lauf</option>
-                            <option value="RUN_3000">3000 Meter Lauf</option>
-                            <option value="HIGH_JUMP">Hochsprung</option>
-                            <option value="LONG_JUMP">Weitsprung</option>
-                            <option value="SHOT_PUT">Kugelstoßen</option>
-                            <option value="SLING_BALL">Schleuderball</option>
-                            <option value="BALL_THROWING_80">Weitwurf 80 Gramm</option>
-                            <option value="BALL_THROWING_200">Weitwurf 200 Gramm</option>
-                        </select>
-                    </div>
-                    <div>
-                        <div style="margin-top: 15px">
-                            <input type="sportResult_result" class="form-control" id="sportResult_result"
-                                   aria-describedby="result">
+                    <form>
+                        <div class="form-group">
+                            <label for="discipline">Wähle eine Disziplin aus</label>
+                            <select class="custom-select" id="discipline">
+                                <option value="RUN_50">50 Meter Sprint</option>
+                                <option value="RUN_75">75 Meter Sprint</option>
+                                <option value="RUN_100">100 Meter Sprint</option>
+                                <option value="RUN_800">800 Meter Lauf</option>
+                                <option value="RUN_2000">2000 Meter Lauf</option>
+                                <option value="RUN_3000">3000 Meter Lauf</option>
+                                <option value="HIGH_JUMP">Hochsprung</option>
+                                <option value="LONG_JUMP">Weitsprung</option>
+                                <option value="SHOT_PUT">Kugelstoßen</option>
+                                <option value="SLING_BALL">Schleuderball</option>
+                                <option value="BALL_THROWING_80">Weitwurf 80 Gramm</option>
+                                <option value="BALL_THROWING_200">Weitwurf 200 Gramm</option>
+                            </select>
                         </div>
-                    </div>
-                </form>
-            </div>
+                        <div>
+                            <div style="margin-top: 15px">
+                                <label for="sportResult_result">Ergebnis in [m] oder [s]</label>
+                                <input type="text" class="form-control" id="sportResult_result"
+                                       aria-describedby="result">
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div class="modal-footer">
                 <label id="labelScore"></label>
-                <button type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#addSportResultCollapse" id="addSportResultButton">Add Sport Result</button>
+                <button type="button" class="btn btn-secondary" data-toggle="collapse"
+                        data-target="#addSportResultCollapse" id="addSportResultButton">Add Sport Result
+                </button>
                 <button type="button" class="btn btn-primary" id="saveButton">Save</button>
             </div>
         </div>
@@ -179,50 +186,53 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-            <div class="modal-footer">
-                <form>
-                <div class="form-row">
-                    <div class="col">
-                        <label for="editFirstname" >Vornamen ändern:</label>
-                        <input type="text" class="form-control" id="editFirstname">
-                    </div>
-                    <div class="col">
-                        <label for="editLastname" >Nachnamen ändern:</label>
-                        <input type="text" class="form-control" id="editLastname">
-                    </div> 
-                    <div class="form-group">
-                        <label for="editBirthday" >Geburtstag ändern:</label>
-                        <input type="text" class="form-control" id="editBirthday">
+                <div class="modal-footer">
+                    <form>
+                        <div class="form-row">
+                            <div class="col">
+                                <label for="editFirstname">Vornamen ändern:</label>
+                                <input type="text" class="form-control" id="editFirstname">
+                            </div>
+                            <div class="col">
+                                <label for="editLastname">Nachnamen ändern:</label>
+                                <input type="text" class="form-control" id="editLastname">
+                            </div>
+                            <div class="form-group">
+                                <label for="editBirthday">Geburtstag ändern:</label>
+                                <input type="text" class="form-control" id="editBirthday">
+                            </div>
+                            <div class="form-group">
+                                <label for="editFemale">Geschlecht ändern:</label>
+                                <select class="custom-select" id="editFemale">
+                                    <option selected>Wähle ein Geschlecht</option>
+                                    <option value="male">Männlich</option>
+                                    <option value="female">Weiblich</option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">abbrechen</button>
+                            <button type="button" class="btn btn-primary" id="confirmationEdit">Änderungen
+                                übernehmen
+                            </button>
                         </div>
-                        <div class="form-group">
-                            <label for="editFemale" >Geschlecht ändern:</label>
-                            <select class="custom-select" id="editFemale">
-                            <option selected>Wähle ein Geschlecht</option>
-                            <option value="male">Männlich</option>
-                            <option value="female">Weiblich</option>
-                            </select>
-                        </div>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">abbrechen</button>
-                <button type="button" class="btn btn-primary" id="confirmationEdit">Änderungen übernehmen</button>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<input type="hidden" id="studentURL">
-<input type="hidden" id="classURL">
-<input type="hidden" id="sportResultURL">
-<input type="hidden" id="EditOrAdd">
+    <input type="hidden" id="studentURL">
+    <input type="hidden" id="classURL">
+    <input type="hidden" id="sportResultURL">
+    <input type="hidden" id="EditOrAdd">
 
 
-<script type="module" src="js/students_of_class.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
+    <script type="module" src="js/students_of_class.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
 </body>
 </html>

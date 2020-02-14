@@ -17,6 +17,11 @@ const modalAddStudent = $('#addstudentModal').modal({
 
 let clickCounter = 0;
 
+$('#sportresultModal').on('hidden.bs.modal', function () {
+    ShowHideSaveButton(false);
+    clearSportResultTable();
+})
+
 function createSportResultTable(studentURL,student) {
     const labelScore = document.getElementById("labelScore");
     labelScore.innerText = "Punkte:" + student.score;
@@ -313,15 +318,15 @@ $(window).on("load", function () {
             addSportResult();
         }
         }, true);
-    post.addEventListener('click', clearSportResultTable, true);
+   // post.addEventListener('click', clearSportResultTable, true);
     post.addEventListener('click', function () {
-        ShowHideSaveButton(false);
+        //ShowHideSaveButton(false);
             }, true);
 
     const closeSportResult = document.getElementById("closeSportResult");
-    closeSportResult.addEventListener('click', clearSportResultTable, true);
+    //closeSportResult.addEventListener('click', clearSportResultTable, true);
     closeSportResult.addEventListener('click',function () {
-        ShowHideSaveButton(false);
+        //ShowHideSaveButton(false);
             },false);
 
     const remove = document.getElementById('confirmationDelete');
@@ -329,7 +334,7 @@ $(window).on("load", function () {
 
     const addSportResultButton = document.getElementById("addSportResultButton");
     addSportResultButton.addEventListener('click', function () {
-        ShowHideSaveButton(true)
+        //ShowHideSaveButton(true)
             }, true);
 
     //const edit = document.getElementById("editStudentButton");
