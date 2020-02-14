@@ -18,8 +18,10 @@ const modalAddStudent = $('#addstudentModal').modal({
 let clickCounter = 0;
 
 $('#sportresultModal').on('hidden.bs.modal', function () {
+
     ShowHideSaveButton(false);
     clearSportResultTable();
+    $("#addSportResultCollapse").collapse('hide');
 })
 
 function createSportResultTable(studentURL,student) {
@@ -334,7 +336,12 @@ $(window).on("load", function () {
 
     const addSportResultButton = document.getElementById("addSportResultButton");
     addSportResultButton.addEventListener('click', function () {
-        //ShowHideSaveButton(true)
+        if (document.getElementById("saveButton").style.visibility === 'hidden'){
+            ShowHideSaveButton(true);
+        }
+        else{
+            ShowHideSaveButton(false);
+        }
             }, true);
 
     //const edit = document.getElementById("editStudentButton");
