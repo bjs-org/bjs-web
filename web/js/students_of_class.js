@@ -20,14 +20,13 @@ const modalEditStudent = $('#editStudentModal').modal({
     show: false
 });
 
-let clickCounter = 0;
+let clickCounter = false;
 
 $('#sportresultModal').on('hidden.bs.modal', function () {
-
     ShowHideSaveButton(false);
     clearSportResultTable();
     $("#addSportResultCollapse").collapse('hide');
-})
+});
 
 function createSportResultTable(studentURL,student) {
     const labelScore = document.getElementById("labelScore");
@@ -66,17 +65,17 @@ function constructSportResultTableRow(sportResult) {
     let editSportResult = document.createElement("td");
     let editSportResultButton = document.createElement("span");
     editSportResultButton.onclick = () => {
-        console.log(sportResultURL);
         document.getElementById("sportResultURL").value = sportResultURL;
         document.getElementById("EditOrAdd").value = "edit";
-        if(clickCounter === 0) {
+        if(clickCounter === false) {
+            loadEditSportResult(sportResult);
             $("#addSportResultCollapse").collapse('show');
             ShowHideSaveButton(true);
-            clickCounter = 1;
+            clickCounter = true;
         } else{
             $("#addSportResultCollapse").collapse('hide');
             ShowHideSaveButton(false);
-            clickCounter = 0;
+            clickCounter = false;
         }
     };
     editSportResultButton.title = "Edit Sportresult";
@@ -99,6 +98,14 @@ function constructSportResultTableRow(sportResult) {
     row.appendChild(removeSportResult);
 
     return row;
+}
+
+function loadEditSportResult(sportResult){
+    const discipline = sportResult.discipline;
+    $("div.form-group select").removeAttr('selected')
+        .find('option[value='+ discipline + ']')
+        .attr('selected',true);
+    document.getElementById("sportResult_result").value = sportResult.result;
 }
 
 function editSportResult() {
@@ -145,6 +152,19 @@ function changingNamesOfDisciplines(discipline) {
         {return "Fehler!"}
 }
 
+function loadEditModal(student) {
+    document.getElementById("editFirstname").value = student.firstName;
+    document.getElementById("editLastname").value = student.lastName;
+    document.getElementById("editBirthday").value = student.birthDay;
+    if(student.female){
+        $("div.form-group select").val("female");
+    }
+    else{
+        $("div.form-group select").val("male");
+    }
+    modalEditStudent.modal('show');
+}
+
 function constructStudentTableRow(student) {
     const studentURL = student._links.self.href;
 
@@ -172,11 +192,9 @@ function constructStudentTableRow(student) {
 
     let edit = document.createElement("td");
     let buttonEdit = document.createElement("span");
-
-
     buttonEdit.onclick = () => {
-        modalEditStudent.modal('show');
         document.getElementById("studentURL").value = studentURL;
+        loadEditModal(student);
     };
     buttonEdit.title = "Edit this student";
     let iconEdit = document.createElement("i");
@@ -204,9 +222,8 @@ function constructStudentTableRow(student) {
     let addSportResultButton = document.createElement("span");
     addSportResultButton.onclick = () => {
         document.getElementById("studentURL").value = studentURL;
-        modalSportresult.modal('show');
         createSportResultTable(studentURL,student);
-
+        modalSportresult.modal('show');
         return false;
     };
     addSportResultButton.title = "Add a Sportresult";
@@ -276,6 +293,15 @@ function isFemale() {
     }
 }
 
+function stillFemale() {
+    const femaleOption = document.getElementById("editFemale");
+    if (femaleOption.value === "female") {
+        return true;
+    } else if (femaleOption.value === "male") {
+        return false;
+    }
+}
+
 function EditOrAdd() {
     const editOption = document.getElementById("EditOrAdd");
     if (editOption.value === "edit"){
@@ -288,8 +314,13 @@ function EditOrAdd() {
 
 function editStudent() {
     modalEditStudent.modal('hide');
-    const errorElement = document.querySelector("#error");
-    const edits = {firstName: "Patch", lastName: "Test", birthDay: "2001-04-20", female: true};
+    const errorElement = document.querySelector("#error").value;
+    const editFirstName = document.getElementById("editFirstname").value;
+    console.log(editFirstName);
+    const editLastName = document.getElementById("editLastname").value;
+    const editBirthday = document.getElementById("editBirthday").value;
+    const editFemale = stillFemale();
+    const edits = {firstName: editFirstName, lastName: editLastName, birthDay: editBirthday, female: editFemale};
     const studentURL = document.getElementById("studentURL").value;
     patchStudent(studentURL, edits)
         .catch(() => {
@@ -348,8 +379,8 @@ $(window).on("load", function () {
         }
             }, true);
 
-    //const edit = document.getElementById("editStudentButton");
-    //edit.addEventListener('click',editStudent,true);
+    const edit = document.getElementById("confirmationEdit");
+    edit.addEventListener('click',editStudent,true);
 
     const addStudent = document.getElementById('confirmationAdd');
     addStudent.addEventListener('click', addNewStudent, true);
