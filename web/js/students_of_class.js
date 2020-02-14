@@ -15,6 +15,11 @@ const modalAddStudent = $('#addstudentModal').modal({
     show: false
 });
 
+const modalEditStudent = $('#editStudentModal').modal({
+    keyboard: true,
+    show: false
+});
+
 let clickCounter = 0;
 
 $('#sportresultModal').on('hidden.bs.modal', function () {
@@ -170,10 +175,8 @@ function constructStudentTableRow(student) {
 
 
     buttonEdit.onclick = () => {
-        //modalSportresult.modal('show');
-        //return false;
+        modalEditStudent.modal('show');
         document.getElementById("studentURL").value = studentURL;
-        editStudent();
     };
     buttonEdit.title = "Edit this student";
     let iconEdit = document.createElement("i");
@@ -284,6 +287,7 @@ function EditOrAdd() {
 }
 
 function editStudent() {
+    modalEditStudent.modal('hide');
     const errorElement = document.querySelector("#error");
     const edits = {firstName: "Patch", lastName: "Test", birthDay: "2001-04-20", female: true};
     const studentURL = document.getElementById("studentURL").value;
