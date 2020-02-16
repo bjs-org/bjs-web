@@ -74,7 +74,7 @@
         </div>
     </div>
 
-    <div class="modal" tabindex="-1" role="dialog" id="addstudentModal">
+    <div class="modal" tabindex="-1" role="dialog" id="addStudentModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -88,11 +88,11 @@
                         <div class="form-row">
                             <div class="col">
                                 <label for="addFirstname">Vorname:</label>
-                                <input type="text" class="form-control" id="addFirstname">
+                                <input type="text" class="form-control" id="addFirstName">
                             </div>
                             <div class="col">
                                 <label for="addLastname">Nachname:</label>
-                                <input type="text" class="form-control" id="addLastname">
+                                <input type="text" class="form-control" id="addLastName">
                             </div>
                         </div>
                         <div class="form-group">
@@ -107,15 +107,15 @@
                                 <option value="female">Weiblich</option>
                             </select>
                         </div>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">abbrechen</button>
-                        <button type="button" class="btn btn-primary" id="confirmationAdd">hinzufügen</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                        <button type="button" class="btn btn-primary" id="confirmationAdd">Hinzufügen</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="sportresultModal" tabindex="-1" role="dialog" aria-labelledby="sportresultModalLabel"
+    <div class="modal fade" id="sportResultModal" tabindex="-1" role="dialog" aria-labelledby="sportresultModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -168,13 +168,13 @@
                             </div>
                         </form>
                     </div>
+                    <label id="labelScore"></label>
                 </div>
                 <div class="modal-footer">
-                    <label id="labelScore"></label>
-                    <button type="button" class="btn btn-secondary" data-toggle="collapse"
-                        data-target="#addSportResultCollapse" id="addSportResultButton">Add Sport Result
+                    <button type="button" class="btn btn-outline-secondary" data-toggle="collapse"
+                        data-target="#addSportResultCollapse" id="addSportResultButton" style="align-content: center">Füge ein Ergebnis hinzu
                     </button>
-                    <button type="button" class="btn btn-primary" id="saveButton">Save</button>
+                    <button type="button" class="btn btn-primary" id="saveSportResultButton">Speichern</button>
                 </div>
             </div>
         </div>
@@ -212,7 +212,7 @@
                                 <option value="female">Weiblich</option>
                             </select>
                         </div>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">abbrechen</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
                         <button type="button" class="btn btn-primary" id="confirmationEdit">Änderungen übernehmen</button>
                     </form>
                 </div>
