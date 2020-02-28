@@ -261,7 +261,7 @@ function addSportResult() {
         })
 }
 
-function addNewStudent() {
+function addNewStudent() { 
     modalAddStudent.modal('hide');
     const errorElement = document.querySelector("#error");
     const firstName = document.getElementById("addFirstName").value;
