@@ -9,24 +9,19 @@ async function determineApiUrl() {
 }
 
 export async function getClasses() {
-    return fetch(`${await api_url}/classes`, {
+    const response = await fetch(`${await api_url}/classes`, {
         credentials: "include"
-    })
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            return data._embedded.classes;
-        })
-        .then(data =>{
-            return data.sort((a,b) =>{
-                const compareClassName = a.grade.localeCompare(b.grade,undefined,{numeric: true});
-                if(compareClassName === 0){
-                    return a.className.localeCompare(b.className);
-                }
-                return compareClassName;
-            })
-        })
+    });
+    const json = await response.json();
+    const classes = json._embedded.classes;
+    classes.sort((a, b) => {
+        const compareClassName = a.grade.localeCompare(b.grade, undefined, {numeric: true});
+        if (compareClassName === 0) {
+            return a.className.localeCompare(b.className);
+        }
+        return compareClassName;
+    });
+    return classes;
 }
 
 export async function getClass(schoolClass) {
@@ -37,10 +32,10 @@ export async function getClass(schoolClass) {
 }
 
 export async function getSportResults(student) {
-    return fetch(`${student}/sportResults`,{
+    return fetch(`${student}/sportResults`, {
         credentials: "include"
     })
-        .then(response =>   {
+        .then(response => {
             return response.json();
         })
         .then(data => {
@@ -58,10 +53,10 @@ export async function getStudents(schoolClass) {
         .then(data => {
             return data._embedded.students;
         })
-        .then(data =>{
-            return data.sort((a,b) =>{
+        .then(data => {
+            return data.sort((a, b) => {
                 const compareLastName = a.lastName.localeCompare(b.lastName);
-                if(compareLastName === 0){
+                if (compareLastName === 0) {
                     return a.firstName.localeCompare(b.firstName);
                 }
                 return compareLastName;
@@ -70,7 +65,7 @@ export async function getStudents(schoolClass) {
 }
 
 export async function patchStudent(student, data) {
-    fetch(`${student}`,{
+    fetch(`${student}`, {
         credentials: "include",
         method: 'PATCH',
         headers: {
@@ -78,25 +73,25 @@ export async function patchStudent(student, data) {
         },
         body: JSON.stringify(data),
     })
-        .then((response)    => response.json())
+        .then((response) => response.json())
         .then((data) => {
             console.log('Success', data);
         })
         .catch((error) => {
             console.error('Error:', error);
-    })
+        })
 }
 
 export async function patchSportResult(sportResult, data) {
-    fetch(`${sportResult}`,{
+    fetch(`${sportResult}`, {
         credentials: "include",
-        method:'PATCH',
-        headers:{
-            'Content-Type':'application/json',
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
     })
-        .then((response)    => response.json())
+        .then((response) => response.json())
         .then((data) => {
             console.log('Success', data);
         })
@@ -105,8 +100,8 @@ export async function patchSportResult(sportResult, data) {
         })
 }
 
-export async function addStudent(student_data)  {
-    fetch(`${await api_url}/students`,    {
+export async function addStudent(student_data) {
+    fetch(`${await api_url}/students`, {
         credentials: "include",
         method: 'POST',
         headers: {
@@ -114,7 +109,7 @@ export async function addStudent(student_data)  {
         },
         body: JSON.stringify(student_data),
     })
-        .then((response)    => response.json())
+        .then((response) => response.json())
         .then((data) => {
             console.log('Success', data);
         })
@@ -142,22 +137,9 @@ export async function postSportResult(sportresult) {
 }
 
 export async function deleteStudent(student) {
-   return fetch(`${student}`,   {
+    return fetch(`${student}`, {
         credentials: "include",
         method: 'DELETE',
-    })
-    .then((data) => {
-        console.log('Success', data);
-    })
-       .catch((error) => {
-           console.error('Error', error);
-       })
-}
-
-export async function deleteSportResult(sportResult) {
-    return fetch(`${sportResult}`,{
-        credentials:"include",
-        method:'DELETE',
     })
         .then((data) => {
             console.log('Success', data);
@@ -167,10 +149,23 @@ export async function deleteSportResult(sportResult) {
         })
 }
 
-export async function getTopStudents(grade){
-    return fetch(`${await api_url}/students/best/${grade}`,{
+export async function deleteSportResult(sportResult) {
+    return fetch(`${sportResult}`, {
         credentials: "include",
-            method: 'GET',
+        method: 'DELETE',
+    })
+        .then((data) => {
+            console.log('Success', data);
+        })
+        .catch((error) => {
+            console.error('Error', error);
+        })
+}
+
+export async function getTopStudents(grade) {
+    return fetch(`${await api_url}/students/best/${grade}`, {
+        credentials: "include",
+        method: 'GET',
     })
         .then((data) => {
             console.log('Success', data);
