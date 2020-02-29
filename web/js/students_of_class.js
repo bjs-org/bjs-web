@@ -22,7 +22,7 @@ const modalEditStudent = $('#editStudentModal').modal({
 
 let clickCounter = false;
 
-$('#sportResultModal').on('hidden.bs.modal', function () {
+$('#sportResultModal').on('hide.bs.modal', function () {
     ShowHideSaveButton(false);
     clearSportResultTable();
     $("#addSportResultCollapse").collapse('hide');
@@ -153,8 +153,8 @@ function changingNamesOfDisciplines(discipline) {
 }
 
 function loadEditModal(student) {
-    document.getElementById("editFirstname").value = student.firstName;
-    document.getElementById("editLastname").value = student.lastName;
+    document.getElementById("editFirstName").value = student.firstName;
+    document.getElementById("editLastName").value = student.lastName;
     document.getElementById("editBirthday").value = student.birthDay;
     if(student.female){
         $("div.form-group select").val("female");
@@ -374,6 +374,12 @@ $(window).on("load", function () {
         .then(value => {
             const className = classInformation.querySelector("#class-name");
             className.innerHTML = `${value.grade}${value.className}`;
+
+            const classTitle = document.getElementById("title");
+            classTitle.innerHTML = `${value.grade}${value.className}`;
+
+            const classBreadCrumb = document.getElementById("breadCrumb");
+            classBreadCrumb.innerHTML =  `${value.grade}${value.className}`;
 
             const classTeacher = classInformation.querySelector("#class-teacher");
             classTeacher.innerHTML = value.classTeacherName === undefined ? '' : value.classTeacherName;

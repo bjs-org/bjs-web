@@ -12,7 +12,7 @@
 
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/c2053bbe39.js" crossorigin="anonymous"></script>
-    <title>Schüler der Klasse</title>
+    <title id="title">Schüler der Klasse</title>
 </head>
 
 <body>
@@ -21,21 +21,33 @@
         <div id="error" class="alert alert-warning" role="alert" style="display: none">
             Something went wrong ...
         </div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Klassenübersicht</a></li>
+                <li class="breadcrumb-item active" aria-current="page" id="breadCrumb"></li>
+            </ol>
+        </nav>
         <div class="container">
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-6">
                     <div class="container" id="class-information">
                         <h1 class="display-4" id="class-name"></h1>
                         <p class="lead" id="class-teacher"></p>
                     </div>
                 </div>
                 <!--- Noch nicht final --->
-                <div class="col-sm-4">
-                    <button class="btn btn-dark">
-                        <span id="addStudentButton" data-toggle="modal" data-target="#addstudentModal">
-                            <i class="fas fa-user-plus" style="font-size: 70px"></i>
-                        </span>
-                    </button>
+                <div class="col-sm-6">
+                        <button class="btn btn-outline-dark">
+                            <span id="addStudentButton" data-toggle="modal" data-target="#addStudentModal">
+                                <i class="far fa-plus-square" style="font-size: 70px"></i>
+                                <!--<i class="fas fa-user-plus" style="font-size: 70px"></i> -->
+                            </span>
+                        </button>
+                        <button class="btn btn-outline-success">
+                            <span>
+                                <i class="far fa-check-square" style="font-size: 70px"></i>
+                            </span>
+                        </button>
                 </div>
             </div>
         </div>
@@ -62,13 +74,13 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Wollen sie wirklich diesen Schüler löschen?</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Nein</button>
-                    <button type="button" class="btn btn-primary" id="confirmationDelete">Ja</button>
+                    <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Nein</button>
+                    <button type="button" class="btn btn-success btn-block" id="confirmationDelete">Ja</button>
                 </div>
             </div>
         </div>
@@ -193,12 +205,12 @@
                     <form>
                         <div class="form-row">
                             <div class="col form-group">
-                                <label for="editFirstname">Vornamen ändern:</label>
-                                <input type="text" class="form-control" id="editFirstname" placeholder="firstName">
+                                <label for="editFirstName">Vornamen ändern:</label>
+                                <input type="text" class="form-control" id="editFirstName" placeholder="firstName">
                             </div>
                             <div class="col form-group">
                                 <label for="editLastname">Nachnamen ändern:</label>
-                                <input type="text" class="form-control" id="editLastname" placeholder="lastName">
+                                <input type="text" class="form-control" id="editLastName" placeholder="lastName">
                             </div>
                         </div>
                         <div class="form-group">
