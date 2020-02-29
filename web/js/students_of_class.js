@@ -1,4 +1,13 @@
-import {addStudent, deleteStudent, getClass, getStudents, patchStudent, postSportResult, getSportResults, patchSportResult, deleteSportResult} from "./api.js";
+import {
+    addStudent,
+    deleteStudent,
+    getClass,
+    getSportResults,
+    getStudents,
+    patchSportResult,
+    patchStudent,
+    postSportResult
+} from "./api.js";
 
 const modalDeletion = $('#deletionModal').modal({
     keyboard: true,
@@ -28,24 +37,24 @@ $('#sportResultModal').on('hide.bs.modal', function () {
     $("#addSportResultCollapse").collapse('hide');
 });
 
-function createSportResultTable(studentURL,student) {
+function createSportResultTable(studentURL, student) {
     const labelScore = document.getElementById("labelScore");
     labelScore.innerText = "Punkte: " + student.score;
 
     const SportResultsTableBody = document.querySelector("#sportResults-tbody");
     getSportResults(studentURL)
-    .then(sportResults => {
-        sportResults.forEach((sportResult) => {
-            let row = constructSportResultTableRow(sportResult);
-            SportResultsTableBody.appendChild(row);
-        });
-    })
+        .then(sportResults => {
+            sportResults.forEach((sportResult) => {
+                let row = constructSportResultTableRow(sportResult);
+                SportResultsTableBody.appendChild(row);
+            });
+        })
 }
 
 function clearSportResultTable() {
     const SportResultsTableBody = document.querySelector("#sportResults-tbody");
 
-    while(SportResultsTableBody.hasChildNodes()){
+    while (SportResultsTableBody.hasChildNodes()) {
         SportResultsTableBody.removeChild(SportResultsTableBody.firstChild);
     }
 }
@@ -67,12 +76,12 @@ function constructSportResultTableRow(sportResult) {
     editSportResultButton.onclick = () => {
         document.getElementById("sportResultURL").value = sportResultURL;
         document.getElementById("EditOrAdd").value = "edit";
-        if(clickCounter === false) {
+        if (clickCounter === false) {
             loadEditSportResult(sportResult);
             $("#addSportResultCollapse").collapse('show');
             ShowHideSaveButton(true);
             clickCounter = true;
-        } else{
+        } else {
             $("#addSportResultCollapse").collapse('hide');
             ShowHideSaveButton(false);
             clickCounter = false;
@@ -100,11 +109,11 @@ function constructSportResultTableRow(sportResult) {
     return row;
 }
 
-function loadEditSportResult(sportResult){
+function loadEditSportResult(sportResult) {
     const discipline = sportResult.discipline;
     $("div.form-group select").removeAttr('selected')
-        .find('option[value='+ discipline + ']')
-        .attr('selected',true);
+        .find('option[value=' + discipline + ']')
+        .attr('selected', true);
     document.getElementById("sportResult_result").value = sportResult.result;
 }
 
@@ -124,42 +133,42 @@ function editSportResult() {
 }
 
 function changingNamesOfDisciplines(discipline) {
-    if(discipline === "RUN_50")
-        {return "50 Meter Sprint"}
-    else if(discipline === "RUN_75")
-        {return "75 Meter Sprint"}
-    else if(discipline === "RUN_100")
-        {return "100 Meter Sprint"}
-    else if(discipline === "RUN_800")
-        {return "800 Meter Lauf"}
-    else if(discipline === "RUN_2000")
-        {return "2000 Meter Lauf"}
-    else if(discipline === "RUN_3000")
-        {return "3000 Meter Lauf"}
-    else if(discipline === "LONG_JUMP")
-        {return "Weitsprung"}
-    else if(discipline === "HIGH_JUMP")
-        {return "Hochsprung"}
-    else if(discipline === "BALL_THROWING_80")
-        {return "Weitwurf 80 Gramm"}
-    else if(discipline === "BALL_THROWING_200")
-        {return "Weitwurf 200 Gramm"}
-    else if(discipline === "SHOT_PUT")
-        {return "Kugelstoßen"}
-    else if(discipline === "SLING_BALL")
-        {return "Schleuderball"}
-    else
-        {return "Fehler!"}
+    if (discipline === "RUN_50") {
+        return "50 Meter Sprint"
+    } else if (discipline === "RUN_75") {
+        return "75 Meter Sprint"
+    } else if (discipline === "RUN_100") {
+        return "100 Meter Sprint"
+    } else if (discipline === "RUN_800") {
+        return "800 Meter Lauf"
+    } else if (discipline === "RUN_2000") {
+        return "2000 Meter Lauf"
+    } else if (discipline === "RUN_3000") {
+        return "3000 Meter Lauf"
+    } else if (discipline === "LONG_JUMP") {
+        return "Weitsprung"
+    } else if (discipline === "HIGH_JUMP") {
+        return "Hochsprung"
+    } else if (discipline === "BALL_THROWING_80") {
+        return "Weitwurf 80 Gramm"
+    } else if (discipline === "BALL_THROWING_200") {
+        return "Weitwurf 200 Gramm"
+    } else if (discipline === "SHOT_PUT") {
+        return "Kugelstoßen"
+    } else if (discipline === "SLING_BALL") {
+        return "Schleuderball"
+    } else {
+        return "Fehler!"
+    }
 }
 
 function loadEditModal(student) {
     document.getElementById("editFirstName").value = student.firstName;
     document.getElementById("editLastName").value = student.lastName;
     document.getElementById("editBirthday").value = student.birthDay;
-    if(student.female){
+    if (student.female) {
         $("div.form-group select").val("female");
-    }
-    else{
+    } else {
         $("div.form-group select").val("male");
     }
     modalEditStudent.modal('show');
@@ -187,7 +196,7 @@ function constructStudentTableRow(student) {
     row.appendChild(score);
 
     let gender = document.createElement("td");
-    gender.innerText = student.female ?  "Weiblich" : "Männlich";
+    gender.innerText = student.female ? "Weiblich" : "Männlich";
     row.appendChild(gender);
 
     let edit = document.createElement("td");
@@ -222,7 +231,7 @@ function constructStudentTableRow(student) {
     let addSportResultButton = document.createElement("span");
     addSportResultButton.onclick = () => {
         document.getElementById("studentURL").value = studentURL;
-        createSportResultTable(studentURL,student);
+        createSportResultTable(studentURL, student);
         modalSportResult.modal('show');
         return false;
     };
@@ -261,7 +270,7 @@ function addSportResult() {
         })
 }
 
-function addNewStudent() { 
+function addNewStudent() {
     modalAddStudent.modal('hide');
     const errorElement = document.querySelector("#error");
     const firstName = document.getElementById("addFirstName").value;
@@ -302,12 +311,11 @@ function stillFemale() {
     }
 }
 
-function EditOrAdd() {
+function editOrAdd() {
     const editOption = document.getElementById("EditOrAdd");
-    if (editOption.value === "edit"){
+    if (editOption.value === "edit") {
         return true;
-    }
-    else if(editOption.value === "add"){
+    } else if (editOption.value === "add") {
         return false;
     }
 }
@@ -328,74 +336,81 @@ function editStudent() {
         })
 }
 
-function ShowHideSaveButton(promise){
-    promise ? document.getElementById("saveSportResultButton").style.visibility='visible': document.getElementById("saveSportResultButton").style.visibility='hidden';
+function ShowHideSaveButton(promise) {
+    promise ? document.getElementById("saveSportResultButton").style.visibility = 'visible' : document.getElementById("saveSportResultButton").style.visibility = 'hidden';
+}
+
+function updateSchoolClass(schoolClass) {
+    const className = document.getElementById("class-name");
+    className.innerHTML = `${schoolClass.grade}${schoolClass.className}`;
+
+    const classTitle = document.getElementById("title");
+    classTitle.innerHTML = `${schoolClass.grade}${schoolClass.className}`;
+
+    const classBreadCrumb = document.getElementById("breadCrumb");
+    classBreadCrumb.innerHTML = `${schoolClass.grade}${schoolClass.className}`;
+
+    const classTeacher = document.getElementById("class-teacher");
+    classTeacher.innerHTML = schoolClass.classTeacherName ?? '';
+
+    document.getElementById("classURL").value = schoolClass._links.self.href;
+}
+
+function setupStudentTable(students) {
+    const studentsTableBody = document.querySelector("#students-tbody");
+    students.forEach((student) => {
+        let row = constructStudentTableRow(student);
+        studentsTableBody.appendChild(row);
+    });
+}
+
+async function fetchApi() {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const errorElement = document.querySelector("#error");
+    const schoolClassUrl = urlSearchParams.get("schoolClass");
+
+    try {
+        const [schoolClass, students] = await Promise.all([getClass(schoolClassUrl), getStudents(schoolClassUrl)]);
+
+        updateSchoolClass(schoolClass);
+        setupStudentTable(students);
+
+    } catch (e) {
+        errorElement.innerHTML = "This element probably does not exists or is not accessible";
+        $(errorElement).slideDown().delay(3000).slideUp();
+    }
+
 }
 
 $(window).on("load", function () {
-    const studentsTableBody = document.querySelector("#students-tbody");
-    const errorElement = document.querySelector("#error");
-    const classInformation = document.querySelector("#class-information");
     const SportResultSaveButton = document.getElementById("saveSportResultButton");
-        SportResultSaveButton.style.visibility="hidden";
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const schoolClass = urlSearchParams.get("schoolClass");
+    SportResultSaveButton.style.visibility = "hidden";
     const post = document.getElementById('saveSportResultButton');
-        post.addEventListener('click', function () {
-        const EditOrAddSportResult = EditOrAdd();
-            if(EditOrAddSportResult){
-                editSportResult();
-                }
-            else{
-                addSportResult();
-             }
-                }, true);
+    post.addEventListener('click', function () {
+        const editOrAddSportResult = editOrAdd();
+        if (editOrAddSportResult) {
+            editSportResult();
+        } else {
+            addSportResult();
+        }
+    }, true);
     const remove = document.getElementById('confirmationDelete');
-        remove.addEventListener('click', deleteStudentRequest, true);
+    remove.addEventListener('click', deleteStudentRequest, true);
     const addSportResultButton = document.getElementById("addSportResultButton");
-        addSportResultButton.addEventListener('click', function () {
-            if (document.getElementById("saveSportResultButton").style.visibility === 'hidden'){
-                ShowHideSaveButton(true);
-            }
-            else{
-                ShowHideSaveButton(false);
-            }
-                 }, true);
+    addSportResultButton.addEventListener('click', function () {
+        if (document.getElementById("saveSportResultButton").style.visibility === 'hidden') {
+            ShowHideSaveButton(true);
+        } else {
+            ShowHideSaveButton(false);
+        }
+    }, true);
     const edit = document.getElementById("confirmationEdit");
-        edit.addEventListener('click',editStudent,true);
+    edit.addEventListener('click', editStudent, true);
     const addStudent = document.getElementById('confirmationAdd');
-        addStudent.addEventListener('click', addNewStudent, true);
+    addStudent.addEventListener('click', addNewStudent, true);
 
-    getClass(schoolClass)
-        .catch(() => {
-            errorElement.innerHTML = "This element probably does not exists or is not accessible";
-            $(errorElement).slideDown().delay(3000).slideUp();
-        })
-        .then(value => {
-            const className = classInformation.querySelector("#class-name");
-            className.innerHTML = `${value.grade}${value.className}`;
-
-            const classTitle = document.getElementById("title");
-            classTitle.innerHTML = `${value.grade}${value.className}`;
-
-            const classBreadCrumb = document.getElementById("breadCrumb");
-            classBreadCrumb.innerHTML =  `${value.grade}${value.className}`;
-
-            const classTeacher = classInformation.querySelector("#class-teacher");
-            classTeacher.innerHTML = value.classTeacherName === undefined ? '' : value.classTeacherName;
-
-            const classURL = value._links.self.href;
-            document.getElementById("classURL").value = classURL;
-        })
-        .then(() => {
-            getStudents(schoolClass)
-                .then(students => {
-                    students.forEach((student) => {
-                        let row = constructStudentTableRow(student);
-                        studentsTableBody.appendChild(row);
-                    });
-                })
-        })
+    fetchApi();
 });
+
 
 
