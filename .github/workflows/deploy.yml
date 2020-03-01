@@ -1,0 +1,16 @@
+name: Deploy
+
+on: 
+  push: 
+    branches: master
+jobs:
+   deploy-balena:
+    name: Trigger Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch
+        uses: peter-evans/repository-dispatch@v1.0.0
+        with:
+          token: ${{ secrets.PAT }}
+          repository: bjs-org/bjs-org
+          event-type: docker-deploy
