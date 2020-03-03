@@ -36,7 +36,12 @@
                     </div>
                 </div>
                 <!--- Noch nicht final --->
-                <div>
+                    <div>
+                        <button class="btn btn-outline-primary">
+                            <span id="addSportResults" data-toggle="modal" data-target="#addSportResultsModal">
+                                <i class="fas fa-sort-amount-up-alt" style="font-size: 70px"></i>
+                            </span>
+                        </button>
                         <button class="btn btn-outline-dark">
                             <span id="addStudentButton" data-toggle="modal" data-target="#addStudentModal">
                                 <i class="far fa-plus-square" style="font-size: 70px"></i>
@@ -51,7 +56,8 @@
                 </div>
             </div>
         </div>
-        <table class="table table-hover table-responsive" id="students-table">
+        <div class="table-responsive">
+        <table class="table table-hover" id="students-table">
             <thead>
                 <tr>
                     <th scope="col">Vorname</th>
@@ -67,6 +73,7 @@
             <tbody id="students-tbody">
             </tbody>
         </table>
+        </div>
     </div>
 
     <div class="modal" tabindex="-1" role="dialog" id="deletionModal">
@@ -187,6 +194,59 @@
                         data-target="#addSportResultCollapse" id="addSportResultButton" style="align-content: center">Füge ein Ergebnis hinzu
                     </button>
                     <button type="button" class="btn btn-primary" id="saveSportResultButton">Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addSportResultsModal" tabindex="-1" role="dialog" aria-labelledby="SportResultsModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sportResultsModalLabel">Füge ein Ergebnis hinzu</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeSportResults"
+                            data-toggle="collapse" data-target="#addSportResultCollapse">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                            <form>
+                                <div class="form-group">
+                                    <label for="discipline">Wähle eine Disziplin aus</label>
+                                    <select class="custom-select" id="discipline">
+                                        <option value="RUN_50">50 Meter Sprint</option>
+                                        <option value="RUN_75">75 Meter Sprint</option>
+                                        <option value="RUN_100">100 Meter Sprint</option>
+                                        <option value="RUN_800">800 Meter Lauf</option>
+                                        <option value="RUN_2000">2000 Meter Lauf</option>
+                                        <option value="RUN_3000">3000 Meter Lauf</option>
+                                        <option value="HIGH_JUMP">Hochsprung</option>
+                                        <option value="LONG_JUMP">Weitsprung</option>
+                                        <option value="SHOT_PUT">Kugelstoßen</option>
+                                        <option value="SLING_BALL">Schleuderball</option>
+                                        <option value="BALL_THROWING_80">Weitwurf 80 Gramm</option>
+                                        <option value="BALL_THROWING_200">Weitwurf 200 Gramm</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                    <div id="studentSportResultTable" class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Schüler</th>
+                                <th>Ergebnis</th>
+                                <th class="isNotRun">Ergebnis 2</th>
+                                <th class="isNotRun">Ergebnis 3</th>
+                            </tr>
+                            </thead>
+                            <tbody id="studentSportResult-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                    <button type="button" class="btn btn-primary" id="saveSportResultsButton">Speichern</button>
                 </div>
             </div>
         </div>

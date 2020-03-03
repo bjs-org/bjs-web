@@ -29,12 +29,36 @@ const modalEditStudent = $('#editStudentModal').modal({
     show: false
 });
 
+const modalSportResults = $('#addSportResultsModal').modal({
+    keyboard: true,
+    show: false
+});
+
 let clickCounter = false;
 
+$('#addSportResultsModal').on('show.bs.modal',  function () {
+    const studentSportResultsTableBody = document.querySelector("#studentSportResult-tbody");
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const schoolClassUrl = urlSearchParams.get("schoolClass");
+    getStudents(schoolClassUrl)
+        .then(students => {
+            students.forEach((student) => {
+                let row = constructStudentSportResultTableRow(student);
+                studentSportResultsTableBody.appendChild(row);
+            })
+        });
+});
+
 $('#sportResultModal').on('hide.bs.modal', function () {
+    clickCounter = false;
     ShowHideSaveButton(false);
     clearSportResultTable();
     $("#addSportResultCollapse").collapse('hide');
+});
+
+$('#addSportResultsModal').on('hide.bs.modal',function  (){
+    clearStudentSportResultTable();
+    showTableColumns("isNotRun");
 });
 
 function createSportResultTable(studentURL, student) {
@@ -51,12 +75,47 @@ function createSportResultTable(studentURL, student) {
         })
 }
 
+function clearStudentSportResultTable(){
+    const studentSportResultsTableBody = document.querySelector("#studentSportResult-tbody");
+
+    while (studentSportResultsTableBody.hasChildNodes()) {
+        studentSportResultsTableBody.removeChild(studentSportResultsTableBody.firstChild);
+    }
+}
+
 function clearSportResultTable() {
     const SportResultsTableBody = document.querySelector("#sportResults-tbody");
 
     while (SportResultsTableBody.hasChildNodes()) {
         SportResultsTableBody.removeChild(SportResultsTableBody.firstChild);
     }
+}
+
+function constructStudentSportResultTableRow(student){
+    let row = document.createElement("tr");
+
+    let studentName = document.createElement("td");
+    studentName.innerText = student.firstName+ "\n"+ student.lastName;
+    row.appendChild(studentName);
+
+    let sportResult = document.createElement("td");
+    let inputSportResult = document.createElement("input");
+    sportResult.appendChild(inputSportResult);
+    row.appendChild(sportResult);
+
+    let sportResult2 = document.createElement("td");
+    let inputSportResult2 = document.createElement("input");
+    sportResult2.className = "isNotRun";
+    sportResult2.appendChild(inputSportResult2);
+    row.appendChild(sportResult2);
+
+    let sportResult3 = document.createElement("td");
+    let inputSportResult3 = document.createElement("input");
+    sportResult3.className = "isNotRun";
+    sportResult3.appendChild(inputSportResult3);
+    row.appendChild(sportResult3);
+
+    return row;
 }
 
 function constructSportResultTableRow(sportResult) {
@@ -356,6 +415,20 @@ function updateSchoolClass(schoolClass) {
     document.getElementById("classURL").value = schoolClass._links.self.href;
 }
 
+function hideTableColumns(className){
+    const elements = document.getElementsByClassName(className);
+    Array.from(elements).forEach((element) => {
+        element.style.display = "none";
+    });
+}
+
+function showTableColumns(className) {
+    const elements = document.getElementsByClassName(className);
+    Array.from(elements).forEach((element) =>{
+        element.style.display = "";
+    })
+}
+
 function setupStudentTable(students) {
     const studentsTableBody = document.querySelector("#students-tbody");
     students.forEach((student) => {
@@ -383,6 +456,11 @@ async function fetchApi() {
 }
 
 $(window).on("load", function () {
+
+    const saveSportResultsButton = document.getElementById("saveSportResultsButton");
+    saveSportResultsButton.addEventListener('click', function () {
+            hideTableColumns("isNotRun");
+    });
     const SportResultSaveButton = document.getElementById("saveSportResultButton");
     SportResultSaveButton.style.visibility = "hidden";
     const post = document.getElementById('saveSportResultButton');
