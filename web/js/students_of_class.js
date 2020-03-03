@@ -36,6 +36,18 @@ const modalSportResults = $('#addSportResultsModal').modal({
 
 let clickCounter = false;
 
+$("#disciplines").on('change', function () {
+    const selected = $(this).val();
+     const select = document.getElementById("disciplines");
+     console.log(selected);
+     if(selected.substring(0,3) === "RUN"){
+         hideTableColumns("isNotRun");
+     }
+     else {
+         showTableColumns("isNotRun");
+     }
+});
+
 $('#addSportResultsModal').on('show.bs.modal',  function () {
     const studentSportResultsTableBody = document.querySelector("#studentSportResult-tbody");
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -183,7 +195,6 @@ function editSportResult() {
     const result = document.getElementById("sportResult_result").value;
     const discipline = document.getElementById("discipline").value;
     const sportResult = {result: result, discipline: discipline};
-    console.log(sportResultURL);
     patchSportResult(sportResultURL, sportResult)
         .catch(() => {
             errorElement.innerHTML = "The post request was not successful.";
