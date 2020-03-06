@@ -351,7 +351,7 @@ function updateSchoolClass(schoolClass) {
     classBreadCrumb.innerHTML = `${schoolClass.grade}${schoolClass.className}`;
 
     const classTeacher = document.getElementById("class-teacher");
-    classTeacher.innerHTML = schoolClass.classTeacherName ?? '';
+    classTeacher.innerHTML = schoolClass.classTeacherName || '';
 
     document.getElementById("classURL").value = schoolClass._links.self.href;
 }
