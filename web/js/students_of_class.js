@@ -9,6 +9,8 @@ import {
     postSportResult
 } from "./api.js";
 
+let clickCounter = false;
+
 const modalDeletion = $('#deletionModal').modal({
     keyboard: true,
     show: false
@@ -34,12 +36,8 @@ const modalSportResults = $('#addSportResultsModal').modal({
     show: false
 });
 
-let clickCounter = false;
-
 $("#disciplines").on('change', function () {
     const selected = $(this).val();
-     const select = document.getElementById("disciplines");
-     console.log(selected);
      if(selected.substring(0,3) === "RUN"){
          hideTableColumns("isNotRun");
      }
@@ -67,6 +65,12 @@ $('#sportResultModal').on('hide.bs.modal', function () {
     clearSportResultTable();
     $("#addSportResultCollapse").collapse('hide');
 });
+
+$('#sportResultModal').on('show.bs.modal', function () {
+    const SportResultSaveButton = document.getElementById("saveSportResultButton");
+    SportResultSaveButton.style.visibility = "hidden";
+    clickCounter = false;
+})
 
 $('#addSportResultsModal').on('hide.bs.modal',function  (){
     clearStudentSportResultTable();
@@ -112,20 +116,31 @@ function constructStudentSportResultTableRow(student){
 
     let sportResult = document.createElement("td");
     let inputSportResult = document.createElement("input");
+        inputSportResult.className = "value";
     sportResult.appendChild(inputSportResult);
     row.appendChild(sportResult);
 
     let sportResult2 = document.createElement("td");
     let inputSportResult2 = document.createElement("input");
+        inputSportResult2.className = "value";
     sportResult2.className = "isNotRun";
     sportResult2.appendChild(inputSportResult2);
     row.appendChild(sportResult2);
 
     let sportResult3 = document.createElement("td");
     let inputSportResult3 = document.createElement("input");
+        inputSportResult3.className = "value";
     sportResult3.className = "isNotRun";
     sportResult3.appendChild(inputSportResult3);
     row.appendChild(sportResult3);
+
+    let studentURL = document.createElement("td");
+    let studentURLInput = document.createElement("input");
+    studentURLInput.innerText = student._links.self.href;
+    studentURLInput.className = "student";
+    studentURL.appendChild(studentURLInput);
+    studentURL.style.display = "none";
+    row.appendChild(studentURL);
 
     return row;
 }
@@ -260,10 +275,6 @@ function constructStudentTableRow(student) {
     let birthday = document.createElement("td");
     birthday.innerText = new Date(student.birthDay).toLocaleDateString();
     row.appendChild(birthday);
-
-    let score = document.createElement("td");
-    score.innerText = student.score;
-    row.appendChild(score);
 
     let gender = document.createElement("td");
     gender.innerText = student.female ? "Weiblich" : "Männlich";
@@ -426,6 +437,37 @@ function updateSchoolClass(schoolClass) {
     document.getElementById("classURL").value = schoolClass._links.self.href;
 }
 
+function addSportResults(){
+    const table = document.getElementsByClassName("value");
+    const students = document.getElementsByClassName("student");
+    const errorElement = document.querySelector("#error");
+    let start = 0;
+    let end = 3;
+    Array.from(students).forEach((student) => {
+        const result = SortArray(Array.from(table).slice(start, end));
+        start = start + 3;
+        end = end + 3;
+        if (result !== "") {
+        const discipline = document.getElementById("disciplines").value;
+        const sportResult = {result: result, discipline: discipline, student: student.innerText};
+        postSportResult(sportResult)
+            .catch(() => {
+                errorElement.innerHTML = "The post request was not successful.";
+                $(errorElement).slideDown().delay(3000).slideUp();
+            })
+        }
+    });
+}
+
+function SortArray(array){
+    const value = new Array(3);
+    value[0] = array[0].value;
+    value[1] = array[1].value;
+    value[2] = array[2].value;
+    const final = value.sort();
+    return final[2];
+}
+
 function hideTableColumns(className){
     const elements = document.getElementsByClassName(className);
     Array.from(elements).forEach((element) => {
@@ -470,10 +512,9 @@ $(window).on("load", function () {
 
     const saveSportResultsButton = document.getElementById("saveSportResultsButton");
     saveSportResultsButton.addEventListener('click', function () {
-            hideTableColumns("isNotRun");
+            addSportResults();
+         //   hideTableColumns("isNotRun");
     });
-    const SportResultSaveButton = document.getElementById("saveSportResultButton");
-    SportResultSaveButton.style.visibility = "hidden";
     const post = document.getElementById('saveSportResultButton');
     post.addEventListener('click', function () {
         const editOrAddSportResult = editOrAdd();
