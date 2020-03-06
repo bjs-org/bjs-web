@@ -8,6 +8,18 @@ async function determineApiUrl() {
     return relative_url;
 }
 
+export async function postUser(user) {
+     const response = await fetch(`${await api_url}/users`, {
+        credentials: "include",
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+    });
+    console.log(response);
+}
+
 export async function getClasses() {
     const response = await fetch(`${await api_url}/classes`, {
         credentials: "include"
