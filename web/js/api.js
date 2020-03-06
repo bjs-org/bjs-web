@@ -181,6 +181,7 @@ export async function patchStudent(student, data) {
         .then((response) => response.json())
         .then((data) => {
             console.log('Success', data);
+            location.reload();
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -217,6 +218,7 @@ export async function patchSportResult(sportResult, data) {
         .then((response) => response.json())
         .then((data) => {
             console.log('Success', data);
+            location.reload();
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -235,6 +237,7 @@ export async function addStudent(student_data) {
         .then((response) => response.json())
         .then((data) => {
             console.log('Success', data);
+            location.reload();
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -266,6 +269,7 @@ export async function deleteStudent(student) {
     })
         .then((data) => {
             console.log('Success', data);
+            location.reload();
         })
         .catch((error) => {
             console.error('Error', error);
@@ -279,6 +283,7 @@ export async function deleteUser(user) {
     })
         .then((data) => {
             console.log('Success', data);
+            location.reload();
         })
         .catch((error) => {
             console.error('Error', error);
