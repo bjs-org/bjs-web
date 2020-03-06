@@ -6,7 +6,8 @@ import {
     getStudents,
     patchSportResult,
     patchStudent,
-    postSportResult
+    postSportResult,
+    deleteSportResult
 } from "./api.js";
 
 let clickCounter = false;
@@ -173,7 +174,7 @@ function constructSportResultTableRow(sportResult) {
             clickCounter = false;
         }
     };
-    editSportResultButton.title = "Edit this Sportresult.";
+    editSportResultButton.title = "Edit this sportresult.";
     let iconASR = document.createElement("i");
     iconASR.className = "fas fa-edit";
     editSportResultButton.appendChild(iconASR);
@@ -183,9 +184,10 @@ function constructSportResultTableRow(sportResult) {
     let removeSportResult = document.createElement("td");
     let removeSportResultButton = document.createElement("span");
     removeSportResultButton.onclick = () => {
-
+        document.getElementById("sportResultURL").value = sportResultURL;
+        removeResult();
     };
-    removeSportResultButton.title = "Remove this Sportresult.";
+    removeSportResultButton.title = "Remove this sportresult.";
     let iconRemove = document.createElement("i");
     iconRemove.className = "fas fa-trash-alt";
     removeSportResultButton.appendChild(iconRemove);
@@ -330,6 +332,7 @@ function deleteStudentRequest() {
     modalDeletion.modal('hide');
     const errorElement = document.querySelector("#error");
     const student = document.getElementById("studentURL").value;
+    console.log(student);
     deleteStudent(student)
         .catch(() => {
             errorElement.innerHTML = "The delete request was not successful.";
@@ -348,7 +351,7 @@ function addSportResult() {
         .catch(() => {
             errorElement.innerHTML = "The post request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
-        })
+        });
 }
 
 function addNewStudent() {
@@ -415,6 +418,7 @@ function editStudent() {
             errorElement.innerHTML = "The patch request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         })
+    location.reload();
 }
 
 function ShowHideSaveButton(promise) {
@@ -457,6 +461,16 @@ function addSportResults(){
             })
         }
     });
+}
+
+function removeResult() {
+    const errorElement = document.querySelector("#error");
+    const sportResult = document.getElementById("sportResultURL").value;
+    deleteSportResult(sportResult)
+        .catch(() =>{
+            errorElement.innerHTML = "The delete request was not successful.";
+            $(errorElement).slideDown().delay(3000).slideUp();
+        })
 }
 
 function SortArray(array){
@@ -513,7 +527,6 @@ $(window).on("load", function () {
     const saveSportResultsButton = document.getElementById("saveSportResultsButton");
     saveSportResultsButton.addEventListener('click', function () {
             addSportResults();
-         //   hideTableColumns("isNotRun");
     });
     const post = document.getElementById('saveSportResultButton');
     post.addEventListener('click', function () {
@@ -526,6 +539,7 @@ $(window).on("load", function () {
     }, true);
     const remove = document.getElementById('confirmationDelete');
     remove.addEventListener('click', deleteStudentRequest, true);
+
     const addSportResultButton = document.getElementById("addSportResultButton");
     addSportResultButton.addEventListener('click', function () {
         if (document.getElementById("saveSportResultButton").style.visibility === 'hidden') {
@@ -538,7 +552,10 @@ $(window).on("load", function () {
     edit.addEventListener('click', editStudent, true);
     const addStudent = document.getElementById('confirmationAdd');
     addStudent.addEventListener('click', addNewStudent, true);
+    const finish = document.getElementById("confirmationFinish");
+    finish.addEventListener('click', function () {
 
+    });
     fetchApi();
 });
 
