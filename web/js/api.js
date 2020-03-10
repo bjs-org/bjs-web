@@ -25,47 +25,38 @@ export async function getClasses() {
 }
 
 export async function getClass(schoolClass) {
-    return fetch(schoolClass, {
+    const response = await fetch(schoolClass, {
         credentials: "include"
-    })
-        .then(response => response.json());
+    });
+    return await response.json();
 }
 
 export async function getSportResults(student) {
-    return fetch(`${student}/sportResults`, {
+    const response = await fetch(`${student}/sportResults`, {
         credentials: "include"
-    })
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            return data._embedded.sport_results;
-        })
+    });
+    const json = await response.json();
+    return json._embedded.sport_results;
 }
 
 export async function getStudents(schoolClass) {
-    return fetch(`${schoolClass}/students?projection=calculation`, {
+    const response = await fetch(`${schoolClass}/students?projection=calculation`, {
         credentials: "include"
-    })
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            return data._embedded.students;
-        })
-        .then(data => {
-            return data.sort((a, b) => {
+    });
+    const json = await response.json();
+    const students = json._embedded.students;
+            students.sort((a, b) => {
                 const compareLastName = a.lastName.localeCompare(b.lastName);
                 if (compareLastName === 0) {
                     return a.firstName.localeCompare(b.firstName);
                 }
                 return compareLastName;
-            })
-        })
+            });
+    return students;
 }
 
 export async function patchStudent(student, data) {
-    fetch(`${student}`, {
+    await fetch(`${student}`, {
         credentials: "include",
         method: 'PATCH',
         headers: {
@@ -76,7 +67,6 @@ export async function patchStudent(student, data) {
         .then((response) => response.json())
         .then((data) => {
             console.log('Success', data);
-            location.reload();
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -84,7 +74,7 @@ export async function patchStudent(student, data) {
 }
 
 export async function patchSportResult(sportResult, data) {
-    fetch(`${sportResult}`, {
+     await fetch(`${sportResult}`, {
         credentials: "include",
         method: 'PATCH',
         headers: {
@@ -95,7 +85,6 @@ export async function patchSportResult(sportResult, data) {
         .then((response) => response.json())
         .then((data) => {
             console.log('Success', data);
-            location.reload();
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -103,7 +92,7 @@ export async function patchSportResult(sportResult, data) {
 }
 
 export async function addStudent(student_data) {
-    fetch(`${await api_url}/students`, {
+    await fetch(`${await api_url}/students`, {
         credentials: "include",
         method: 'POST',
         headers: {
@@ -114,7 +103,6 @@ export async function addStudent(student_data) {
         .then((response) => response.json())
         .then((data) => {
             console.log('Success', data);
-            location.reload();
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -122,7 +110,7 @@ export async function addStudent(student_data) {
 }
 
 export async function postSportResult(sportresult) {
-    fetch(`${await api_url}/sport_results`, {
+    await fetch(`${await api_url}/sport_results`, {
         credentials: "include",
         method: 'POST',
         headers: {
@@ -133,7 +121,6 @@ export async function postSportResult(sportresult) {
         .then((response) => response.json())
         .then((data) => {
             console.log('Success', data);
-            location.reload();
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -141,13 +128,12 @@ export async function postSportResult(sportresult) {
 }
 
 export async function deleteStudent(student) {
-    return fetch(`${student}`, {
+    await fetch(`${student}`, {
         credentials: "include",
         method: 'DELETE',
     })
         .then((data) => {
             console.log('Success', data);
-            location.reload();
         })
         .catch((error) => {
             console.error('Error', error);
@@ -155,13 +141,12 @@ export async function deleteStudent(student) {
 }
 
 export async function deleteSportResult(sportResult) {
-    return fetch(`${sportResult}`, {
+    await fetch(`${sportResult}`, {
         credentials: "include",
         method: 'DELETE',
     })
         .then((data) => {
             console.log('Success', data);
-            location.reload();
         })
         .catch((error) => {
             console.error('Error', error);
@@ -169,14 +154,9 @@ export async function deleteSportResult(sportResult) {
 }
 
 export async function getTopStudents(grade) {
-    return fetch(`${await api_url}/students/best/${grade}`, {
+    const response = await fetch(`${await api_url}/students/best/${grade}`, {
         credentials: "include",
         method: 'GET',
     })
-        .then((data) => {
-            console.log('Success', data);
-        })
-        .catch((error) => {
-            console.error('Error', error);
-        })
+    return await response.json();
 }

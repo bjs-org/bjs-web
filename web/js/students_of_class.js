@@ -1,13 +1,13 @@
 import {
     addStudent,
+    deleteSportResult,
     deleteStudent,
     getClass,
     getSportResults,
     getStudents,
     patchSportResult,
     patchStudent,
-    postSportResult,
-    deleteSportResult
+    postSportResult
 } from "./api.js";
 
 let clickCounter = false;
@@ -39,15 +39,14 @@ const modalSportResults = $('#addSportResultsModal').modal({
 
 $("#disciplines").on('change', function () {
     const selected = $(this).val();
-     if(selected.substring(0,3) === "RUN"){
-         hideTableColumns("isNotRun");
-     }
-     else {
-         showTableColumns("isNotRun");
-     }
+    if (selected.substring(0, 3) === "RUN") {
+        hideTableColumns("isNotRun");
+    } else {
+        showTableColumns("isNotRun");
+    }
 });
 
-$('#addSportResultsModal').on('show.bs.modal',  function () {
+$('#addSportResultsModal').on('show.bs.modal', function () {
     const studentSportResultsTableBody = document.querySelector("#studentSportResult-tbody");
     const urlSearchParams = new URLSearchParams(window.location.search);
     const schoolClassUrl = urlSearchParams.get("schoolClass");
@@ -62,18 +61,16 @@ $('#addSportResultsModal').on('show.bs.modal',  function () {
 
 $('#sportResultModal').on('hide.bs.modal', function () {
     clickCounter = false;
-    ShowHideSaveButton(false);
     clearSportResultTable();
     $("#addSportResultCollapse").collapse('hide');
 });
 
 $('#sportResultModal').on('show.bs.modal', function () {
-    const SportResultSaveButton = document.getElementById("saveSportResultButton");
-    SportResultSaveButton.style.visibility = "hidden";
+    document.getElementById("saveSportResultButton").hidden = true;
     clickCounter = false;
-})
+});
 
-$('#addSportResultsModal').on('hide.bs.modal',function  (){
+$('#addSportResultsModal').on('hide.bs.modal', function () {
     clearStudentSportResultTable();
     showTableColumns("isNotRun");
 });
@@ -92,7 +89,7 @@ function createSportResultTable(studentURL, student) {
         })
 }
 
-function clearStudentSportResultTable(){
+function clearStudentSportResultTable() {
     const studentSportResultsTableBody = document.querySelector("#studentSportResult-tbody");
 
     while (studentSportResultsTableBody.hasChildNodes()) {
@@ -108,29 +105,29 @@ function clearSportResultTable() {
     }
 }
 
-function constructStudentSportResultTableRow(student){
+function constructStudentSportResultTableRow(student) {
     let row = document.createElement("tr");
 
     let studentName = document.createElement("td");
-    studentName.innerText = student.firstName+ "\n"+ student.lastName;
+    studentName.innerText = student.firstName + "\n" + student.lastName;
     row.appendChild(studentName);
 
     let sportResult = document.createElement("td");
     let inputSportResult = document.createElement("input");
-        inputSportResult.className = "value";
+    inputSportResult.className = "value";
     sportResult.appendChild(inputSportResult);
     row.appendChild(sportResult);
 
     let sportResult2 = document.createElement("td");
     let inputSportResult2 = document.createElement("input");
-        inputSportResult2.className = "value";
+    inputSportResult2.className = "value";
     sportResult2.className = "isNotRun";
     sportResult2.appendChild(inputSportResult2);
     row.appendChild(sportResult2);
 
     let sportResult3 = document.createElement("td");
     let inputSportResult3 = document.createElement("input");
-        inputSportResult3.className = "value";
+    inputSportResult3.className = "value";
     sportResult3.className = "isNotRun";
     sportResult3.appendChild(inputSportResult3);
     row.appendChild(sportResult3);
@@ -163,14 +160,15 @@ function constructSportResultTableRow(sportResult) {
     editSportResultButton.onclick = () => {
         document.getElementById("sportResultURL").value = sportResultURL;
         document.getElementById("EditOrAdd").value = "edit";
+        const sportResultButton = document.getElementById("saveSportResultButton");
         if (clickCounter === false) {
             loadEditSportResult(sportResult);
             $("#addSportResultCollapse").collapse('show');
-            ShowHideSaveButton(true);
+            sportResultButton.hidden = !sportResultButton.hidden;
             clickCounter = true;
         } else {
             $("#addSportResultCollapse").collapse('hide');
-            ShowHideSaveButton(false);
+            sportResultButton.hidden = !sportResultButton.hidden;
             clickCounter = false;
         }
     };
@@ -202,7 +200,7 @@ function loadEditSportResult(sportResult) {
     $("div.form-group select").removeAttr('selected')
         .find('option[value=' + discipline + ']')
         .attr('selected', true);
-    document.getElementById("sportResult_result").value = sportResult.result;
+    document.querySelector("#sportResult_result").value = sportResult.result;
 }
 
 function editSportResult() {
@@ -250,14 +248,11 @@ function changingNamesOfDisciplines(discipline) {
 }
 
 function loadEditModal(student) {
-    document.getElementById("editFirstName").value = student.firstName;
-    document.getElementById("editLastName").value = student.lastName;
-    document.getElementById("editBirthday").value = student.birthDay;
-    if (student.female) {
-        $("div.form-group select").val("female");
-    } else {
-        $("div.form-group select").val("male");
-    }
+    const editModal = document.querySelector("#editStudentModal");
+    editModal.querySelector("#editFirstName").value = student.firstName;
+    document.querySelector("#editLastName").value = student.lastName;
+    document.querySelector("#editBirthday").value = student.birthDay;
+    editModal.querySelector("#editFemale").value = student.female ? "female" : "male";
     modalEditStudent.modal('show');
 }
 
@@ -285,7 +280,7 @@ function constructStudentTableRow(student) {
     let edit = document.createElement("td");
     let buttonEdit = document.createElement("span");
     buttonEdit.onclick = () => {
-        document.getElementById("studentURL").value = studentURL;
+        document.querySelector('#editStudentForm > input[name="studentURL"]').value = studentURL;
         loadEditModal(student);
     };
     buttonEdit.title = "Edit this student";
@@ -298,7 +293,7 @@ function constructStudentTableRow(student) {
     let remove = document.createElement("td");
     let buttonRemove = document.createElement("span");
     buttonRemove.onclick = () => {
-        document.getElementById("studentURL").value = studentURL;
+        document.querySelector("#studentURL").value = studentURL;
         modalDeletion.modal('show');
         return false;
     };
@@ -313,7 +308,7 @@ function constructStudentTableRow(student) {
     let addSportResult = document.createElement("td");
     let addSportResultButton = document.createElement("span");
     addSportResultButton.onclick = () => {
-        document.getElementById("studentURL").value = studentURL;
+        document.querySelector("#studentURL").value = studentURL;
         createSportResultTable(studentURL, student);
         modalSportResult.modal('show');
         return false;
@@ -328,16 +323,17 @@ function constructStudentTableRow(student) {
     return row;
 }
 
-function deleteStudentRequest() {
+async function deleteStudentRequest() {
     modalDeletion.modal('hide');
     const errorElement = document.querySelector("#error");
-    const student = document.getElementById("studentURL").value;
+    const student = document.querySelector("#studentURL").value;
     console.log(student);
-    deleteStudent(student)
+    await deleteStudent(student)
         .catch(() => {
             errorElement.innerHTML = "The delete request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
-        })
+        });
+    await fetchApi();
 }
 
 function addSportResult() {
@@ -354,49 +350,26 @@ function addSportResult() {
         });
 }
 
-function addNewStudent() {
+async function addNewStudent(formData) {
+    const errorElement = document.querySelector("#error").value;
     modalAddStudent.modal('hide');
-    const errorElement = document.querySelector("#error");
-    const firstName = document.getElementById("addFirstName").value;
-    const lastName = document.getElementById("addLastName").value;
-    const birthDay = document.getElementById("addBirthday").value;
-    const female = isFemale();
-    const schoolClass = document.getElementById("classURL").value;
-
-    const newStudent = {
-        firstName: firstName,
-        lastName: lastName,
-        birthDay: birthDay,
-        female: female,
-        schoolClass: schoolClass
+    const data = {
+        firstName: formData.get("firstName"),
+        lastName: formData.get("lastName"),
+        birthDay: formData.get("birthDay"),
+        female: formData.get("female") === "female",
+        schoolClass: formData.get("schoolClass")
     };
-    addStudent(newStudent)
+    await addStudent(data)
         .catch(() => {
             errorElement.innerHTML = "The post request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
-        })
-}
-
-function isFemale() {
-    const femaleOption = document.getElementById("addFemale");
-    if (femaleOption.value === "female") {
-        return true;
-    } else if (femaleOption.value === "male") {
-        return false;
-    }
-}
-
-function stillFemale() {
-    const femaleOption = document.getElementById("editFemale");
-    if (femaleOption.value === "female") {
-        return true;
-    } else if (femaleOption.value === "male") {
-        return false;
-    }
+        });
+    await fetchApi();
 }
 
 function editOrAdd() {
-    const editOption = document.getElementById("EditOrAdd");
+    const editOption = document.querySelector("#EditOrAdd");
     if (editOption.value === "edit") {
         return true;
     } else if (editOption.value === "add") {
@@ -404,44 +377,42 @@ function editOrAdd() {
     }
 }
 
-function editStudent() {
-    modalEditStudent.modal('hide');
+async function editStudent(formData) {
     const errorElement = document.querySelector("#error").value;
-    const editFirstName = document.getElementById("editFirstName").value;
-    const editLastName = document.getElementById("editLastName").value;
-    const editBirthday = document.getElementById("editBirthday").value;
-    const editFemale = stillFemale();
-    const edits = {firstName: editFirstName, lastName: editLastName, birthDay: editBirthday, female: editFemale};
-    const studentURL = document.getElementById("studentURL").value;
-    patchStudent(studentURL, edits)
+    modalEditStudent.modal('hide');
+    console.log(formData);
+    const data = {
+        firstName: formData.get("editFirstName"),
+        lastName: formData.get("editLastName"),
+        birthDay: formData.get("editBirthDay"),
+        female: formData.get("editFemale") === "female"
+    };
+    const studentURL = formData.get("studentURL");
+    await patchStudent(studentURL, data)
         .catch(() => {
             errorElement.innerHTML = "The patch request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
-        })
-    location.reload();
-}
-
-function ShowHideSaveButton(promise) {
-    promise ? document.getElementById("saveSportResultButton").style.visibility = 'visible' : document.getElementById("saveSportResultButton").style.visibility = 'hidden';
+        });
+    await fetchApi();
 }
 
 function updateSchoolClass(schoolClass) {
-    const className = document.getElementById("class-name");
+    const className = document.querySelector("#class-name");
     className.innerHTML = `${schoolClass.grade}${schoolClass.className}`;
 
-    const classTitle = document.getElementById("title");
+    const classTitle = document.querySelector("#title");
     classTitle.innerHTML = `${schoolClass.grade}${schoolClass.className}`;
 
-    const classBreadCrumb = document.getElementById("breadCrumb");
+    const classBreadCrumb = document.querySelector("#breadCrumb");
     classBreadCrumb.innerHTML = `${schoolClass.grade}${schoolClass.className}`;
 
-    const classTeacher = document.getElementById("class-teacher");
+    const classTeacher = document.querySelector("#class-teacher");
     classTeacher.innerHTML = schoolClass.classTeacherName || '';
 
     document.getElementById("classURL").value = schoolClass._links.self.href;
 }
 
-function addSportResults(){
+function addSportResults() {
     const table = document.getElementsByClassName("value");
     const students = document.getElementsByClassName("student");
     const errorElement = document.querySelector("#error");
@@ -452,28 +423,28 @@ function addSportResults(){
         start = start + 3;
         end = end + 3;
         if (result !== "") {
-        const discipline = document.getElementById("disciplines").value;
-        const sportResult = {result: result, discipline: discipline, student: student.innerText};
-        postSportResult(sportResult)
-            .catch(() => {
-                errorElement.innerHTML = "The post request was not successful.";
-                $(errorElement).slideDown().delay(3000).slideUp();
-            })
+            const discipline = document.getElementById("disciplines").value;
+            const sportResult = {result: result, discipline: discipline, student: student.innerText};
+            postSportResult(sportResult)
+                .catch(() => {
+                    errorElement.innerHTML = "The post request was not successful.";
+                    $(errorElement).slideDown().delay(3000).slideUp();
+                })
         }
     });
 }
 
 function removeResult() {
     const errorElement = document.querySelector("#error");
-    const sportResult = document.getElementById("sportResultURL").value;
+    const sportResult = document.querySelector("#sportResultURL").value;
     deleteSportResult(sportResult)
-        .catch(() =>{
+        .catch(() => {
             errorElement.innerHTML = "The delete request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         })
 }
 
-function SortArray(array){
+function SortArray(array) {
     const value = new Array(3);
     value[0] = array[0].value;
     value[1] = array[1].value;
@@ -482,7 +453,7 @@ function SortArray(array){
     return final[2];
 }
 
-function hideTableColumns(className){
+function hideTableColumns(className) {
     const elements = document.getElementsByClassName(className);
     Array.from(elements).forEach((element) => {
         element.style.display = "none";
@@ -491,17 +462,23 @@ function hideTableColumns(className){
 
 function showTableColumns(className) {
     const elements = document.getElementsByClassName(className);
-    Array.from(elements).forEach((element) =>{
+    Array.from(elements).forEach((element) => {
         element.style.display = "";
     })
 }
 
 function setupStudentTable(students) {
     const studentsTableBody = document.querySelector("#students-tbody");
+    studentsTableBody.querySelectorAll("tr")
+        .forEach(row => studentsTableBody.removeChild(row));
     students.forEach((student) => {
         let row = constructStudentTableRow(student);
         studentsTableBody.appendChild(row);
     });
+}
+
+function saveUrl(schoolClassUrl) {
+    document.querySelector('#addStudentForm > input[name="schoolClass"]').value = schoolClassUrl;
 }
 
 async function fetchApi() {
@@ -510,11 +487,11 @@ async function fetchApi() {
     const schoolClassUrl = urlSearchParams.get("schoolClass");
 
     try {
-        const [schoolClass, students] = await Promise.all([getClass(schoolClassUrl), getStudents(schoolClassUrl)]);
+        saveUrl(schoolClassUrl);
 
+        const [schoolClass, students] = await Promise.all([getClass(schoolClassUrl), getStudents(schoolClassUrl)]);
         updateSchoolClass(schoolClass);
         setupStudentTable(students);
-
     } catch (e) {
         errorElement.innerHTML = "This element probably does not exists or is not accessible";
         $(errorElement).slideDown().delay(3000).slideUp();
@@ -522,42 +499,51 @@ async function fetchApi() {
 
 }
 
-$(window).on("load", function () {
+const saveSportResultsButton = document.getElementById("saveSportResultsButton");
+const post = document.getElementById('saveSportResultButton');
+const remove = document.getElementById('confirmationDelete');
+const finish = document.getElementById("confirmationFinish");
+const addSportResultButton = document.getElementById("addSportResultButton");
+const editStudentForm = document.querySelector("#editStudentForm");
+const addStudentForm = document.querySelector("#addStudentForm");
 
-    const saveSportResultsButton = document.getElementById("saveSportResultsButton");
-    saveSportResultsButton.addEventListener('click', function () {
-            addSportResults();
-    });
-    const post = document.getElementById('saveSportResultButton');
-    post.addEventListener('click', function () {
-        const editOrAddSportResult = editOrAdd();
-        if (editOrAddSportResult) {
-            editSportResult();
-        } else {
-            addSportResult();
-        }
-    }, true);
-    const remove = document.getElementById('confirmationDelete');
-    remove.addEventListener('click', deleteStudentRequest, true);
-
-    const addSportResultButton = document.getElementById("addSportResultButton");
-    addSportResultButton.addEventListener('click', function () {
-        if (document.getElementById("saveSportResultButton").style.visibility === 'hidden') {
-            ShowHideSaveButton(true);
-        } else {
-            ShowHideSaveButton(false);
-        }
-    }, true);
-    const edit = document.getElementById("confirmationEdit");
-    edit.addEventListener('click', editStudent, true);
-    const addStudent = document.getElementById('confirmationAdd');
-    addStudent.addEventListener('click', addNewStudent, true);
-    const finish = document.getElementById("confirmationFinish");
-    finish.addEventListener('click', function () {
-
-    });
-    fetchApi();
+editStudentForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    editStudent(data);
 });
+
+addStudentForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    addNewStudent(data);
+});
+
+saveSportResultsButton.addEventListener('click', function () {
+    addSportResults();
+});
+
+post.addEventListener('click', function () {
+    const editOrAddSportResult = editOrAdd();
+    if (editOrAddSportResult) {
+        editSportResult();
+    } else {
+        addSportResult();
+    }
+}, true);
+
+remove.addEventListener('click', deleteStudentRequest, true);
+
+addSportResultButton.addEventListener('click', function () {
+    const sportResultButton = document.getElementById("saveSportResultButton");
+    sportResultButton.hidden = !sportResultButton.hidden;
+}, true);
+
+finish.addEventListener('click', function () {
+
+});
+
+fetchApi();
 
 
 
