@@ -180,45 +180,48 @@
                     </table>
                 </div>
                 <div class="collapse" id="addSportResultCollapse">
-                    <form>
-                        <div class="form-group">
-                            <label for="discipline">Wähle eine Disziplin aus</label>
-                            <select class="custom-select" id="discipline">
-                                <option value="RUN_50">50 Meter Sprint</option>
-                                <option value="RUN_75">75 Meter Sprint</option>
-                                <option value="RUN_100">100 Meter Sprint</option>
-                                <option value="RUN_800">800 Meter Lauf</option>
-                                <option value="RUN_2000">2000 Meter Lauf</option>
-                                <option value="RUN_3000">3000 Meter Lauf</option>
-                                <option value="HIGH_JUMP">Hochsprung</option>
-                                <option value="LONG_JUMP">Weitsprung</option>
-                                <option value="SHOT_PUT">Kugelstoßen</option>
-                                <option value="SLING_BALL">Schleuderball</option>
-                                <option value="BALL_THROWING_80">Weitwurf 80 Gramm</option>
-                                <option value="BALL_THROWING_200">Weitwurf 200 Gramm</option>
-                            </select>
-                        </div>
+                    <form id="sportResultForm">
                         <div>
-                            <div style="margin-top: 15px">
-                                <label for="sportResult_result">Ergebnis in [m] oder [s]</label>
-                                <input type="text" class="form-control" id="sportResult_result"
-                                       aria-describedby="result">
+                            <div class="form-group">
+                                <label for="discipline">Wähle eine Disziplin aus</label>
+                                <select class="custom-select" id="discipline" name="discipline">
+                                    <option value="RUN_50">50 Meter Sprint</option>
+                                    <option value="RUN_75">75 Meter Sprint</option>
+                                    <option value="RUN_100">100 Meter Sprint</option>
+                                    <option value="RUN_800">800 Meter Lauf</option>
+                                    <option value="RUN_2000">2000 Meter Lauf</option>
+                                    <option value="RUN_3000">3000 Meter Lauf</option>
+                                    <option value="HIGH_JUMP">Hochsprung</option>
+                                    <option value="LONG_JUMP">Weitsprung</option>
+                                    <option value="SHOT_PUT">Kugelstoßen</option>
+                                    <option value="SLING_BALL">Schleuderball</option>
+                                    <option value="BALL_THROWING_80">Weitwurf 80 Gramm</option>
+                                    <option value="BALL_THROWING_200">Weitwurf 200 Gramm</option>
+                                </select>
+                                <div style="margin-top: 15px">
+                                    <label for="sportResult_result">Ergebnis in [m] oder [s]</label>
+                                    <input type="text" class="form-control" id="sportResult_result"
+                                           aria-describedby="result" name="result">
+                                </div>
+                                <input type="hidden" id="EditOrAdd">
+                                <input name="studentURL" type="hidden" id="studentURL">
+                                <input name="sportResultURL" type="hidden" id="sportResultURL">
                             </div>
+                            <button type="submit" class="btn btn-primary btn-block" id="saveSportResultButton">Speichern</button>
                         </div>
                     </form>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <label id="labelScore"></label>
-                <button type="button" class="btn btn-outline-secondary" data-toggle="collapse"
-                        data-target="#addSportResultCollapse" id="addSportResultButton" style="align-content: center">
-                    Füge ein Ergebnis hinzu
-                </button>
-                <button type="button" class="btn btn-primary" id="saveSportResultButton">Speichern</button>
+                <div class="modal-footer">
+                    <label id="labelScore"></label>
+                    <button type="button" class="btn btn-outline-secondary" data-toggle="collapse"
+                            data-target="#addSportResultCollapse" id="addSportResultButton" style="align-content: center">
+                        Füge ein Ergebnis hinzu
+                    </button>
+                </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <div class="modal fade" id="addSportResultsModal" tabindex="-1" role="dialog" aria-labelledby="SportResultsModalLabel"
      aria-hidden="true">
@@ -272,7 +275,6 @@
         </div>
     </div>
 </div>
-</div>
 
 <div class="modal" tabindex="-1" role="dialog" id="editStudentModal">
     <div class="modal-dialog" role="document">
@@ -316,12 +318,6 @@
         </div>
     </div>
 </div>
-
-<input type="hidden" id="studentURL">
-<input type="hidden" id="classURL">
-<input type="hidden" id="sportResultURL">
-<input type="hidden" id="EditOrAdd">
-
 
 <script defer type="module" defer src="js/students_of_class.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
