@@ -10,6 +10,8 @@ import {
     postSportResult
 } from "./api.js";
 
+let classURL = null;
+
 const modalDeletion = $('#deletionModal').modal({
     keyboard: true,
     show: false
@@ -65,8 +67,7 @@ $('#addSportResultsModal').on('hide.bs.modal', function () {
 
 function createSportResultTable(studentURL, student) {
     const labelScore = document.querySelector("#labelScore");
-    labelScore.innerText = "Punkte: " + student.score;
-
+    labelScore.innerText = `Punkte: ${student.score}`;
     const SportResultsTableBody = document.querySelector("#sportResults-tbody");
     getSportResults(studentURL)
         .then(sportResults => {
@@ -142,11 +143,9 @@ function constructSportResultTableRow(sportResult) {
     let editSportResult = document.createElement("td");
     let editSportResultButton = document.createElement("span");
     editSportResultButton.onclick = () => {
-        document.querySelector("#sportResultURL").value = sportResultURL;
-        document.querySelector("#EditOrAdd").value = "edit";
         loadEditSportResult(sportResult);
     };
-    editSportResultButton.title = "Edit this sportresult.";
+    editSportResultButton.title = "Verändere das Ergebnis.";
     let iconASR = document.createElement("i");
     iconASR.className = "fas fa-edit";
     editSportResultButton.appendChild(iconASR);
@@ -156,10 +155,9 @@ function constructSportResultTableRow(sportResult) {
     let removeSportResult = document.createElement("td");
     let removeSportResultButton = document.createElement("span");
     removeSportResultButton.onclick = () => {
-        document.querySelector("#sportResultURL").value = sportResultURL;
-        removeResult();
+        removeResult(sportResultURL);
     };
-    removeSportResultButton.title = "Remove this sportresult.";
+    removeSportResultButton.title = "Lösche dieses Ergebnis.";
     let iconRemove = document.createElement("i");
     iconRemove.className = "fas fa-trash-alt";
     removeSportResultButton.appendChild(iconRemove);
@@ -170,11 +168,12 @@ function constructSportResultTableRow(sportResult) {
 }
 
 function loadEditSportResult(sportResult) {
+    document.querySelector("#sportResultURL").value = sportResult._links.self.href;
     const discipline = sportResult.discipline;
-    $("div.form-group select").removeAttr('selected')
-        .find('option[value=' + discipline + ']')
-        .attr('selected', true);
+    const disciplineSelect = document.querySelector("#discipline");
+    disciplineSelect.value = discipline;
     document.querySelector("#sportResult_result").value = sportResult.result;
+    $('#addSportResultCollapse').collapse('toggle');
 }
 
 function editSportResult(formData) {
@@ -260,7 +259,7 @@ function constructStudentTableRow(student) {
         document.querySelector('#editStudentForm > input[name="studentURL"]').value = studentURL;
         loadEditModal(student);
     };
-    buttonEdit.title = "Edit this student";
+    buttonEdit.title = "Verändere diesen Schüler.";
     let iconEdit = document.createElement("i");
     iconEdit.className = "fas fa-user-edit";
     buttonEdit.appendChild(iconEdit);
@@ -272,13 +271,11 @@ function constructStudentTableRow(student) {
     buttonRemove.onclick = () => {
         document.querySelector("#studentURL").value = studentURL;
         modalDeletion.modal('show');
-        return false;
     };
-    buttonRemove.title = "Remove this student";
+    buttonRemove.title = "Lösche diesen Schüler.";
     let iconRemove = document.createElement("i");
     iconRemove.className = "fas fa-trash-alt";
     buttonRemove.appendChild(iconRemove);
-
     remove.appendChild(buttonRemove);
     row.appendChild(remove);
 
@@ -288,9 +285,8 @@ function constructStudentTableRow(student) {
         document.querySelector("#studentURL").value = studentURL;
         createSportResultTable(studentURL, student);
         modalSportResult.modal('show');
-        return false;
     };
-    addSportResultButton.title = "Sportresults of this student";
+    addSportResultButton.title = "Ergebnisse des Schülers.";
     let iconASR = document.createElement("i");
     iconASR.className = "fas fa-running";
     addSportResultButton.appendChild(iconASR);
@@ -309,7 +305,7 @@ async function deleteStudentRequest() {
             errorElement.innerHTML = "The delete request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         });
-    await fetchApi();
+    fetchApi();
 }
 
 async function addSportResult(formData) {
@@ -325,7 +321,7 @@ async function addSportResult(formData) {
             errorElement.innerHTML = "The post request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         });
-    await fetchApi();
+    fetchApi();
 }
 
 async function addNewStudent(formData) {
@@ -336,23 +332,14 @@ async function addNewStudent(formData) {
         lastName: formData.get("lastName"),
         birthDay: formData.get("birthDay"),
         female: formData.get("female") === "female",
-        schoolClass: formData.get("schoolClass")
+        schoolClass: classURL
     };
     await addStudent(data)
         .catch(() => {
             errorElement.innerHTML = "The post request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         });
-    await fetchApi();
-}
-
-function editOrAdd() {
-    const editOption = document.querySelector("#EditOrAdd");
-    if (editOption.value === "edit") {
-        return true;
-    } else if (editOption.value === "add") {
-        return false;
-    }
+    fetchApi();
 }
 
 async function editStudent(formData) {
@@ -370,15 +357,15 @@ async function editStudent(formData) {
             errorElement.innerHTML = "The patch request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         });
-    await fetchApi();
+    fetchApi();
 }
 
 function updateSchoolClass(schoolClass) {
     const className = document.querySelector("#class-name");
     className.innerHTML = `${schoolClass.grade}${schoolClass.className}`;
 
-    const classTitle = document.querySelector("#title");
-    classTitle.innerHTML = `${schoolClass.grade}${schoolClass.className}`;
+    const websiteTitle = document.querySelector("#title");
+    websiteTitle.innerHTML = `${schoolClass.grade}${schoolClass.className}`;
 
     const classBreadCrumb = document.querySelector("#breadCrumb");
     classBreadCrumb.innerHTML = `${schoolClass.grade}${schoolClass.className}`;
@@ -420,15 +407,14 @@ function addSportResults() {
     fetchApi();
 }
 
-async function removeResult() {
+async function removeResult(sportResult) {
     const errorElement = document.querySelector("#error");
-    const sportResult = document.querySelector("#sportResultURL").value;
     await deleteSportResult(sportResult)
         .catch(() => {
             errorElement.innerHTML = "The delete request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         });
-    await fetchApi();
+    fetchApi();
 }
 
 function hideTableColumns(className) {
@@ -455,17 +441,13 @@ function setupStudentTable(students) {
     });
 }
 
-function saveUrl(schoolClassUrl) {
-    document.querySelector('#addStudentForm > input[name="schoolClass"]').value = schoolClassUrl;
-}
-
 async function fetchApi() {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const errorElement = document.querySelector("#error");
     const schoolClassUrl = urlSearchParams.get("schoolClass");
 
     try {
-        saveUrl(schoolClassUrl);
+        classURL = schoolClassUrl;
         const [schoolClass, students] = await Promise.all([getClass(schoolClassUrl), getStudents(schoolClassUrl)]);
         updateSchoolClass(schoolClass);
         setupStudentTable(students);
@@ -482,15 +464,16 @@ const finish = document.querySelector("#confirmationFinish");
 const editStudentForm = document.querySelector("#editStudentForm");
 const addStudentForm = document.querySelector("#addStudentForm");
 const sportResultForm = document.querySelector("#sportResultForm");
+const addSportResultButton = document.querySelector("#addSportResultButton");
 
 sportResultForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
-    const editOrAddSportResult = editOrAdd();
-    if (editOrAddSportResult) {
-        editSportResult(data);
-    } else {
+    const editOrAdd = data.get("sportResultURL");
+    if (editOrAdd === "null") {
         addSportResult(data);
+    } else {
+        editSportResult(data);
     }
 });
 
@@ -511,6 +494,10 @@ saveSportResultsButton.addEventListener('click', function () {
 });
 
 remove.addEventListener('click', deleteStudentRequest, true);
+
+addSportResultButton.addEventListener('click', function () {
+    document.querySelector("#sportResultURL").value = "null";
+});
 
 finish.addEventListener('click', function () {
 
