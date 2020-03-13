@@ -21,6 +21,17 @@ export async function postUser(user) {
     return json;
 }
 
+export async function getUsers() {
+    const response= await fetch(`${await api_url}/users`, {
+        credentials: "include",
+        method: 'GET',
+    });
+
+    const json= await response.json();
+    const users = json._embedded.users;
+    return users;
+}
+
 export async function getClasses() {
     const response = await fetch(`${await api_url}/classes`, {
         credentials: "include"

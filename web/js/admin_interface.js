@@ -1,4 +1,4 @@
-import {postUser, getClasses} from "./api.js"
+import { postUser, getClasses, getUsers } from "./api.js"
 
 const passwordInput = document.querySelector("#passwordInput")
 const userInput = document.querySelector("#userInput")
@@ -17,16 +17,42 @@ async function addUser() {
     try {
         const json = await postUser(data);
         console.log(json);
-    } catch(e){
+    } catch (e) {
         console.log(e);
     }
 
 }
 async function addClassesToList() {
-   const classes =  await getClasses()
-   classes.forEach((schoolClass) => {
-       classList.appendChild(schoolClass);
-   }) 
+    const classes = await getClasses()
+    classes.forEach((schoolClass) => {
+        classList.appendChild(schoolClass);
+    })
+}
+
+async function updateUserTable() {
+    let users = await getUsers();
+
+    users.map(user => {
+        const tr = document.createElement("tr");
+        const username = document.createElement("td");
+        username.innerText = user.username;
+        tr.appendChild(username);
+
+        const admin = document.createElement("td");
+        admin.innerHTML = `<div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="customSwitch${user.username}">
+        <label class="custom-control-label" for="customSwitch${user.username}"></label>
+      </div>`;
+
+        admin.querySelector("input").checked = user.administrator;
+        tr.appendChild(admin);
+
+        return tr;
+    }).forEach(row => {
+        userTable.appendChild(row)
+    })
+
+    console.log(users);
 }
 
 confirmUserAdd.addEventListener("click", addUser);
@@ -34,15 +60,13 @@ showPassword.onclick = () => {
     if (passwordInput.type === "password") {
         passwordInput.type = "text";
         const icon = showPassword.querySelector("a > i");
-        icon.classList.replace("fa-eye","fa-eye-slash");
+        icon.classList.replace("fa-eye", "fa-eye-slash");
     } else {
         passwordInput.type = "password";
         const icon = showPassword.querySelector("a > i");
-        icon.classList.replace("fa-eye-slash","fa-eye");
+        icon.classList.replace("fa-eye-slash", "fa-eye");
     }
 }
 
-addClassesToList()
-function updateUserTable() {
-    
-}
+addClassesToList();
+updateUserTable();
