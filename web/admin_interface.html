@@ -23,7 +23,50 @@
     </div>
     <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#addUser">Benutzer
       hinzufügen</button>
+
+    <table class="table" id="userTable">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Benutzername</th>
+          <th scope="col">Admin</th>
+          <th scope="col">Klassen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Jay</th>
+          <td>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="customSwitch1">
+              <label class="custom-control-label" for="customSwitch1"></label>
+            </div>
+          </td>
+          <td>all</td>
+        </tr>
+        <tr>
+          <th scope="row">Ayk</th>
+          <td>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="customSwitch2">
+              <label class="custom-control-label" for="customSwitch2"></label>
+            </div>
+          </td>
+          <td>7b,7c,9b</td>
+        </tr>
+        <tr>
+          <th scope="row">Liam</th>
+          <td>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="customSwitch3">
+              <label class="custom-control-label" for="customSwitch3"></label>
+            </div>
+          </td>
+          <td>alle</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
+
 
   <div class="modal fade" id="addUser" tabindex="-1" role="dialog" aria-labelledby="addUserLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -60,7 +103,7 @@
               </div>
             </div>
             <div class="list-group" id="classList">
-              <button type="button" class="list-group-item list-group-item-action" >Klasse auswählen</button>              
+              <button type="button" class="list-group-item list-group-item-action">Klasse auswählen</button>
             </div>
           </form>
         </div>
@@ -71,10 +114,11 @@
       </div>
     </div>
   </div>
+
   <script>
 
   </script>
-  <script type="module" src="js/admin_interface.js" defer ></script>
+  <script type="module" src="js/admin_interface.js" defer></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
     integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"

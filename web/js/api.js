@@ -9,7 +9,7 @@ async function determineApiUrl() {
 }
 
 export async function postUser(user) {
-     const response = await fetch(`${await api_url}/users`, {
+    const response = await fetch(`${await api_url}/users`, {
         credentials: "include",
         method: 'POST',
         headers: {
@@ -17,7 +17,8 @@ export async function postUser(user) {
         },
         body: JSON.stringify(user),
     });
-    console.log(response);
+    const json=await response.json();
+    return json;
 }
 
 export async function getClasses() {

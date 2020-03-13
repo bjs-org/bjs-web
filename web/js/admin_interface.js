@@ -6,20 +6,26 @@ const isAdminInput = document.querySelector("#isAdminInput")
 const confirmUserAdd = document.querySelector("#confirmUserAdd")
 const showPassword = document.querySelector("#showPassword")
 const classList = document.querySelector("#classList")
+const userTable = document.querySelector("#userTable")
 
-function addUser() {
+async function addUser() {
     const data = {
         username: userInput.value,
         password: passwordInput.value,
         administrator: isAdminInput.checked,
     };
-    postUser(data)
-    console.log(data);
+    try {
+        const json = await postUser(data);
+        console.log(json);
+    } catch(e){
+        console.log(e);
+    }
+
 }
 async function addClassesToList() {
    const classes =  await getClasses()
-   classes.forEach((class) => {
-       classList.appendChild(class);
+   classes.forEach((schoolClass) => {
+       classList.appendChild(schoolClass);
    }) 
 }
 
@@ -37,3 +43,6 @@ showPassword.onclick = () => {
 }
 
 addClassesToList()
+function updateUserTable() {
+    
+}
