@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/c2053bbe39.js" crossorigin="anonymous"></script>
+    <title id="title">Schüler der Klasse</title>
+</head>
+
+<body>
+
+<div class="container">
+    <div id="error" class="alert alert-warning" role="alert" style="display: none">
+        Something went wrong ...
+    </div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Klassenübersicht</a></li>
+            <li class="breadcrumb-item active" aria-current="page" id="breadCrumb"></li>
+        </ol>
+    </nav>
+    <div class="container">
+        <div class="row d-flex justify-content-between align-items-center">
+            <div>
+                <div class="container" id="class-information">
+                    <h1 class="display-4" id="class-name"></h1>
+                    <p class="lead" id="class-teacher"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive-sm">
+        <table class="table table-hover" id="students-table">
+            <thead>
+            <tr>
+                <th scope="col">Vorname</th>
+                <th scope="col">Nachname</th>
+                <th scope="col">Geschlecht</th>
+                <th scope="col">Urkunde</th>
+                <th scope="col">Punkte</th>
+            </tr>
+            </thead>
+            <tbody id="students-tbody">
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+<script defer type="module" defer src="js/students_scores.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</html>
