@@ -1,10 +1,10 @@
-const default_url = "http://raspberry-balena.gtdbqv7ic1ie9w3s.myfritz.net:8080/api/v1"
-const relativ_url = "/api/v1"
+const default_url = "http://raspberry-balena.gtdbqv7ic1ie9w3s.myfritz.net:8080/api/v1";
+const relative_url = "/api/v1";
 let api_url = determineApiUrl();
 
 async function determineApiUrl() {
-    let response = await fetch(relativ_url);
-    if (response.status === 404) return default_url;
+    let response = await fetch(relative_url);
+    if (!response.ok || response.status === 404) return default_url;
     return relativ_url;
 }
 
@@ -22,6 +22,13 @@ export async function getClasses() {
         return compareClassName;
     });
     return classes;
+}
+
+export async function getStudent(student) {
+    const response = await fetch(`${student}?projection=calculation`,{
+        credentials: "include"
+    });
+    return await response.json();
 }
 
 export async function getClass(schoolClass) {
@@ -157,6 +164,6 @@ export async function getTopStudents(grade) {
     const response = await fetch(`${await api_url}/students/best/${grade}`, {
         credentials: "include",
         method: 'GET',
-    })
+    });
     return await response.json();
 }

@@ -1,4 +1,5 @@
 import {
+    getStudent,
     addStudent,
     deleteSportResult,
     deleteStudent,
@@ -65,7 +66,7 @@ $('#addSportResultsModal').on('hide.bs.modal', function () {
     showTableColumns("isNotRun");
 });
 
-function createSportResultTable(studentURL, student) {
+function createSportResultTable(student , studentURL) {
     const labelScore = document.querySelector("#labelScore");
     labelScore.innerText = `Punkte: ${student.score}`;
     const SportResultsTableBody = document.querySelector("#sportResults-tbody");
@@ -176,8 +177,7 @@ function loadEditSportResult(sportResult) {
     $('#addSportResultCollapse').collapse('toggle');
 }
 
-function editSportResult(formData) {
-    modalSportResult.modal('hide');
+async function editSportResult(formData) {
     const errorElement = document.querySelector("#error");
     const data = {
         discipline: formData.get("discipline"),
@@ -185,12 +185,13 @@ function editSportResult(formData) {
         student: formData.get("studentURL")
     };
     const sportResultURL = formData.get("sportResultURL");
-
-    patchSportResult(sportResultURL, data)
+    await patchSportResult(sportResultURL, data)
         .catch(() => {
             errorElement.innerHTML = "The post request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
-        })
+        });
+    reloadModal();
+
 }
 
 function changingNamesOfDisciplines(discipline) {
@@ -283,7 +284,7 @@ function constructStudentTableRow(student) {
     let addSportResultButton = document.createElement("span");
     addSportResultButton.onclick = () => {
         document.querySelector("#studentURL").value = studentURL;
-        createSportResultTable(studentURL, student);
+        createSportResultTable(student, studentURL);
         modalSportResult.modal('show');
     };
     addSportResultButton.title = "Ergebnisse des Schülers.";
@@ -309,7 +310,6 @@ async function deleteStudentRequest() {
 }
 
 async function addSportResult(formData) {
-    modalSportResult.modal('hide');
     const errorElement = document.querySelector("#error");
     const data = {
         discipline: formData.get("discipline"),
@@ -321,7 +321,7 @@ async function addSportResult(formData) {
             errorElement.innerHTML = "The post request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         });
-    fetchApi();
+    reloadModal();
 }
 
 async function addNewStudent(formData) {
@@ -407,6 +407,14 @@ function addSportResults() {
     fetchApi();
 }
 
+async function reloadModal() {
+    const studentUrl = document.querySelector("#studentURL").value;
+    const student = await getStudent(studentUrl);
+    $('#addSportResultCollapse').collapse('hide');
+    clearSportResultTable();
+    createSportResultTable(student, studentUrl);
+}
+
 async function removeResult(sportResult) {
     const errorElement = document.querySelector("#error");
     await deleteSportResult(sportResult)
@@ -414,7 +422,7 @@ async function removeResult(sportResult) {
             errorElement.innerHTML = "The delete request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         });
-    fetchApi();
+    reloadModal();
 }
 
 function hideTableColumns(className) {
