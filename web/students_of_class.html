@@ -140,8 +140,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-footer">
-                <form id="addStudentForm">
+            <form id="addStudentForm">
+                <div class="modal-body">
                     <div class="form-row">
                         <div class="col">
                             <label for="addFirstName">Vorname:</label>
@@ -164,10 +164,12 @@
                             <option value="female">Weiblich</option>
                         </select>
                     </div>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
                     <button type="submit" class="btn btn-primary" id="confirmationAdd">Hinzufügen</button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -295,7 +297,7 @@
     </div>
 </div>
 
-<div class="modal" tabindex="-1" role="dialog" id="editStudentModal">
+<div class="modal fade" tabindex="-1" role="dialog" id="editStudentModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
