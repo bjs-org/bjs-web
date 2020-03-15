@@ -1,10 +1,10 @@
 import {
-    getStudent,
     addStudent,
     deleteSportResult,
     deleteStudent,
     getClass,
     getSportResults,
+    getStudent,
     getStudents,
     patchSportResult,
     patchStudent,
@@ -43,17 +43,15 @@ $("#disciplines").on('change', function () {
     }
 });
 
-$('#addSportResultsModal').on('show.bs.modal', function () {
+$('#addSportResultsModal').on('show.bs.modal', async function () {
     const studentSportResultsTableBody = document.querySelector("#studentSportResult-tbody");
     const urlSearchParams = new URLSearchParams(window.location.search);
     const schoolClassUrl = urlSearchParams.get("schoolClass");
-    getStudents(schoolClassUrl)
-        .then(students => {
-            students.forEach((student) => {
-                let row = constructStudentSportResultTableRow(student);
-                studentSportResultsTableBody.appendChild(row);
-            })
-        });
+
+    const students = await getStudents(schoolClassUrl);
+    students
+        .map(student => constructStudentSportResultTableRow(student))
+        .forEach(row => studentSportResultsTableBody.appendChild(row));
 });
 
 $('#sportResultModal').on('hide.bs.modal', function () {
@@ -66,59 +64,63 @@ $('#addSportResultsModal').on('hide.bs.modal', function () {
     showTableColumns("isNotRun");
 });
 
-function createSportResultTable(student , studentURL) {
+async function reloadSportResultModal() {
+    const studentUrl = document.querySelector("#studentURL").value;
+    const [student, sportResults] = await Promise.all([getStudent(studentUrl), getSportResults(studentUrl)]);
+    $('#addSportResultCollapse').collapse('hide');
+
+    clearSportResultTable();
+    insertStudentScoreIntoSportResultModal(student.score);
+    insertSportResultsIntoSportResultModal(sportResults);
+}
+
+async function prepareSportResultModal(student) {
+    const studentURL = student._links.self.href;
+    document.querySelector("#studentURL").value = studentURL;
+
+    const sportResults = await getSportResults(studentURL);
+    insertStudentScoreIntoSportResultModal(student.score);
+    insertSportResultsIntoSportResultModal(sportResults);
+}
+
+function insertStudentScoreIntoSportResultModal(score) {
     const labelScore = document.querySelector("#labelScore");
-    labelScore.innerText = `Punkte: ${student.score}`;
-    const SportResultsTableBody = document.querySelector("#sportResults-tbody");
-    getSportResults(studentURL)
-        .then(sportResults => {
-            sportResults.forEach((sportResult) => {
-                let row = constructSportResultTableRow(sportResult);
-                SportResultsTableBody.appendChild(row);
-            });
-        })
+    labelScore.innerText = `Punkte: ${score}`;
+}
+
+function insertSportResultsIntoSportResultModal(sportResults) {
+    const sportResultsTableBody = document.querySelector("#sportResults-tbody");
+    sportResults
+        .map((sportResult) => constructSportResultTableRow(sportResult))
+        .forEach(row => sportResultsTableBody.appendChild(row));
 }
 
 function clearStudentSportResultTable() {
     const studentSportResultsTableBody = document.querySelector("#studentSportResult-tbody");
-    while (studentSportResultsTableBody.hasChildNodes()) {
-        studentSportResultsTableBody.removeChild(studentSportResultsTableBody.firstChild);
-    }
+    studentSportResultsTableBody.querySelectorAll("tr").forEach(row => studentSportResultsTableBody.removeChild(row));
 }
 
 function clearSportResultTable() {
-    const SportResultsTableBody = document.querySelector("#sportResults-tbody");
-    while (SportResultsTableBody.hasChildNodes()) {
-        SportResultsTableBody.removeChild(SportResultsTableBody.firstChild);
-    }
+    const sportResultsTableBody = document.querySelector("#sportResults-tbody");
+    sportResultsTableBody.querySelectorAll("tr").forEach(row => sportResultsTableBody.removeChild(row));
 }
 
 function constructStudentSportResultTableRow(student) {
-    let row = document.createElement("tr");
+    function buildInputField(classes = "") {
+        let sportResult = document.createElement("td");
+        sportResult.innerHTML = `<input type="number" class="value" step="0.001">`;
+        sportResult.className = classes;
+        return sportResult;
+    }
 
+    let row = document.createElement("tr");
     let studentName = document.createElement("td");
     studentName.innerText = student.firstName + "\n" + student.lastName;
+
     row.appendChild(studentName);
-
-    let sportResult = document.createElement("td");
-    let inputSportResult = document.createElement("input");
-    inputSportResult.className = "value";
-    sportResult.appendChild(inputSportResult);
-    row.appendChild(sportResult);
-
-    let sportResult2 = document.createElement("td");
-    let inputSportResult2 = document.createElement("input");
-    inputSportResult2.className = "value";
-    sportResult2.className = "isNotRun";
-    sportResult2.appendChild(inputSportResult2);
-    row.appendChild(sportResult2);
-
-    let sportResult3 = document.createElement("td");
-    let inputSportResult3 = document.createElement("input");
-    inputSportResult3.className = "value";
-    sportResult3.className = "isNotRun";
-    sportResult3.appendChild(inputSportResult3);
-    row.appendChild(sportResult3);
+    row.appendChild(buildInputField());
+    row.appendChild(buildInputField("isNotRun"));
+    row.appendChild(buildInputField("isNotRun"));
 
     let studentMetaData = document.createElement("input");
     studentMetaData.value = student._links.self.href;
@@ -131,37 +133,35 @@ function constructStudentSportResultTableRow(student) {
 
 function constructSportResultTableRow(sportResult) {
     const sportResultURL = sportResult._links.self.href;
-    let row = document.createElement("tr");
+    const row = document.createElement("tr");
 
-    let discipline = document.createElement("td");
+    const discipline = document.createElement("td");
     discipline.innerText = changingNamesOfDisciplines(sportResult.discipline);
     row.appendChild(discipline);
 
-    let result = document.createElement("td");
+    const result = document.createElement("td");
     result.innerText = sportResult.result;
     row.appendChild(result);
 
-    let editSportResult = document.createElement("td");
-    let editSportResultButton = document.createElement("span");
+    const editSportResult = document.createElement("td");
+    const editSportResultButton = document.createElement("span");
     editSportResultButton.onclick = () => {
         loadEditSportResult(sportResult);
     };
     editSportResultButton.title = "Verändere das Ergebnis.";
-    let iconASR = document.createElement("i");
+    const iconASR = document.createElement("i");
     iconASR.className = "fas fa-edit";
     editSportResultButton.appendChild(iconASR);
     editSportResult.appendChild(editSportResultButton);
     row.appendChild(editSportResult);
 
-    let removeSportResult = document.createElement("td");
-    let removeSportResultButton = document.createElement("span");
-    removeSportResultButton.onclick = () => {
-        removeResult(sportResultURL);
-    };
+    const removeSportResult = document.createElement("td");
+
+    const removeSportResultButton = document.createElement("span");
+    removeSportResultButton.onclick = () => removeResult(sportResultURL);
     removeSportResultButton.title = "Lösche dieses Ergebnis.";
-    let iconRemove = document.createElement("i");
-    iconRemove.className = "fas fa-trash-alt";
-    removeSportResultButton.appendChild(iconRemove);
+    removeSportResultButton.innerHTML = `<i class="fas fa-trash-alt" aria-hidden="true"></i>`;
+
     removeSportResult.appendChild(removeSportResultButton);
     row.appendChild(removeSportResult);
 
@@ -179,10 +179,12 @@ function loadEditSportResult(sportResult) {
 
 async function editSportResult(formData) {
     const errorElement = document.querySelector("#error");
+    const studentURL = formData.get("studentURL");
+
     const data = {
         discipline: formData.get("discipline"),
         result: formData.get("result"),
-        student: formData.get("studentURL")
+        student: studentURL
     };
     const sportResultURL = formData.get("sportResultURL");
     await patchSportResult(sportResultURL, data)
@@ -190,8 +192,7 @@ async function editSportResult(formData) {
             errorElement.innerHTML = "The post request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         });
-    reloadModal();
-
+    await reloadSportResultModal();
 }
 
 function changingNamesOfDisciplines(discipline) {
@@ -283,9 +284,8 @@ function constructStudentTableRow(student) {
     let addSportResult = document.createElement("td");
     let addSportResultButton = document.createElement("span");
     addSportResultButton.onclick = () => {
-        document.querySelector("#studentURL").value = studentURL;
-        createSportResultTable(student, studentURL);
-        modalSportResult.modal('show');
+        prepareSportResultModal(student)
+            .then(() => modalSportResult.modal('show'));
     };
     addSportResultButton.title = "Ergebnisse des Schülers.";
     let iconASR = document.createElement("i");
@@ -306,7 +306,7 @@ async function deleteStudentRequest() {
             errorElement.innerHTML = "The delete request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         });
-    fetchApi();
+    await fetchApi();
 }
 
 async function addSportResult(formData) {
@@ -321,7 +321,7 @@ async function addSportResult(formData) {
             errorElement.innerHTML = "The post request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         });
-    reloadModal();
+    await reloadSportResultModal();
 }
 
 async function addNewStudent(formData) {
@@ -383,7 +383,7 @@ function addSportResults() {
     Array.from(rows)
         .map((rows) => ({
             student: rows.querySelector(".student").value,
-            result:  rows.querySelectorAll(".value")
+            result: rows.querySelectorAll(".value")
         }))
         .forEach((row) => {
             const {result} = row;
@@ -396,7 +396,7 @@ function addSportResults() {
                 student: student
             };
 
-            if(data.result !== 0){
+            if (data.result !== 0) {
                 postSportResult(data)
                     .catch(() => {
                         errorElement.innerHTML = "The patch request was not successful.";
@@ -407,14 +407,6 @@ function addSportResults() {
     fetchApi();
 }
 
-async function reloadModal() {
-    const studentUrl = document.querySelector("#studentURL").value;
-    const student = await getStudent(studentUrl);
-    $('#addSportResultCollapse').collapse('hide');
-    clearSportResultTable();
-    createSportResultTable(student, studentUrl);
-}
-
 async function removeResult(sportResult) {
     const errorElement = document.querySelector("#error");
     await deleteSportResult(sportResult)
@@ -422,7 +414,7 @@ async function removeResult(sportResult) {
             errorElement.innerHTML = "The delete request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         });
-    reloadModal();
+    await reloadSportResultModal();
 }
 
 function hideTableColumns(className) {

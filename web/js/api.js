@@ -5,7 +5,7 @@ let api_url = determineApiUrl();
 async function determineApiUrl() {
     let response = await fetch(relative_url);
     if (!response.ok || response.status === 404) return default_url;
-    return relativ_url;
+    return relative_url;
 }
 
 export async function getClasses() {
