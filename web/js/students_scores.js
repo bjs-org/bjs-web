@@ -1,4 +1,4 @@
-import {getClass, getStudents} from "./api";
+import {getClass, getStudents} from "./api.js";
 
 async function fetchApi() {
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -56,14 +56,30 @@ function constructStudentTableRow(student) {
     row.appendChild(gender);
 
     let certificate = document.createElement("td");
-    certificate.innerText = student.classification;
+    certificate.innerText = renameClassification(student.classification);
     row.appendChild(certificate);
 
     let points = document.createElement("td");
     points.innerText = student.score;
     row.appendChild(points);
 
+    let done = document.createElement("td");
+    let doneCheckBox = document.createElement("input");
+    doneCheckBox.type = "checkbox";
+    done.appendChild(doneCheckBox);
+    row.appendChild(done);
+
     return row;
+}
+
+function renameClassification(classification) {
+    if(classification === "PARTICIPANT"){
+        return "Teilnehmer";
+    } else  if(classification === "HONOR"){
+        return "Ehrenurkunde";
+    } else{
+        return "Siegesurkunde";
+    }
 }
 
 fetchApi();

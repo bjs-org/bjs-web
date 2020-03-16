@@ -1,5 +1,23 @@
 import {getClasses} from "./api.js";
 
+async function loadClasses() {
+    const classTableBody = document.querySelector("#class-tbody");
+    const errorElement = document.querySelector("#error");
+
+    getClasses()
+        .then(classes => {
+            classes.sort();
+            classes.forEach((schoolClass) => {
+                let row = constructClassTableRow(schoolClass);
+                classTableBody.appendChild(row);
+            });
+        })
+        .catch(err => {
+            console.error(err);
+            $(errorElement).slideDown("slow").delay(1500).slideUp("slow");
+        })
+}
+
 function constructClassTableRow(schoolClass) {
     let row = document.createElement("tr");
     row.onclick = () => {
@@ -21,21 +39,4 @@ function constructClassTableRow(schoolClass) {
     return row;
 }
 
-
-$(window).on("load", function () {
-    const classTableBody = document.querySelector("#class-tbody");
-    const errorElement = document.querySelector("#error");
-
-    getClasses()
-        .then(classes => {
-            classes.sort();
-            classes.forEach((schoolClass) => {
-                let row = constructClassTableRow(schoolClass);
-                classTableBody.appendChild(row);
-            });
-        })
-        .catch(err => {
-            console.error(err);
-            $(errorElement).slideDown("slow").delay(1500).slideUp("slow");
-        })
-});
+loadClasses();
