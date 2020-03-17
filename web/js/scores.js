@@ -27,12 +27,6 @@ function constructClassTableRow(schoolClass) {
     if(schoolClass.grade === "7"){
         row.className = "table-success";
     }
-    else if(schoolClass.grade === "8"){
-        row.className = "table-warning";
-    }
-    else{
-        row.className = "table-danger";
-    }
 
     let grade = document.createElement("td");
     grade.innerText = schoolClass.grade;

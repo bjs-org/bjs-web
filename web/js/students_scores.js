@@ -64,9 +64,14 @@ function constructStudentTableRow(student) {
     row.appendChild(points);
 
     let done = document.createElement("td");
+    let divCheckBox = document.createElement("div");
+    divCheckBox.className = "custom-control custom-checkbox";
     let doneCheckBox = document.createElement("input");
     doneCheckBox.type = "checkbox";
-    done.appendChild(doneCheckBox);
+    doneCheckBox.className = "custom-control-input";
+    $(doneCheckBox).prop('indeterminate', true);
+    divCheckBox.appendChild(doneCheckBox);
+    done.appendChild(divCheckBox);
     row.appendChild(done);
 
     return row;
