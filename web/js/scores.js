@@ -1,6 +1,6 @@
 import {getClasses} from "./api.js";
 
-async function loadClasses() {
+function loadClasses() {
     const classTableBody = document.querySelector("#class-tbody");
     const errorElement = document.querySelector("#error");
 
