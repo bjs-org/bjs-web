@@ -58,6 +58,7 @@ export async function getUsers() {
 
     const json = await response.json();
     const users = json._embedded.users;
+    users.sort((a,b) => a.username.localeCompare(b.username))
     return users;
 }
 
@@ -68,11 +69,11 @@ export async function getClasses() {
     const json = await response.json();
     const classes = json._embedded.classes;
     classes.sort((a, b) => {
-        const compareClassName = a.grade.localeCompare(b.grade, undefined, { numeric: true });
-        if (compareClassName === 0) {
+        const compareGrade = a.grade.localeCompare(b.grade, undefined, { numeric: true });
+        if (compareGrade === 0) {
             return a.className.localeCompare(b.className);
         }
-        return compareClassName;
+        return compareGrade;
     });
     return classes;
 }
