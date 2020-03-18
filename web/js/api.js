@@ -17,17 +17,46 @@ export async function postUser(user) {
         },
         body: JSON.stringify(user),
     });
-    const json=await response.json();
+    const json = await response.json();
     return json;
 }
 
+export async function patchUser(url, user){
+    const response = await fetch(url, {
+        credentials: "include",
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+    });
+    const json = await response.json();
+    return json;
+}
+
+export function getAccessibleClasses(user) {
+    //Placeholder
+    return [
+        {
+            "className": "A",
+            "grade": "7",
+            "classTeacherName": "Gutsche",
+            "_links": {
+                "self": {
+                    "href": "http://raspberry-balena.gtdbqv7ic1ie9w3s.myfritz.net/api/v1/classes/23"
+                },
+            }
+        }
+    ];
+}
+
 export async function getUsers() {
-    const response= await fetch(`${await api_url}/users`, {
+    const response = await fetch(`${await api_url}/users`, {
         credentials: "include",
         method: 'GET',
     });
 
-    const json= await response.json();
+    const json = await response.json();
     const users = json._embedded.users;
     return users;
 }
@@ -39,7 +68,7 @@ export async function getClasses() {
     const json = await response.json();
     const classes = json._embedded.classes;
     classes.sort((a, b) => {
-        const compareClassName = a.grade.localeCompare(b.grade, undefined, {numeric: true});
+        const compareClassName = a.grade.localeCompare(b.grade, undefined, { numeric: true });
         if (compareClassName === 0) {
             return a.className.localeCompare(b.className);
         }
