@@ -1,4 +1,4 @@
-import { postUser, getClasses, getUsers, getAccessibleClasses, patchUser } from "./api.js"
+import {getAccessibleClasses, getClasses, getUsers, patchUser, postUser} from "./api.js"
 
 const passwordInput = document.querySelector("#passwordInput")
 const userInput = document.querySelector("#userInput")
@@ -22,6 +22,7 @@ async function addUser() {
     }
 
 }
+
 // async function addClassesToList() {
 //     const classes = await getClasses()
 //     classes.forEach((schoolClass) => {
@@ -31,9 +32,10 @@ async function addUser() {
 
 async function updateUserTable() {
     let users = await getUsers();
+    const classes = await getClasses();
 
-    users.map((user) => {
-        const userUrl = user._links.self.href;  
+    const userElements = await Promise.all(users.map(async (user) => {
+        const userUrl = user._links.self.href;
 
         const tr = document.createElement("tr");
         const username = document.createElement("td");
@@ -52,7 +54,7 @@ async function updateUserTable() {
         adminInput.addEventListener("change", async (e) => {
             const response = await patchUser(userUrl, {
                 administrator: adminInput.checked,
-            })
+            });
             console.log(response);
         })
         tr.appendChild(admin);
@@ -74,22 +76,24 @@ async function updateUserTable() {
         })
         tr.appendChild(enabled);
 
-        const classes = getAccessibleClasses(user);
-    
+        const accessibleClasses = await getAccessibleClasses(user);
         const classesElement = document.createElement("td");
-        // classesElement.innerHTML = `
-        // <select class="classSelectPicker" multiple>
-        //     ${classes.map(schoolClass => `
-        //         <option>${schoolClass.grade}${schoolClass.className}</option>
-        //     `)}
-        // </select>
-        // `
+        classesElement.innerHTML = `
+        <select class="schoolClassPicker" multiple data-live-search="true">
+            ${classes.map(schoolClass =>
+            `<option>${(schoolClass.grade)}${(schoolClass.className)}</option>
+            `)}
+        </select>
+        `;
+
         tr.appendChild(classesElement);
 
         return tr;
-    }).forEach(row => {
-        userTable.appendChild(row)
-    })
+    }));
+
+    userElements.forEach(row => userTable.appendChild(row));
+
+    $(".schoolClassPicker").selectpicker();
 
 
     console.log(users);
