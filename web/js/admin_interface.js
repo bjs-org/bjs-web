@@ -87,11 +87,18 @@ async function updateUserTable() {
             `)}
         </select>
         `;
-
         $(classesElement.querySelector("select")).selectpicker("val", accessibleClasses.map(({ grade, className }) => `${grade}${className}`));
-
-
         tr.appendChild(classesElement);
+
+        // HIER DELETE BUTTON
+        const deleteElement = document.createElement("td");
+        deleteElement.innerHTML = `
+        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteUser">
+        <span>
+          <i class="fas fa-trash-alt" aria-hidden="true"></i>
+        </span></button>
+        `
+        tr.appendChild(deleteElement);
 
         return tr;
     }));
