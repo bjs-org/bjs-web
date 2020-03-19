@@ -12,6 +12,7 @@ import {
 } from "./api.js";
 
 let classURL = null;
+const addSportResultsTable = document.querySelector("#studentSportResultTable");
 
 const modalDeletion = $('#deletionModal').modal({
     keyboard: true,
@@ -36,12 +37,20 @@ const modalEditStudent = $('#editStudentModal').modal({
 
 $("#disciplines").on('change', function () {
     const selected = $(this).val();
-    if (selected.substring(0, 3) === "RUN") {
-        hideTableColumns("isNotRun");
-    } else {
-        showTableColumns("isNotRun");
+    if(selected.substring(0,3) !== "NSO") {
+        addSportResultsTable.style.visibility = "show";
+        if (selected.substring(0, 3) === "RUN") {
+            hideTableColumns("isNotRun");
+        } else {
+            showTableColumns("isNotRun");
+        }
+        addSportResultsTable.style.display = "";
+    }
+    else{
+        addSportResultsTable.style.display = "none";
     }
 });
+
 
 $('#addSportResultsModal').on('show.bs.modal', async function () {
     const studentSportResultsTableBody = document.querySelector("#studentSportResult-tbody");
@@ -52,7 +61,9 @@ $('#addSportResultsModal').on('show.bs.modal', async function () {
     students
         .map(student => constructStudentSportResultTableRow(student))
         .forEach(row => studentSportResultsTableBody.appendChild(row));
+    addSportResultsTable.style.display = "none";
 });
+
 
 $('#sportResultModal').on('hide.bs.modal', function () {
     clearSportResultTable();
