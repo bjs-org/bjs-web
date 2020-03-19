@@ -21,7 +21,7 @@ export async function postUser(user) {
     return json;
 }
 
-export async function patchUser(url, user){
+export async function patchUser(url, user) {
     const response = await fetch(url, {
         credentials: "include",
         method: 'PATCH',
@@ -46,6 +46,16 @@ export function getAccessibleClasses(user) {
                     "href": "http://raspberry-balena.gtdbqv7ic1ie9w3s.myfritz.net/api/v1/classes/23"
                 },
             }
+        },
+        {
+            "className": "A",
+            "grade": "8",
+            "classTeacherName": "Gutsche",
+            "_links": {
+                "self": {
+                    "href": "http://raspberry-balena.gtdbqv7ic1ie9w3s.myfritz.net/api/v1/classes/23"
+                },
+            }
         }
     ];
 }
@@ -58,7 +68,7 @@ export async function getUsers() {
 
     const json = await response.json();
     const users = json._embedded.users;
-    users.sort((a,b) => a.username.localeCompare(b.username))
+    users.sort((a, b) => a.username.localeCompare(b.username))
     return users;
 }
 

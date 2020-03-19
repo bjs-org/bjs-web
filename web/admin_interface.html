@@ -96,14 +96,17 @@
                 </div>
               </div>
             </div>
-            <div class="form-check">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="isAdminInput">
-                <label class="custom-control-label" for="isAdminInput">Admininistrator</label>
+            <div class="row my-2">
+              <div class="col">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="isAdminInput">
+                  <label class="custom-control-label" for="isAdminInput">Admininistrator</label>
+                </div>
               </div>
             </div>
-            <div class="list-group" id="classList">
-              <button type="button" class="list-group-item list-group-item-action">Klasse auswählen</button>
+            <div class="list-group" id="selectClassGroup">
+              <select data-live-search="true" multiple id="selectClass">
+              </select>
             </div>
           </form>
         </div>

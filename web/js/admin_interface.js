@@ -1,12 +1,13 @@
-import {getAccessibleClasses, getClasses, getUsers, patchUser, postUser} from "./api.js"
+import { getAccessibleClasses, getClasses, getUsers, patchUser, postUser } from "./api.js"
 
 const passwordInput = document.querySelector("#passwordInput")
 const userInput = document.querySelector("#userInput")
 const isAdminInput = document.querySelector("#isAdminInput")
 const confirmUserAdd = document.querySelector("#confirmUserAdd")
 const showPassword = document.querySelector("#showPassword")
-const classList = document.querySelector("#classList")
+const selectClass = document.querySelector("#selectClass")
 const userTable = document.querySelector("#userTable")
+const selectClassGroup = document.querySelector("#selectClassGroup")
 
 async function addUser() {
     const data = {
@@ -23,16 +24,18 @@ async function addUser() {
 
 }
 
-// async function addClassesToList() {
-//     const classes = await getClasses()
-//     classes.forEach((schoolClass) => {
-//         classList.appendChild(schoolClass);
-//     })
-// }
+async function addClassesToList() {
+    const classes = await getClasses();
+    classes
+        .map(({ grade, className }) => `<option>${grade}${className}</option>`)
+        .forEach((option) => selectClass.insertAdjacentHTML("beforeend", option));
+
+    $(selectClass).selectpicker();
+}
 
 async function updateUserTable() {
-    let users = await getUsers();
-    const classes = await getClasses();
+
+    const [users, classes] = await Promise.all([getUsers(), getClasses()]);
 
     const userElements = await Promise.all(users.map(async (user) => {
         const userUrl = user._links.self.href;
@@ -55,7 +58,6 @@ async function updateUserTable() {
             const response = await patchUser(userUrl, {
                 administrator: adminInput.checked,
             });
-            console.log(response);
         })
         tr.appendChild(admin);
 
@@ -72,19 +74,22 @@ async function updateUserTable() {
             const response = await patchUser(userUrl, {
                 enabled: enabledInput.checked,
             })
-            console.log(response);
         })
         tr.appendChild(enabled);
+
 
         const accessibleClasses = await getAccessibleClasses(user);
         const classesElement = document.createElement("td");
         classesElement.innerHTML = `
-        <select class="schoolClassPicker" multiple data-live-search="true">
-            ${classes.map(schoolClass =>
-            `<option>${(schoolClass.grade)}${(schoolClass.className)}</option>
+        <select multiple data-live-search="true">
+            ${classes.map(({ grade, className }) =>
+            `<option>${grade}${className}</option>
             `)}
         </select>
         `;
+
+        $(classesElement.querySelector("select")).selectpicker("val", accessibleClasses.map(({ grade, className }) => `${grade}${className}`));
+
 
         tr.appendChild(classesElement);
 
@@ -92,10 +97,6 @@ async function updateUserTable() {
     }));
 
     userElements.forEach(row => userTable.appendChild(row));
-
-    $(".schoolClassPicker").selectpicker();
-
-
     console.log(users);
 }
 
@@ -112,4 +113,9 @@ showPassword.onclick = () => {
     }
 }
 
+isAdminInput.addEventListener("change", (e) => {
+    selectClassGroup.hidden = isAdminInput.checked;
+})
+
 updateUserTable();
+addClassesToList();
