@@ -29,7 +29,7 @@ function constructClassTableRow(schoolClass) {
     row.appendChild(grade);
 
     let className = document.createElement("td");
-    className.innerText = schoolClass.className;
+    className.innerText = schoolClass.className.toUpperCase();
     row.appendChild(className);
 
     let classTeacher = document.createElement("td");

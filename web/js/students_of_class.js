@@ -298,6 +298,7 @@ function constructStudentTableRow(student) {
     addSportResultButton.onclick = () => {
         if(student.score !== 0){
             document.querySelector("#studentURL").value = studentURL;
+            clearSportResultTable();
             createSportResultTable(studentURL, student);
             modalSportResult.modal('show');
         }
