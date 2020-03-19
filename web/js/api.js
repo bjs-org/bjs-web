@@ -34,30 +34,20 @@ export async function patchUser(url, user) {
     return json;
 }
 
-export function getAccessibleClasses(user) {
-    //Placeholder
-    return [
-        {
-            "className": "A",
-            "grade": "7",
-            "classTeacherName": "Gutsche",
-            "_links": {
-                "self": {
-                    "href": "http://raspberry-balena.gtdbqv7ic1ie9w3s.myfritz.net/api/v1/classes/23"
-                },
-            }
-        },
-        {
-            "className": "A",
-            "grade": "8",
-            "classTeacherName": "Gutsche",
-            "_links": {
-                "self": {
-                    "href": "http://raspberry-balena.gtdbqv7ic1ie9w3s.myfritz.net/api/v1/classes/23"
-                },
-            }
-        }
-    ];
+export async function getAccessibleClasses(user) {
+    const privilegesUrl = user._links.userPrivileges.href;
+    const response = await fetch(privilegesUrl, {
+        credentials: "include"
+    });
+
+    const json = await response.json();
+    const { user_privileges } = json._embedded;
+
+    const accessibleClasses = await Promise.all(user_privileges.map(userPrivilege => fetch(userPrivilege._links.accessibleClass.href, {
+        credentials: "include"
+    }).then(response => response.json())));
+
+    return accessibleClasses;
 }
 
 export async function getUsers() {
