@@ -259,6 +259,7 @@ function constructStudentTableRow(student) {
     row.appendChild(lastName);
 
     let birthday = document.createElement("td");
+    birthday.className = "d-none d-sm-table-cell";
     birthday.innerText = new Date(student.birthDay).toLocaleDateString();
     row.appendChild(birthday);
 
