@@ -95,13 +95,13 @@ async function prepareSportResultModal(student) {
 }
 
 function insertStudentScoreIntoSportResultModal(score) {
-    const labelScore = document.querySelector("#labelScore");
-    labelScore.innerText = `Punkte: ${score}`;
-}
+        const labelScore = document.querySelector("#labelScore");
+        labelScore.innerText = `Punkte: ${score}`;
+    }
 
 function insertSportResultsIntoSportResultModal(sportResults) {
     const sportResultsTableBody = document.querySelector("#sportResults-tbody");
-    sportResults
+        sportResults
         .map((sportResult) => constructSportResultTableRow(sportResult))
         .forEach(row => sportResultsTableBody.appendChild(row));
 }
@@ -295,8 +295,16 @@ function constructStudentTableRow(student) {
     let addSportResult = document.createElement("td");
     let addSportResultButton = document.createElement("span");
     addSportResultButton.onclick = () => {
-        prepareSportResultModal(student)
-            .then(() => modalSportResult.modal('show'));
+        if(student.score !== 0){
+            document.querySelector("#studentURL").value = studentURL;
+            createSportResultTable(studentURL, student);
+            modalSportResult.modal('show');
+        }
+        else {
+            const errorElement = document.querySelector("#error");
+            errorElement.innerHTML = "Dieser Schüler hat noch keine Ergebnisse";
+            $(errorElement).slideDown().delay(3000).slideUp();
+        }
     };
     addSportResultButton.title = "Ergebnisse des Schülers.";
     let iconASR = document.createElement("i");
