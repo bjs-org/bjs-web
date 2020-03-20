@@ -20,23 +20,27 @@ async function addUser() {
         console.log(json);
 
         const user = json._links.self.href;
-        await Promise.all(
-            Array.from(selectClass.selectedOptions)
-                .map(selectedClass => selectedClass.value)
-                .map(async accessibleClass => {
-                    const privilege = {
-                        user,
-                        accessibleClass
-                    };
-                    const penis = await postPrivilege(privilege);
-                    console.log(penis);
-                })
-        );
+        await sendPrivileges(user, selectClass.selectedOptions)
     } catch (e) {
         console.error(e);
     }
 
     await updateUserTable();
+}
+
+async function sendPrivileges(user, selectedOptions) {
+    await Promise.all(
+        Array.from(selectedOptions)
+            .map(selectedClass => selectedClass.value)
+            .map(async (accessibleClass) => {
+                const privilege = {
+                    user,
+                    accessibleClass
+                }
+                const penis = await postPrivilege(privilege)
+                console.log(penis)
+            })
+    )
 }
 
 async function addClassesToList() {
@@ -98,12 +102,18 @@ async function updateUserTable() {
         const classesElement = document.createElement("td");
         classesElement.innerHTML = `
         <select multiple data-live-search="true">
-            ${classes.map(({ grade, className }) =>
-            `<option>${grade}${className}</option>
+            ${classes.map(({ _links, grade, className }) =>
+            `<option value="${_links.self.href}">${grade}${className}</option>
             `)}
         </select>
         `;
-        $(classesElement.querySelector("select")).selectpicker("val", accessibleClasses.map(({ grade, className }) => `${grade}${className}`));
+        const selectField = classesElement.querySelector("select")
+        $(selectField).selectpicker("val", accessibleClasses.map(({ _links }) => _links.self.href));
+        selectField.addEventListener("change", (e) => {
+            // Differentiate between delete and create
+            //sendPrivileges(userUrl, selectField.selectedOptions);
+        });
+
         tr.appendChild(classesElement);
 
         // HIER DELETE BUTTON
