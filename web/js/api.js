@@ -113,7 +113,7 @@ export async function patchSportResult(sportResult, data) {
         })
         .catch((error) => {
             console.error('Error:', error);
-        });
+        })
 }
 
 export async function addStudent(student_data) {

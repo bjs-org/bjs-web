@@ -83,6 +83,8 @@ async function reloadSportResultModal() {
     $('#addSportResultCollapse').collapse('hide');
     if(student.score === 0){
         document.querySelector("#sportResultsTable").style.display = "none";
+       $('#addSportResultCollapse').collapse('toggle');
+        document.querySelector("#sportResultURL").value = "null";
     }
     else{
         document.querySelector("#sportResultsTable").style.display = "";
@@ -97,8 +99,11 @@ async function prepareSportResultModal(student) {
     document.querySelector("#studentURL").value = studentURL;
     if(student.score === 0){
         document.querySelector("#sportResultsTable").style.display = "none";
+        $('#addSportResultCollapse').collapse('toggle');
+        document.querySelector("#sportResultURL").value = "null";
     }
     else{
+        document.querySelector("#sportresultModalLabel").innerText = "Die Ergebnisse des Schülers";
         document.querySelector("#sportResultsTable").style.display = "";
     }
     const sportResults = await getSportResults(studentURL);
