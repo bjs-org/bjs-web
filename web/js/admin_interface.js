@@ -36,6 +36,7 @@ async function addUser() {
         console.error(e);
     }
 
+    await updateUserTable();
 }
 
 async function addClassesToList() {
@@ -117,7 +118,7 @@ async function updateUserTable() {
 
         return tr;
     }));
-
+    userTable.innerHTML = '';
     userElements.forEach(row => userTable.appendChild(row));
     console.log(users);
 }
