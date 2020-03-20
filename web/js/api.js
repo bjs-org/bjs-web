@@ -232,6 +232,19 @@ export async function deleteStudent(student) {
         })
 }
 
+export async function deleteUser(user) {
+    return fetch(`${user}`, {
+        credentials: "include",
+        method: 'DELETE',
+    })
+        .then((data) => {
+            console.log('Success', data);
+        })
+        .catch((error) => {
+            console.error('Error', error);
+        })
+}
+
 export async function deleteSportResult(sportResult) {
     await fetch(`${sportResult}`, {
         credentials: "include",

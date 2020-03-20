@@ -1,4 +1,4 @@
-import { getAccessibleClasses, getClasses, getUsers, patchUser, postUser, postPrivilege } from "./api.js"
+import { getAccessibleClasses, getClasses, getUsers, patchUser, postUser, postPrivilege, deleteUser } from "./api.js"
 
 const passwordInput = document.querySelector("#passwordInput")
 const userInput = document.querySelector("#userInput")
@@ -8,6 +8,9 @@ const showPassword = document.querySelector("#showPassword")
 const selectClass = document.querySelector("#selectClass")
 const userTable = document.querySelector("#userTable")
 const selectClassGroup = document.querySelector("#selectClassGroup")
+const confirmationDelete = document.querySelector("#confirmationDelete")
+
+let deleteUserUrl;
 
 async function addUser() {
     const data = {
@@ -103,8 +106,7 @@ async function updateUserTable() {
         classesElement.innerHTML = `
         <select multiple data-live-search="true">
             ${classes.map(({ _links, grade, className }) =>
-            `<option value="${_links.self.href}">${grade}${className}</option>
-            `)}
+            `<option value="${_links.self.href}">${grade}${className}</option>`)}
         </select>
         `;
         const selectField = classesElement.querySelector("select")
@@ -120,10 +122,13 @@ async function updateUserTable() {
         const deleteElement = document.createElement("td");
         deleteElement.innerHTML = `
         <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteUser">
-        <span>
-          <i class="fas fa-trash-alt" aria-hidden="true"></i>
-        </span></button>
+            <span>
+                <i class="fas fa-trash-alt" aria-hidden="true"></i>
+            </span>
+        </button>
         `
+        deleteElement.querySelector("button").addEventListener("click", () => deleteUserUrl = userUrl)
+
         tr.appendChild(deleteElement);
 
         return tr;
@@ -148,6 +153,14 @@ showPassword.onclick = () => {
 
 isAdminInput.addEventListener("change", (e) => {
     selectClassGroup.hidden = isAdminInput.checked;
+})
+
+confirmationDelete.addEventListener("click", async () => {
+    if (deleteUserUrl) {
+        await deleteUser(deleteUserUrl);
+        deleteUserUrl = null;
+        await updateUserTable();
+    }
 })
 
 updateUserTable();
