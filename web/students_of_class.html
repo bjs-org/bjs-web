@@ -21,6 +21,21 @@
     <div id="error" class="alert alert-warning" role="alert" style="display: none">
         Something went wrong ...
     </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">BJS-Web</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="#">Start</a>
+                <a class="nav-item nav-link active" href="index.html">Klassenübersicht</a>
+                <a class="nav-item nav-link" href="scores.html">Punkteübersicht</a>
+                <a class="nav-item nav-link" href="overview.html">Besten aller Stufen</a>
+                <a class="nav-item nav-link" href="#">Admin Übersicht</a>
+            </div>
+        </div>
+    </nav>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.html">Klassenübersicht</a></li>
@@ -103,6 +118,27 @@
                 Sie können keine weiteren Änderungen an den Ergebnissen der Schüler mehr vollziehen.
                 Die von ihnen eingetragenen Ergebnisse werden so wie sie aktuell sind in den Urkunden der Schüler
                 niedergeschrieben.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Nein</button>
+                <button type="button" class="btn btn-success btn-block" id="confirmationFinish" data-dismiss="modal">Ja</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="finishModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Wollen sie wirklich die Bearbeitung der Klasse beenden?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="container">
+                  Die Klasse wird vorerst geschlossen. Mit den bisher eingetragenen Daten können von dem Zeitpunkt an die Urkunden ausgestellt werden.
+                  Sind sie sicher das sie die Bearbeitung beenden wollen? Sie können die Bearbeitung jedoch wieder aufnehmen.
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Nein</button>
@@ -290,7 +326,7 @@
                             <input type="text" class="form-control" name="editFirstName" id="editFirstName" placeholder="firstName">
                         </div>
                         <div class="col form-group">
-                            <label for="editLastname">Nachnamen ändern:</label>
+                            <label for="editLastName">Nachnamen ändern:</label>
                             <input type="text" class="form-control" name="editLastName" id="editLastName" placeholder="lastName">
                         </div>
                     </div>

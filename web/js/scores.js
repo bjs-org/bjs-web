@@ -24,7 +24,7 @@ function constructClassTableRow(schoolClass) {
         window.location.href = `students_scores.html?schoolClass=${schoolClass._links.self.href}`;
     };
 
-    if(schoolClass.grade === "7"){
+    if(schoolClass.classClosed === true){
         row.className = "table-success";
     }
 

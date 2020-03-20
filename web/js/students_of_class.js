@@ -8,7 +8,8 @@ import {
     getStudents,
     patchSportResult,
     patchStudent,
-    postSportResult
+    postSportResult,
+    patchClosed,
 } from "./api.js";
 
 let classURL = null;
@@ -34,34 +35,38 @@ const modalEditStudent = $('#editStudentModal').modal({
     show: false
 });
 
+let classURL = "";
 
 $("#disciplines").on('change', function () {
+    const studentSportResultsTableBody = document.querySelector("#studentSportResult-tbody");
     const selected = $(this).val();
     if(selected.substring(0,3) !== "NSO") {
-        addSportResultsTable.style.visibility = "show";
+        studentSportResultsTableBody.style.display= "";
         if (selected.substring(0, 3) === "RUN") {
             hideTableColumns("isNotRun");
         } else {
             showTableColumns("isNotRun");
         }
-        addSportResultsTable.style.display = "";
+        studentSportResultsTableBody.style.display = "";
     }
     else{
-        addSportResultsTable.style.display = "none";
+        studentSportResultsTableBody.style.display = "none";
     }
 });
 
 
-$('#addSportResultsModal').on('show.bs.modal', async function () {
+$('#addSportResultsModal').on('show.bs.modal', function () {
     const studentSportResultsTableBody = document.querySelector("#studentSportResult-tbody");
     const urlSearchParams = new URLSearchParams(window.location.search);
     const schoolClassUrl = urlSearchParams.get("schoolClass");
-
-    const students = await getStudents(schoolClassUrl);
-    students
-        .map(student => constructStudentSportResultTableRow(student))
-        .forEach(row => studentSportResultsTableBody.appendChild(row));
-    addSportResultsTable.style.display = "none";
+    getStudents(schoolClassUrl)
+        .then(students => {
+            students.forEach((student) => {
+                let row = constructStudentSportResultTableRow(student);
+                studentSportResultsTableBody.appendChild(row);
+            })
+        });
+    studentSportResultsTableBody.style.display = "none";
 });
 
 
@@ -297,10 +302,8 @@ function constructStudentTableRow(student) {
     let addSportResultButton = document.createElement("span");
     addSportResultButton.onclick = () => {
         if(student.score !== 0){
-            document.querySelector("#studentURL").value = studentURL;
-            clearSportResultTable();
-            createSportResultTable(studentURL, student);
-            modalSportResult.modal('show');
+            prepareSportResultModal(student)
+            .then(() => modalSportResult.modal('show'));
         }
         else {
             const errorElement = document.querySelector("#error");
@@ -327,7 +330,7 @@ async function deleteStudentRequest() {
             errorElement.innerHTML = "The delete request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         });
-    await fetchApi();
+    fetchApi();
 }
 
 async function addSportResult(formData) {
@@ -342,7 +345,7 @@ async function addSportResult(formData) {
             errorElement.innerHTML = "The post request was not successful.";
             $(errorElement).slideDown().delay(3000).slideUp();
         });
-    await reloadSportResultModal();
+     reloadSportResultModal();
 }
 
 async function addNewStudent(formData) {
@@ -472,6 +475,7 @@ async function fetchApi() {
         const [schoolClass, students] = await Promise.all([getClass(schoolClassUrl), getStudents(schoolClassUrl)]);
         updateSchoolClass(schoolClass);
         setupStudentTable(students);
+
     } catch (e) {
         errorElement.innerHTML = "This element probably does not exists or is not accessible";
         $(errorElement).slideDown().delay(3000).slideUp();
@@ -520,8 +524,12 @@ addSportResultButton.addEventListener('click', function () {
     document.querySelector("#sportResultURL").value = "null";
 });
 
-finish.addEventListener('click', function () {
-
+finish.addEventListener('click', async function () {
+    const data = {
+        classClosed: true
+    };
+    await patchClosed(classURL, data);
+    window.location.href = `index.html`;
 });
 
 fetchApi();

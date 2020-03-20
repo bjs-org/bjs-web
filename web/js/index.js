@@ -1,9 +1,19 @@
-import {getClasses} from "./api.js";
+import {getClasses,
+        patchClosed} from "./api.js";
+
+
+const modalClosed = $('#closedModal').modal({
+    keyboard: false,
+    show: false
+});
+
+let classURL = "";
 
 async function loadClasses() {
     const classTableBody = document.querySelector("#class-tbody");
     const errorElement = document.querySelector("#error");
-
+    classTableBody.querySelectorAll("tr")
+        .forEach(row => classTableBody.removeChild(row));
     getClasses()
         .then(classes => {
             classes.sort();
@@ -20,8 +30,16 @@ async function loadClasses() {
 
 function constructClassTableRow(schoolClass) {
     let row = document.createElement("tr");
-    row.onclick = () => {
-            window.location.href = `students_of_class.html?schoolClass=${schoolClass._links.self.href}`;
+    if(schoolClass.classClosed === true){
+        row.className = "table-dark";
+    }
+        row.onclick = () => {
+            if(schoolClass.classClosed === true){
+                classURL = schoolClass._links.self.href;
+                modalClosed.modal('show');
+            } else {
+                window.location.href = `students_of_class.html?schoolClass=${schoolClass._links.self.href}`;
+            }
     };
 
     let grade = document.createElement("td");
@@ -38,5 +56,13 @@ function constructClassTableRow(schoolClass) {
 
     return row;
 }
+const openAgain = document.querySelector("#confirmationOpen");
+openAgain.addEventListener('click', async function () {
+    const data = {
+        classClosed: false
+    };
+    await patchClosed(classURL, data);
+    loadClasses();
+});
 
 loadClasses();
