@@ -1,5 +1,4 @@
-import {getClasses,
-        patchClosed} from "./api.js";
+import {getClasses, patchClosed} from "./api.js";
 
 
 const modalClosed = $('#closedModal').modal({
@@ -7,7 +6,7 @@ const modalClosed = $('#closedModal').modal({
     show: false
 });
 
-let classURL = "";
+let closeClassUrl;
 
 async function loadClasses() {
     const classTableBody = document.querySelector("#class-tbody");
@@ -30,38 +29,43 @@ async function loadClasses() {
 
 function constructClassTableRow(schoolClass) {
     let row = document.createElement("tr");
-    if(schoolClass.classClosed === true){
-        row.className = "table-dark";
-    }
-        row.onclick = () => {
-            if(schoolClass.classClosed === true){
-                classURL = schoolClass._links.self.href;
-                modalClosed.modal('show');
-            } else {
-                window.location.href = `students_of_class.html?schoolClass=${schoolClass._links.self.href}`;
-            }
-    };
+    const {href: schoolClassUrl} = schoolClass._links.self;
 
-    let grade = document.createElement("td");
+    if (schoolClass.classClosed) {
+        row.className = "table-dark";
+        row.onclick = () => {
+            closeClassUrl = schoolClassUrl;
+            modalClosed.modal('show');
+        };
+    } else {
+        row.onclick = () => {
+            window.location.href = `students_of_class.html?schoolClass=${schoolClassUrl}`;
+        }
+    }
+
+    const grade = document.createElement("td");
     grade.innerText = schoolClass.grade;
     row.appendChild(grade);
 
-    let className = document.createElement("td");
+    const className = document.createElement("td");
     className.innerText = schoolClass.className.toUpperCase();
     row.appendChild(className);
 
-    let classTeacher = document.createElement("td");
-    classTeacher.innerText = schoolClass.classTeacherName === undefined ? "" : schoolClass.classTeacherName;
+    const classTeacher = document.createElement("td");
+    classTeacher.innerText = schoolClass.classTeacherName || "";
     row.appendChild(classTeacher);
 
     return row;
 }
+
 const openAgain = document.querySelector("#confirmationOpen");
 openAgain.addEventListener('click', async function () {
-    const data = {
-        classClosed: false
-    };
-    await patchClosed(classURL, data);
+    if (closeClassUrl) {
+        await patchClosed(closeClassUrl, {
+            classClosed: false
+        });
+        closeClassUrl = null;
+    }
     loadClasses();
 });
 
