@@ -1,4 +1,4 @@
-import { getAccessibleClasses, getClasses, getUsers, patchUser, postUser } from "./api.js"
+import { getAccessibleClasses, getClasses, getUsers, patchUser, postUser, postPrivilege } from "./api.js"
 
 const passwordInput = document.querySelector("#passwordInput")
 const userInput = document.querySelector("#userInput")
@@ -18,16 +18,31 @@ async function addUser() {
     try {
         const json = await postUser(data);
         console.log(json);
+
+        const user = json._links.self.href;
+        await Promise.all(
+            Array.from(selectClass.selectedOptions)
+                .map(selectedClass => selectedClass.value)
+                .map(async accessibleClass => {
+                    const privilege = {
+                        user,
+                        accessibleClass
+                    };
+                    const penis = await postPrivilege(privilege);
+                    console.log(penis);
+                })
+        );
     } catch (e) {
-        console.log(e);
+        console.error(e);
     }
 
 }
 
 async function addClassesToList() {
     const classes = await getClasses();
+    console.log(classes);
     classes
-        .map(({ grade, className }) => `<option>${grade}${className}</option>`)
+        .map(({ grade, className, _links }) => `<option value="${_links.self.href}">${grade}${className}</option>`)
         .forEach((option) => selectClass.insertAdjacentHTML("beforeend", option));
 
     $(selectClass).selectpicker();

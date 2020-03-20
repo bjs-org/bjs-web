@@ -21,6 +21,19 @@ export async function postUser(user) {
     return json;
 }
 
+export async function postPrivilege(privilege) {
+    const response = await fetch(`${await api_url}/user_privileges`, {
+        credentials: "include",
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(privilege),
+    });
+    const json = await response.json();
+    return json;
+}
+
 export async function patchUser(url, user) {
     const response = await fetch(url, {
         credentials: "include",
