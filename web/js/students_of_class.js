@@ -12,9 +12,6 @@ import {
     patchClosed,
 } from "./api.js";
 
-let classURL = null;
-const addSportResultsTable = document.querySelector("#studentSportResultTable");
-
 const modalDeletion = $('#deletionModal').modal({
     keyboard: true,
     show: false
@@ -475,7 +472,6 @@ async function fetchApi() {
         const [schoolClass, students] = await Promise.all([getClass(schoolClassUrl), getStudents(schoolClassUrl)]);
         updateSchoolClass(schoolClass);
         setupStudentTable(students);
-
     } catch (e) {
         errorElement.innerHTML = "This element probably does not exists or is not accessible";
         $(errorElement).slideDown().delay(3000).slideUp();
