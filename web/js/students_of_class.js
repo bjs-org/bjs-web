@@ -6,10 +6,10 @@ import {
     getSportResults,
     getStudent,
     getStudents,
+    patchClosed,
     patchSportResult,
     patchStudent,
     postSportResult,
-    patchClosed,
 } from "./api.js";
 
 const modalDeletion = $('#deletionModal').modal({
@@ -68,12 +68,12 @@ $('#addSportResultsModal').on('show.bs.modal', function () {
 
 
 $('#sportResultModal').on('hide.bs.modal', function () {
-    clearSportResultTable();
+    document.querySelector("#sportResults-tbody").innerHTML = '';
     $("#addSportResultCollapse").collapse('hide');
 });
 
 $('#addSportResultsModal').on('hide.bs.modal', function () {
-    clearStudentSportResultTable();
+    document.querySelector("#studentSportResult-tbody").innerHTML = '';
     showTableColumns("isNotRun");
 });
 
@@ -81,8 +81,13 @@ async function reloadSportResultModal() {
     const studentUrl = document.querySelector("#studentURL").value;
     const [student, sportResults] = await Promise.all([getStudent(studentUrl), getSportResults(studentUrl)]);
     $('#addSportResultCollapse').collapse('hide');
-
-    clearSportResultTable();
+    if(student.score === 0){
+        document.querySelector("#sportResultsTable").style.display = "none";
+    }
+    else{
+        document.querySelector("#sportResultsTable").style.display = "";
+    }
+    document.querySelector("#sportResults-tbody").innerHTML = '';
     insertStudentScoreIntoSportResultModal(student.score);
     insertSportResultsIntoSportResultModal(sportResults);
 }
@@ -90,7 +95,12 @@ async function reloadSportResultModal() {
 async function prepareSportResultModal(student) {
     const studentURL = student._links.self.href;
     document.querySelector("#studentURL").value = studentURL;
-
+    if(student.score === 0){
+        document.querySelector("#sportResultsTable").style.display = "none";
+    }
+    else{
+        document.querySelector("#sportResultsTable").style.display = "";
+    }
     const sportResults = await getSportResults(studentURL);
     insertStudentScoreIntoSportResultModal(student.score);
     insertSportResultsIntoSportResultModal(sportResults);
@@ -106,16 +116,6 @@ function insertSportResultsIntoSportResultModal(sportResults) {
         sportResults
         .map((sportResult) => constructSportResultTableRow(sportResult))
         .forEach(row => sportResultsTableBody.appendChild(row));
-}
-
-function clearStudentSportResultTable() {
-    const studentSportResultsTableBody = document.querySelector("#studentSportResult-tbody");
-    studentSportResultsTableBody.querySelectorAll("tr").forEach(row => studentSportResultsTableBody.removeChild(row));
-}
-
-function clearSportResultTable() {
-    const sportResultsTableBody = document.querySelector("#sportResults-tbody");
-    sportResultsTableBody.querySelectorAll("tr").forEach(row => sportResultsTableBody.removeChild(row));
 }
 
 function constructStudentSportResultTableRow(student) {
@@ -206,6 +206,7 @@ async function editSportResult(formData) {
             $(errorElement).slideDown().delay(3000).slideUp();
         });
     await reloadSportResultModal();
+    fetchApi();
 }
 
 function changingNamesOfDisciplines(discipline) {
@@ -260,10 +261,10 @@ function constructStudentTableRow(student) {
     lastName.innerText = student.lastName;
     row.appendChild(lastName);
 
-    let birthday = document.createElement("td");
-    birthday.className = "d-none d-sm-table-cell";
-    birthday.innerText = new Date(student.birthDay).toLocaleDateString();
-    row.appendChild(birthday);
+    let score = document.createElement("td");
+    score.className = "d-none d-sm-table-cell";
+    score.innerText = student.score;
+    row.appendChild(score);
 
     let gender = document.createElement("td");
     gender.innerText = student.female ? "Weiblich" : "Männlich";
@@ -298,15 +299,8 @@ function constructStudentTableRow(student) {
     let addSportResult = document.createElement("td");
     let addSportResultButton = document.createElement("span");
     addSportResultButton.onclick = () => {
-        if(student.score !== 0){
             prepareSportResultModal(student)
             .then(() => modalSportResult.modal('show'));
-        }
-        else {
-            const errorElement = document.querySelector("#error");
-            errorElement.innerHTML = "Dieser Schüler hat noch keine Ergebnisse";
-            $(errorElement).slideDown().delay(3000).slideUp();
-        }
     };
     addSportResultButton.title = "Ergebnisse des Schülers.";
     let iconASR = document.createElement("i");
@@ -343,6 +337,7 @@ async function addSportResult(formData) {
             $(errorElement).slideDown().delay(3000).slideUp();
         });
      reloadSportResultModal();
+     fetchApi();
 }
 
 async function addNewStudent(formData) {
@@ -436,6 +431,7 @@ async function removeResult(sportResult) {
             $(errorElement).slideDown().delay(3000).slideUp();
         });
     await reloadSportResultModal();
+    fetchApi();
 }
 
 function hideTableColumns(className) {
