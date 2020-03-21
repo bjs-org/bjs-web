@@ -24,9 +24,16 @@
       Something went wrong ...
     </div>
     <div class="container d-flex justify-content-end align-items-center mb-2 mt-2">
-      <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#addUser">
+      <button title="Einen Benutzer erstellen" type="button" class="btn btn-outline-primary mx-2" data-toggle="modal"
+        data-target="#addUser">
         <span>
           <i class="far fa-plus-square" style="font-size: 3rem" aria-hidden="true"></i>
+        </span>
+      </button>
+      <button title="Mehrere Benutzer hinzufügen" type="button" class="btn btn-outline-primary" data-toggle="modal"
+        data-target="#addMultipleUsers">
+        <span>
+          <i class="fas fa-folder-plus" style="font-size: 3rem" aria-hidden="true"></i>
         </span>
       </button>
     </div>
@@ -58,7 +65,8 @@
           </button>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success btn-block" data-dismiss="modal" id="confirmationDelete">Ja</button>
+          <button type="button" class="btn btn-success btn-block" data-dismiss="modal"
+            id="confirmationDelete">Ja</button>
           <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Nein</button>
         </div>
       </div>
@@ -113,6 +121,48 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" tabindex="-1" role="dialog" id="addMultipleUsers">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Mehrere Benutzer hinzufügen</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="multipleUsersForm">
+            <div class="form-row align-items-center my-1">
+              <div class="col-auto">
+                <p>Erstelle</p>
+              </div>
+              <div class="col-auto">
+                <input class="form-control" type="number" min="1" max="3" step="1" value="1" name="userCount">
+              </div>
+            </div>
+            <div class="form-row align-items-center my-1">
+              <div class="col-auto">
+                <p>pro</p>
+              </div>
+              <div class="col-auto">
+                <select class="custom-select" name="classGrade">
+                  <option value="class">Klasse</option>
+                  <option value="grade">Stufe</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="reset" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+          <button form="multipleUsersForm" type="submit" class="btn btn-primary" id="confirmMultipleUsersAdd"
+            data-dismiss="modal">Erstellen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <script>
 

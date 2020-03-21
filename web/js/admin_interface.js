@@ -9,6 +9,8 @@ const selectClass = document.querySelector("#selectClass")
 const userTable = document.querySelector("#userTable")
 const selectClassGroup = document.querySelector("#selectClassGroup")
 const confirmationDelete = document.querySelector("#confirmationDelete")
+const multipleUsersForm = document.querySelector("#multipleUsersForm")
+const confirmMultipleUsersAdd = document.querySelector("#confirmMultipleUsersAdd")
 
 let deleteUserUrl;
 
@@ -54,6 +56,10 @@ async function addClassesToList() {
         .forEach((option) => selectClass.insertAdjacentHTML("beforeend", option));
 
     $(selectClass).selectpicker();
+}
+
+function randomString() {
+    return Math.random().toString(36).substring(7);
 }
 
 async function updateUserTable() {
@@ -161,6 +167,39 @@ confirmationDelete.addEventListener("click", async () => {
         deleteUserUrl = null;
         await updateUserTable();
     }
+})
+
+confirmMultipleUsersAdd.addEventListener("click", async (e) => {
+    let formData = new FormData(multipleUsersForm);
+    const classOrGrade = formData.get("classGrade")
+    const userCount = formData.get("userCount")
+    console.log({
+        userCount: userCount,
+        classGrade: classOrGrade
+    })
+    const classes = await getClasses();
+
+    let createdUsers = [];
+
+    if (classOrGrade === "class") {
+        await classes.forEach(async schoolClass => {
+            const newUser = {
+                username: randomString(),
+                password: randomString(),
+            };
+            const userResponse = await postUser(newUser);
+            createdUsers.push(newUser);
+
+            const newPrivilege = {
+                user: userResponse._links.self.href,
+                accessibleClass: schoolClass._links.self.href
+            }
+            const privilegeResponse = await postPrivilege(newPrivilege);
+        })
+    }
+
+    console.log(createdUsers);
+    console.table(createdUsers);
 })
 
 updateUserTable();
