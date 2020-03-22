@@ -1,4 +1,4 @@
-import { getAccessibleClasses, getClasses, getUsers, patchUser, postUser, postPrivilege, deleteUser } from "./api.js"
+import {deleteUser, getAccessibleClasses, getClasses, getUsers, patchUser, postPrivilege, postUser} from "./api.js"
 
 const passwordInput = document.querySelector("#passwordInput")
 const userInput = document.querySelector("#userInput")
@@ -169,38 +169,57 @@ confirmationDelete.addEventListener("click", async () => {
     }
 })
 
+function groupBy(arr, prop) {
+    return arr.reduce((sum, element) => {
+        const propertyOfElement = prop(element);
+        sum[propertyOfElement] = [...sum[propertyOfElement] || [], element];
+        return sum;
+    }, {})
+}
+
 confirmMultipleUsersAdd.addEventListener("click", async (e) => {
     let formData = new FormData(multipleUsersForm);
-    const classOrGrade = formData.get("classGrade")
-    const userCount = formData.get("userCount")
+    const classOrGrade = formData.get("classGrade");
+    const userCount = formData.get("userCount");
+
+    const classes = await getClasses();
+
     console.log({
         userCount: userCount,
         classGrade: classOrGrade
-    })
-    const classes = await getClasses();
-
-    let createdUsers = [];
+    });
 
     if (classOrGrade === "class") {
-        await classes.forEach(async schoolClass => {
-            const newUser = {
-                username: randomString(),
-                password: randomString(),
-            };
-            const userResponse = await postUser(newUser);
-            createdUsers.push(newUser);
+        const createdUsers = await Promise.all(
+            classes.map(async (schoolClass) => {
+                const newUser = {
+                    username: randomString(),
+                    password: randomString(),
+                };
+                const userResponse = await postUser(newUser);
 
-            const newPrivilege = {
-                user: userResponse._links.self.href,
-                accessibleClass: schoolClass._links.self.href
-            }
-            const privilegeResponse = await postPrivilege(newPrivilege);
-        })
+                const newPrivilege = {
+                    user: userResponse._links.self.href,
+                    accessibleClass: schoolClass._links.self.href
+                };
+                const privilegeResponse = await postPrivilege(newPrivilege);
+
+                return newUser;
+            })
+        );
+
+        console.log(createdUsers);
+        console.table(createdUsers);
+    } else {
+        const classesByGrade = groupBy(classes, (schoolClass) => schoolClass.grade);
+        console.log(classesByGrade);
+        Object.entries(classesByGrade).forEach(([grade, classes]) => {
+            console.log(`Stufe ${grade}`);
+            console.table(classes);
+        });
+
     }
+});
 
-    console.log(createdUsers);
-    console.table(createdUsers);
-})
-
-updateUserTable();
-addClassesToList();
+updateUserTable()
+    .then(() => addClassesToList());
