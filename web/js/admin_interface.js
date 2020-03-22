@@ -11,6 +11,9 @@ const selectClassGroup = document.querySelector("#selectClassGroup")
 const confirmationDelete = document.querySelector("#confirmationDelete")
 const multipleUsersForm = document.querySelector("#multipleUsersForm")
 const confirmMultipleUsersAdd = document.querySelector("#confirmMultipleUsersAdd")
+const generatedUsersTableBody = document.querySelector("#generatedUsersTableBody")
+const generatedUsersTable = document.querySelector("#generatedUsersTable")
+const generatedUsersSpinner = document.querySelector("#generatedUsersSpinner")
 
 let deleteUserUrl;
 
@@ -182,8 +185,12 @@ function groupBy(arr, prop) {
 
 confirmMultipleUsersAdd.addEventListener("click", async (e) => {
     let formData = new FormData(multipleUsersForm);
+
+    multipleUsersForm.hidden = true;
+    generatedUsersSpinner.hidden = false;
+
     const classOrGrade = formData.get("classGrade");
-    const userCount = formData.get("userCount");
+    const userCount = parseInt(formData.get("userCount"));
 
     const classes = await getClasses();
 
@@ -193,36 +200,103 @@ confirmMultipleUsersAdd.addEventListener("click", async (e) => {
     });
 
     if (classOrGrade === "class") {
-        const createdUsers = await Promise.all(
-            classes.map(async (schoolClass) => {
-                const newUser = {
-                    username: randomString(),
-                    password: randomString(),
-                };
-                const userResponse = await postUser(newUser);
+        const createdUsers = [];
+        for (let i = 0; i < userCount; i++) {
+            createdUsers.push(... await Promise.all(
+                classes.map(async (schoolClass) => {
+                    const newUser = {
+                        username: randomString(),
+                        password: randomString(),
+                    };
+                    const userResponse = await postUser(newUser);
 
-                const newPrivilege = {
-                    user: userResponse._links.self.href,
-                    accessibleClass: schoolClass._links.self.href
-                };
-                const privilegeResponse = await postPrivilege(newPrivilege);
+                    const newPrivilege = {
+                        user: userResponse._links.self.href,
+                        accessibleClass: schoolClass._links.self.href
+                    };
+                    const privilegeResponse = await postPrivilege(newPrivilege);
 
-                return newUser;
-            })
-        );
+                    newUser["accessibleClass"] = schoolClass;
 
+                    return newUser;
+                })
+            ))
+        }
+        createdUsers.forEach(user => {
+            const row = document.createElement("tr");
+
+            row.insertAdjacentHTML("beforeend", `<td>${user.username}</td>`);
+            row.insertAdjacentHTML("beforeend", `<td>${user.password}</td>`);
+            row.insertAdjacentHTML("beforeend", `<td>${user.accessibleClass.grade}${user.accessibleClass.className}</td>`);
+
+            generatedUsersTableBody.appendChild(row);
+        })
         console.log(createdUsers);
         console.table(createdUsers);
     } else {
         const classesByGrade = groupBy(classes, (schoolClass) => schoolClass.grade);
         console.log(classesByGrade);
-        Object.entries(classesByGrade).forEach(([grade, classes]) => {
-            console.log(`Stufe ${grade}`);
-            console.table(classes);
-        });
+
+        const createdUsers = [];
+
+        for (let i = 0; i < userCount; i++) {
+            createdUsers.push(... await Promise.all(
+                Object.entries(classesByGrade).map(async ([grade, classes]) => {
+                    console.log(`Stufe ${grade}`);
+                    console.table(classes);
+
+                    const newUser = {
+                        username: randomString(),
+                        password: randomString(),
+                    };
+                    const userResponse = await postUser(newUser);
+
+                    await Promise.all(
+                        classes.map(async (schoolClass) => {
+                            const newPrivilege = {
+                                user: userResponse._links.self.href,
+                                accessibleClass: schoolClass._links.self.href
+                            };
+                            const privilegeResponse = await postPrivilege(newPrivilege);
+                        })
+                    );
+
+                    newUser.accessibleClasses = classes;
+
+                    return newUser;
+                })
+            ))
+        }
+
+        createdUsers.forEach(user => {
+            const row = document.createElement("tr");
+
+            row.insertAdjacentHTML("beforeend", `<td>${user.username}</td>`);
+            row.insertAdjacentHTML("beforeend", `<td>${user.password}</td>`);
+            row.insertAdjacentHTML("beforeend", `<td>${user.accessibleClasses.map(schoolClass => `${schoolClass.grade}${schoolClass.className}`)}</td>`);
+
+            generatedUsersTableBody.appendChild(row);
+        })
+
+        console.log(createdUsers);
+        console.table(createdUsers);
 
     }
+    confirmMultipleUsersAdd.hidden = true;
+    generatedUsersSpinner.hidden = true;
+    generatedUsersTable.hidden = false;
+
+    await updateUserTable();
 });
+
+$("#addMultipleUsers").on("hidden.bs.modal", () => {
+    confirmMultipleUsersAdd.hidden = false;
+    generatedUsersSpinner.hidden = true;
+    generatedUsersTable.hidden = true;
+    multipleUsersForm.hidden = false;
+    multipleUsersForm.reset();
+    generatedUsersTableBody.innerHTML = "";
+})
 
 updateUserTable()
     .then(() => addClassesToList());

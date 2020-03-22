@@ -153,11 +153,24 @@
               </div>
             </div>
           </form>
+          <div hidden class="spinner-border text-primary" role="status" id="generatedUsersSpinner">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <table hidden class="table" id="generatedUsersTable">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Passwort</th>
+                <th scope="col">Klasse(n)</th>
+              </tr>
+            </thead>
+            <tbody id="generatedUsersTableBody">
+            </tbody>
+          </table>
         </div>
         <div class="modal-footer">
-          <button type="reset" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-          <button form="multipleUsersForm" type="submit" class="btn btn-primary" id="confirmMultipleUsersAdd"
-            data-dismiss="modal">Erstellen</button>
+          <button type="reset" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+          <button class="btn btn-primary" id="confirmMultipleUsersAdd">Erstellen</button>
         </div>
       </div>
     </div>
