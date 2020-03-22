@@ -1,4 +1,4 @@
-import { deleteUser, getAccessibleClasses, getClasses, getUsers, patchUser, postPrivilege, postUser } from "./api.js"
+import { deleteUser, getAccessibleClasses, getClasses, getUsers, patchUser, postPrivilege, postUser, getAuth } from "./api.js"
 
 const passwordInput = document.querySelector("#passwordInput")
 const userInput = document.querySelector("#userInput")
@@ -18,22 +18,25 @@ const generatedUsersSpinner = document.querySelector("#generatedUsersSpinner")
 let deleteUserUrl;
 
 async function addUser() {
-    const data = {
-        username: userInput.value,
-        password: passwordInput.value,
-        administrator: isAdminInput.checked,
-    };
-    try {
-        const json = await postUser(data);
-        console.log(json);
+    if (userInput.value.trim().length !== 0) {
+        const data = {
+            username: userInput.value,
+            password: passwordInput.value,
+            administrator: isAdminInput.checked,
+        };
+        try {
+            const json = await postUser(data);
+            console.log(json);
 
-        const user = json._links.self.href;
-        await sendPrivileges(user, selectClass.selectedOptions)
-    } catch (e) {
-        console.error(e);
+            const user = json._links.self.href;
+            await sendPrivileges(user, selectClass.selectedOptions)
+        } catch (e) {
+            console.error(e);
+        }
+
+        await updateUserTable();
     }
 
-    await updateUserTable();
 }
 
 async function sendPrivileges(user, selectedOptions) {
@@ -67,12 +70,20 @@ function randomString() {
 
 async function updateUserTable() {
 
-    const [users, classes] = await Promise.all([getUsers(), getClasses()]);
+    const [users, classes, auth] = await Promise.all([
+        getUsers(),
+        getClasses(),
+        getAuth()
+    ]);
 
-    console.log(users);
+    console.log(auth);
 
     const userElements = users.map((user) => {
         const userUrl = user._links.self.href;
+
+        if (auth.username === user.username) {
+            console.log(auth.username);
+        }
 
         const tr = document.createElement("tr");
         const username = document.createElement("td");
@@ -87,6 +98,7 @@ async function updateUserTable() {
         </div>`;
 
         const adminInput = admin.querySelector("input")
+        adminInput.disabled = auth.username === user.username;
         adminInput.checked = user.administrator;
         adminInput.addEventListener("change", async (e) => {
             const response = await patchUser(userUrl, {
@@ -102,7 +114,8 @@ async function updateUserTable() {
             <label class="custom-control-label" for="enabledSwitch${user.username}"></label>
         </div>`;
 
-        const enabledInput = enabled.querySelector("input")
+        const enabledInput = enabled.querySelector("input");
+        enabledInput.disabled = auth.username === user.username;
         enabledInput.checked = user.enabled;
         enabledInput.addEventListener("change", async (e) => {
             const response = await patchUser(userUrl, {
@@ -114,22 +127,24 @@ async function updateUserTable() {
 
         const { accessibleClasses } = user;
         const classesElement = document.createElement("td");
-        classesElement.innerHTML = `
-        <select multiple data-live-search="true">
-            ${classes.map(({ _links, grade, className }) =>
-            `<option value="${_links.self.href}">${grade}${className}</option>`)}
-        </select>
-        `;
-        const selectField = classesElement.querySelector("select")
-        $(selectField).selectpicker("val", accessibleClasses.map(({ _links }) => _links.self.href.replace("{?projection}", "")));
-        selectField.addEventListener("change", (e) => {
-            // Differentiate between delete and create
-            //sendPrivileges(userUrl, selectField.selectedOptions);
-        });
+        if (!user.administrator) {
+            classesElement.innerHTML = `
+            <select multiple data-live-search="true">
+                ${classes.map(({ _links, grade, className }) =>
+                `<option value="${_links.self.href}">${grade}${className}</option>`)}
+            </select>
+            `;
+            const selectField = classesElement.querySelector("select")
+            $(selectField).selectpicker("val", accessibleClasses.map(({ _links }) => _links.self.href.replace("{?projection}", "")));
+            selectField.addEventListener("change", (e) => {
+                // Differentiate between delete and create
+                //sendPrivileges(userUrl, selectField.selectedOptions);
+            });
+        }
 
         tr.appendChild(classesElement);
 
-        // HIER DELETE BUTTON
+
         const deleteElement = document.createElement("td");
         deleteElement.innerHTML = `
         <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteUser">
@@ -138,8 +153,9 @@ async function updateUserTable() {
             </span>
         </button>
         `
-        deleteElement.querySelector("button").addEventListener("click", () => deleteUserUrl = userUrl)
-
+        const deleteButton = deleteElement.querySelector("button")
+        deleteButton.addEventListener("click", () => deleteUserUrl = userUrl)
+        deleteButton.disabled = auth.username === user.username;
         tr.appendChild(deleteElement);
 
         return tr;
@@ -147,7 +163,6 @@ async function updateUserTable() {
 
     userTable.innerHTML = '';
     userElements.forEach(row => userTable.appendChild(row));
-    console.log(users);
 }
 
 confirmUserAdd.addEventListener("click", addUser);
