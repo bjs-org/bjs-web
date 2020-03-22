@@ -64,14 +64,20 @@ export async function getAccessibleClasses(user) {
 }
 
 export async function getUsers() {
-    const response = await fetch(`${await api_url}/users`, {
+    const response = await fetch(`${await api_url}/users?projection=accessibleClasses`, {
         credentials: "include",
         method: 'GET',
     });
 
     const json = await response.json();
     const users = json._embedded.users;
-    users.sort((a, b) => a.username.localeCompare(b.username))
+    users.sort((a, b) => {
+        const administratorCompare = (a.administrator === b.administrator) ? 0 : a.administrator ? -1 : 1;
+        if (administratorCompare === 0) {
+            return a.username.localeCompare(b.username)
+        }
+        return administratorCompare;
+    })
     return users;
 }
 

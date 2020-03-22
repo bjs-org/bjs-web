@@ -1,4 +1,4 @@
-import {deleteUser, getAccessibleClasses, getClasses, getUsers, patchUser, postPrivilege, postUser} from "./api.js"
+import { deleteUser, getAccessibleClasses, getClasses, getUsers, patchUser, postPrivilege, postUser } from "./api.js"
 
 const passwordInput = document.querySelector("#passwordInput")
 const userInput = document.querySelector("#userInput")
@@ -66,7 +66,9 @@ async function updateUserTable() {
 
     const [users, classes] = await Promise.all([getUsers(), getClasses()]);
 
-    const userElements = await Promise.all(users.map(async (user) => {
+    console.log(users);
+
+    const userElements = users.map((user) => {
         const userUrl = user._links.self.href;
 
         const tr = document.createElement("tr");
@@ -107,7 +109,7 @@ async function updateUserTable() {
         tr.appendChild(enabled);
 
 
-        const accessibleClasses = await getAccessibleClasses(user);
+        const { accessibleClasses } = user;
         const classesElement = document.createElement("td");
         classesElement.innerHTML = `
         <select multiple data-live-search="true">
@@ -116,7 +118,7 @@ async function updateUserTable() {
         </select>
         `;
         const selectField = classesElement.querySelector("select")
-        $(selectField).selectpicker("val", accessibleClasses.map(({ _links }) => _links.self.href));
+        $(selectField).selectpicker("val", accessibleClasses.map(({ _links }) => _links.self.href.replace("{?projection}", "")));
         selectField.addEventListener("change", (e) => {
             // Differentiate between delete and create
             //sendPrivileges(userUrl, selectField.selectedOptions);
@@ -138,7 +140,8 @@ async function updateUserTable() {
         tr.appendChild(deleteElement);
 
         return tr;
-    }));
+    });
+
     userTable.innerHTML = '';
     userElements.forEach(row => userTable.appendChild(row));
     console.log(users);
