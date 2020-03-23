@@ -74,6 +74,7 @@ export async function patchStudent(student, data) {
         .then((response) => response.json())
         .then((data) => {
             console.log('Success', data);
+            location.reload();
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -184,4 +185,40 @@ export async function getTopStudents(grade) {
         method: 'GET',
     });
     return await response.json();
+}
+
+export async function addClass(data) {
+    await fetch(`${await api_url}/classes`, {
+        credentials: "include",
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log('Success', data);
+        })
+        .catch((error) => {
+            console.error('Error', error);
+        })
+}
+
+export async function editClass(data, schoolClass) {
+    await fetch(`${schoolClass}`, {
+        credentials: "include",
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log('Success', data);
+        })
+        .catch((error) => {
+            console.error('Error', error);
+        })
 }

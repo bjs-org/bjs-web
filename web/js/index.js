@@ -1,4 +1,4 @@
-import {getClasses, patchClosed} from "./api.js";
+import {getClasses, patchClosed, addClass, editClass} from "./api.js";
 
 
 const modalClosed = $('#closedModal').modal({
@@ -6,9 +6,15 @@ const modalClosed = $('#closedModal').modal({
     show: false
 });
 
-let closeClassUrl;
+const modalAdd = $('#addClassModal').modal({
+    keyboard: true,
+    show: false
+});
+
+let classUrl = null;
 
 async function loadClasses() {
+
     const classTableBody = document.querySelector("#class-tbody");
     const errorElement = document.querySelector("#error");
     classTableBody.querySelectorAll("tr")
@@ -34,7 +40,7 @@ function constructClassTableRow(schoolClass) {
     if (schoolClass.classClosed) {
         row.className = "table-dark";
         row.onclick = () => {
-            closeClassUrl = schoolClassUrl;
+            classUrl = schoolClassUrl;
             modalClosed.modal('show');
         };
     } else {
@@ -55,7 +61,65 @@ function constructClassTableRow(schoolClass) {
     classTeacher.innerText = schoolClass.classTeacherName || "";
     row.appendChild(classTeacher);
 
+    let edit = document.createElement("td").hidden;
+    let buttonEdit = document.createElement("span");
+    buttonEdit.onclick = (event) => {
+        event.stopPropagation();
+        openAsEdit(schoolClass);
+    };
+    buttonEdit.title = "Verändere diese Klasse.";
+    let iconEdit = document.createElement("i");
+    iconEdit.className = "fas fa-user-edit";
+    buttonEdit.appendChild(iconEdit);
+    edit.appendChild(buttonEdit);
+    row.appendChild(edit);
+
     return row;
+}
+
+function openAsEdit(schoolClass) {
+    const editModal = document.querySelector("#addClassModal");
+    document.querySelector("#addModalTitle").innerText = "Editieren sie diese Klasse.";
+    editModal.querySelector("#addGrade").value = schoolClass.grade;
+    document.querySelector("#addName").value = schoolClass.className;
+    document.querySelector("#addTeacherName").value = schoolClass.classTeacherName;
+    classUrl = schoolClass._links.self.href;
+    modalAdd.modal('show');
+}
+
+async function addSchoolClass(formData) {
+    const errorElement = document.querySelector("#error").value;
+    modalAdd.modal('hide');
+    const data = {
+        grade: formData.get("grade"),
+        className: formData.get("addName"),
+        classTeacherName: formData.get("addTeacherName"),
+        classClosed: false
+    };
+    await addClass(data)
+        .catch(() => {
+            errorElement.innerHTML = "The post request was not successful.";
+            $(errorElement).slideDown().delay(3000).slideUp();
+        });
+    loadClasses();
+}
+
+async function editSchoolClass(formData) {
+    const errorElement = document.querySelector("#error").value;
+    modalAdd.modal('hide');
+    const data = {
+        grade: formData.get("grade"),
+        className: formData.get("addName"),
+        classTeacherName: formData.get("addTeacherName"),
+    };
+    await editClass(data, classUrl)
+        .catch(() => {
+            errorElement.innerHTML = "Das Aktualisieren der Klasse war nicht erfolgreich.";
+            $(errorElement).slideDown().delay(3000).slideUp();
+        });
+    document.querySelector("#addModalTitle").innerText = "Klasse hinzufügen?";
+    classUrl = null;
+    loadClasses();
 }
 
 const openAgain = document.querySelector("#confirmationOpen");
@@ -64,9 +128,22 @@ openAgain.addEventListener('click', async function () {
         await patchClosed(closeClassUrl, {
             classClosed: false
         });
-        closeClassUrl = null;
+        classUrl = null;
     }
     loadClasses();
+});
+
+const addOrEditSchoolClassForm = document.querySelector("#addClassForm");
+addOrEditSchoolClassForm.addEventListener("submit", (event) =>  {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    console.log(classUrl);
+    if(classUrl === null){
+        addSchoolClass(data);
+    }
+    else{
+        editSchoolClass(data, classUrl);
+    }
 });
 
 loadClasses();
