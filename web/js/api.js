@@ -74,7 +74,6 @@ export async function patchStudent(student, data) {
         .then((response) => response.json())
         .then((data) => {
             console.log('Success', data);
-            location.reload();
         })
         .catch((error) => {
             console.error('Error:', error);
