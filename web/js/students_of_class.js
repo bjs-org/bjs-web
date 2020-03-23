@@ -10,6 +10,7 @@ import {
     patchSportResult,
     patchStudent,
     postSportResult,
+    getAuth
 } from "./api.js";
 
 const modalDeletion = $('#deletionModal').modal({
@@ -467,7 +468,10 @@ async function fetchApi() {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const errorElement = document.querySelector("#error");
     const schoolClassUrl = urlSearchParams.get("schoolClass");
-
+    const auth = await getAuth();
+        if(auth.administrator === true){
+            document.querySelector("#navAdmin").hidden = false;
+        }
     try {
         classURL = schoolClassUrl;
         const [schoolClass, students] = await Promise.all([getClass(schoolClassUrl), getStudents(schoolClassUrl)]);

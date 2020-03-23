@@ -1,6 +1,10 @@
-import {getClasses} from "./api.js";
+import {getClasses, getAuth} from "./api.js";
 
-function loadClasses() {
+async function loadClasses() {
+    const auth = await getAuth();
+    if(auth.administrator === true){
+        document.querySelector("#navAdmin").hidden = false;
+    }
     const classTableBody = document.querySelector("#class-tbody");
     const errorElement = document.querySelector("#error");
 

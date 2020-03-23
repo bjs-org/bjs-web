@@ -1,6 +1,11 @@
 import {getClass, getStudents} from "./api.js";
+import {getAuth} from "./api";
 
 async function fetchApi() {
+    const auth = await getAuth();
+    if(auth.administrator === true){
+        document.querySelector("#navAdmin").hidden = false;
+    }
     const urlSearchParams = new URLSearchParams(window.location.search);
     const errorElement = document.querySelector("#error");
     const schoolClassUrl = urlSearchParams.get("schoolClass");

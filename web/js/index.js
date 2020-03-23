@@ -1,4 +1,4 @@
-import {getClasses, patchClosed, addClass, editClass} from "./api.js";
+import {getClasses, patchClosed, addClass, editClass, getAuth} from "./api.js";
 
 
 const modalClosed = $('#closedModal').modal({
@@ -12,9 +12,15 @@ const modalAdd = $('#addClassModal').modal({
 });
 
 let classUrl = null;
+let auth = false;
 
 async function loadClasses() {
-
+    const admin = await getAuth();
+    if(admin.administrator === true){
+        auth = true;
+        document.querySelector("#addButton").hidden = false;
+        document.querySelector("#navAdmin").hidden = false;
+    }
     const classTableBody = document.querySelector("#class-tbody");
     const errorElement = document.querySelector("#error");
     classTableBody.querySelectorAll("tr")
@@ -61,7 +67,14 @@ function constructClassTableRow(schoolClass) {
     classTeacher.innerText = schoolClass.classTeacherName || "";
     row.appendChild(classTeacher);
 
-    let edit = document.createElement("td").hidden;
+    let edit = document.createElement("td");
+    if(auth === true){
+        edit.hidden = false;
+    }
+    else{
+        edit.hidden = true;
+    }
+    edit.className = "editButtons";
     let buttonEdit = document.createElement("span");
     buttonEdit.onclick = (event) => {
         event.stopPropagation();

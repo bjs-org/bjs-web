@@ -24,11 +24,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link" href="#">Start</a>
                 <a class="nav-item nav-link active" href="index.html">Klassenübersicht</a>
                 <a class="nav-item nav-link" href="scores.html">Punkteübersicht</a>
                 <a class="nav-item nav-link" href="overview.html">Besten aller Stufen</a>
-                <a class="nav-item nav-link" href="#">Admin Übersicht</a>
+                <a class="nav-item nav-link" href="admin_interface.html" hidden id="navAdmin">Admin Übersicht</a>
             </div>
         </div>
     </nav>
@@ -37,13 +36,16 @@
             <li class="breadcrumb-item active" aria-current="page">Klassenübersicht</li>
         </ol>
     </nav>
+    <div class="container text-center my-4">
+        <h1 class="display-4">Klassenübersicht</h1>
+    </div>
 </header>
 <div class="container">
     <div id="error" class="alert alert-warning" role="alert" style="display: none">
         Something went wrong ...
     </div>
 
-    <button class="btn btn-outline-dark">
+    <button class="btn btn-outline-dark" hidden id="addButton">
         <span id="addClassButton" data-toggle="modal" data-target="#addClassModal">
             <i class="far fa-plus-square" style="font-size: 3rem"></i>
         </span>

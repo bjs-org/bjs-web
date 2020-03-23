@@ -300,7 +300,7 @@ export async function deleteSportResult(sportResult) {
 
 
 export async function getAuth() {
-    const response = await fetch("http://raspberry-balena.gtdbqv7ic1ie9w3s.myfritz.net/api/v1/auth", {credentials: "include"});
+    const response = await fetch(`${await api_url}/auth`, {credentials: "include"});
     return await response.json();
 }
 export async function getTopStudents(grade) {
