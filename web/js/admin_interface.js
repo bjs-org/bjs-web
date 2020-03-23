@@ -1,55 +1,33 @@
-import { deleteUser, getAccessibleClasses, getClasses, getUsers, patchUser, postPrivilege, postUser, getAuth } from "./api.js"
+import {deleteUser, getAuth, getClasses, getUsers, patchUser, postPrivilege, postUser} from "./api.js"
 
-const passwordInput = document.querySelector("#passwordInput")
-const userInput = document.querySelector("#userInput")
-const isAdminInput = document.querySelector("#isAdminInput")
-const confirmUserAdd = document.querySelector("#confirmUserAdd")
-const showPassword = document.querySelector("#showPassword")
-const selectClass = document.querySelector("#selectClass")
-const userTable = document.querySelector("#userTable")
-const selectClassGroup = document.querySelector("#selectClassGroup")
-const confirmationDelete = document.querySelector("#confirmationDelete")
-const multipleUsersForm = document.querySelector("#multipleUsersForm")
-const confirmMultipleUsersAdd = document.querySelector("#confirmMultipleUsersAdd")
-const generatedUsersTableBody = document.querySelector("#generatedUsersTableBody")
-const generatedUsersTable = document.querySelector("#generatedUsersTable")
-const generatedUsersSpinner = document.querySelector("#generatedUsersSpinner")
+const passwordInput = document.querySelector("#passwordInput");
+const usernameInput = document.querySelector("#usernameInput");
+const isAdminInput = document.querySelector("#isAdminInput");
+const singleUserForm = document.querySelector("#userForm");
+const showPassword = document.querySelector("#showPassword");
+const selectClass = document.querySelector("#selectClass");
+const userTable = document.querySelector("#userTable");
+const selectClassGroup = document.querySelector("#selectClassGroup");
+const confirmationDelete = document.querySelector("#confirmationDelete");
+const multipleUsersForm = document.querySelector("#multipleUsersForm");
+const confirmMultipleUsersAdd = document.querySelector("#confirmMultipleUsersAdd");
+const generatedUsersTableBody = document.querySelector("#generatedUsersTableBody");
+const generatedUsersTable = document.querySelector("#generatedUsersTable");
+const generatedUsersSpinner = document.querySelector("#generatedUsersSpinner");
+const sendingUserSpinner = document.querySelector("#sendingUserSpinner");
 
 let deleteUserUrl;
 
-async function addUser() {
-    if (userInput.value.trim().length !== 0) {
-        const data = {
-            username: userInput.value,
-            password: passwordInput.value,
-            administrator: isAdminInput.checked,
-        };
-        try {
-            const json = await postUser(data);
-            console.log(json);
-
-            const user = json._links.self.href;
-            await sendPrivileges(user, selectClass.selectedOptions)
-        } catch (e) {
-            console.error(e);
-        }
-
-        await updateUserTable();
-    }
-
-}
-
-async function sendPrivileges(user, selectedOptions) {
+async function sendPrivileges(user, classes) {
     await Promise.all(
-        Array.from(selectedOptions)
-            .map(selectedClass => selectedClass.value)
+        Array.from(classes)
             .map(async (accessibleClass) => {
                 const privilege = {
                     user,
                     accessibleClass
-                }
-                const penis = await postPrivilege(privilege)
-                console.log(penis)
+                };
+                const prviligeResponse = await postPrivilege(privilege);
+                console.log(prviligeResponse)
             })
     )
 }
@@ -97,14 +75,14 @@ async function updateUserTable() {
             <label class="custom-control-label" for="adminSwitch${user.username}"></label>
         </div>`;
 
-        const adminInput = admin.querySelector("input")
+        const adminInput = admin.querySelector("input");
         adminInput.disabled = auth.username === user.username;
         adminInput.checked = user.administrator;
         adminInput.addEventListener("change", async (e) => {
             const response = await patchUser(userUrl, {
                 administrator: adminInput.checked,
             });
-        })
+        });
         tr.appendChild(admin);
 
         const enabled = document.createElement("td");
@@ -134,7 +112,7 @@ async function updateUserTable() {
                 `<option value="${_links.self.href}">${grade}${className}</option>`)}
             </select>
             `;
-            const selectField = classesElement.querySelector("select")
+            const selectField = classesElement.querySelector("select");
             $(selectField).selectpicker("val", accessibleClasses.map(({ _links }) => _links.self.href.replace("{?projection}", "")));
             selectField.addEventListener("change", (e) => {
                 // Differentiate between delete and create
@@ -146,15 +124,16 @@ async function updateUserTable() {
 
 
         const deleteElement = document.createElement("td");
+        deleteElement.className = "text-right";
         deleteElement.innerHTML = `
         <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteUser">
             <span>
                 <i class="fas fa-trash-alt" aria-hidden="true"></i>
             </span>
         </button>
-        `
-        const deleteButton = deleteElement.querySelector("button")
-        deleteButton.addEventListener("click", () => deleteUserUrl = userUrl)
+        `;
+        const deleteButton = deleteElement.querySelector("button");
+        deleteButton.addEventListener("click", () => deleteUserUrl = userUrl);
         deleteButton.disabled = auth.username === user.username;
         tr.appendChild(deleteElement);
 
@@ -165,7 +144,51 @@ async function updateUserTable() {
     userElements.forEach(row => userTable.appendChild(row));
 }
 
-confirmUserAdd.addEventListener("click", addUser);
+usernameInput.addEventListener("input", e => {
+    if (usernameInput.value.trim().length === 0) {
+        usernameInput.setCustomValidity("Please enter a valid username");
+    } else {
+        usernameInput.setCustomValidity("");
+    }
+});
+
+singleUserForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (singleUserForm.checkValidity() === false) {
+        e.stopPropagation();
+    } else {
+        let form = new FormData(singleUserForm);
+
+        sendingUserSpinner.hidden = false;
+        singleUserForm.hidden = true;
+
+        try {
+            let data = {
+                username: form.get("username"),
+                password: form.get("password"),
+                administrator: form.get("administrator") != null,
+            };
+
+            const json = await postUser(data);
+            console.log(json);
+
+            if (!data.administrator) {
+                const user = json._links.self.href;
+                await sendPrivileges(user, form.getAll("classes"));
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        $("#addUser").modal("hide");
+        await updateUserTable();
+    }
+
+    singleUserForm.classList.add('was-validated');
+
+});
+
 showPassword.onclick = () => {
     if (passwordInput.type === "password") {
         passwordInput.type = "text";
@@ -176,11 +199,11 @@ showPassword.onclick = () => {
         const icon = showPassword.querySelector("a > i");
         icon.classList.replace("fa-eye-slash", "fa-eye");
     }
-}
+};
 
 isAdminInput.addEventListener("change", (e) => {
     selectClassGroup.hidden = isAdminInput.checked;
-})
+});
 
 confirmationDelete.addEventListener("click", async () => {
     if (deleteUserUrl) {
@@ -188,7 +211,7 @@ confirmationDelete.addEventListener("click", async () => {
         deleteUserUrl = null;
         await updateUserTable();
     }
-})
+});
 
 function groupBy(arr, prop) {
     return arr.reduce((sum, element) => {
@@ -198,7 +221,9 @@ function groupBy(arr, prop) {
     }, {})
 }
 
-confirmMultipleUsersAdd.addEventListener("click", async (e) => {
+multipleUsersForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
     let formData = new FormData(multipleUsersForm);
 
     multipleUsersForm.hidden = true;
@@ -245,7 +270,7 @@ confirmMultipleUsersAdd.addEventListener("click", async (e) => {
             row.insertAdjacentHTML("beforeend", `<td>${user.accessibleClass.grade}${user.accessibleClass.className}</td>`);
 
             generatedUsersTableBody.appendChild(row);
-        })
+        });
         console.log(createdUsers);
         console.table(createdUsers);
     } else {
@@ -291,7 +316,7 @@ confirmMultipleUsersAdd.addEventListener("click", async (e) => {
             row.insertAdjacentHTML("beforeend", `<td>${user.accessibleClasses.map(schoolClass => `${schoolClass.grade}${schoolClass.className}`)}</td>`);
 
             generatedUsersTableBody.appendChild(row);
-        })
+        });
 
         console.log(createdUsers);
         console.table(createdUsers);
@@ -304,6 +329,12 @@ confirmMultipleUsersAdd.addEventListener("click", async (e) => {
     await updateUserTable();
 });
 
+$("#addUser").on("hidden.bs.modal", () => {
+    sendingUserSpinner.hidden = true;
+    singleUserForm.hidden = false;
+    singleUserForm.reset();
+});
+
 $("#addMultipleUsers").on("hidden.bs.modal", () => {
     confirmMultipleUsersAdd.hidden = false;
     generatedUsersSpinner.hidden = true;
@@ -311,7 +342,7 @@ $("#addMultipleUsers").on("hidden.bs.modal", () => {
     multipleUsersForm.hidden = false;
     multipleUsersForm.reset();
     generatedUsersTableBody.innerHTML = "";
-})
+});
 
 updateUserTable()
     .then(() => addClassesToList());

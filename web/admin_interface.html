@@ -2,193 +2,220 @@
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
 
-  <!-- Font Awesome -->
-  <script src="https://kit.fontawesome.com/c2053bbe39.js" crossorigin="anonymous"></script>
-  <title>Admin Interface</title>
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/c2053bbe39.js" crossorigin="anonymous"></script>
+    <title>Admin Interface</title>
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
     <div id="error" class="alert alert-warning" role="alert" style="display: none">
-      Something went wrong ...
+        Something went wrong ...
     </div>
-    <div class="container d-flex justify-content-end align-items-center mb-2 mt-2">
-      <button title="Einen Benutzer erstellen" type="button" class="btn btn-outline-primary mx-2" data-toggle="modal"
-        data-target="#addUser">
+
+</div>
+
+<div class="container text-center my-4">
+    <h1 class="display-4">Admin Interface</h1>
+</div>
+
+<div class="container d-flex justify-content-end align-items-center mb-2 mt-2">
+  <button title="Einen Benutzer erstellen" type="button" class="btn btn-outline-primary mx-2" data-toggle="modal"
+          data-target="#addUser">
         <span>
           <i class="far fa-plus-square" style="font-size: 3rem" aria-hidden="true"></i>
         </span>
-      </button>
-      <button title="Mehrere Benutzer hinzufügen" type="button" class="btn btn-outline-primary" data-toggle="modal"
-        data-target="#addMultipleUsers">
+  </button>
+  <button title="Mehrere Benutzer hinzufügen" type="button" class="btn btn-outline-primary" data-toggle="modal"
+          data-target="#addMultipleUsers">
         <span>
           <i class="fas fa-folder-plus" style="font-size: 3rem" aria-hidden="true"></i>
         </span>
-      </button>
-    </div>
+  </button>
+</div>
 
-    <div class="container">
-      <table class="table">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">Benutzername</th>
-            <th scope="col">Admin</th>
-            <th scope="col">Aktiviert</th>
-            <th scope="col">Klassen</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody id="userTable">
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="modal fade" tabindex="-1" role="dialog" id="deleteUser">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Wollen sie diesen Benutzer wirklich löschen?</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success btn-block" data-dismiss="modal"
-            id="confirmationDelete">Ja</button>
-          <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Nein</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="modal fade" id="addUser" tabindex="-1" role="dialog" aria-labelledby="addUserLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addUserLabel">Benutzer hinzufügen</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="row">
-              <div class="col">
-                <input type="text" id="userInput" class="form-control" placeholder="Benutzername" min="2">
-              </div>
-              <div class="col">
-                <div class="input-group">
-                  <input type="password" id="passwordInput" class="form-control" placeholder="Passwort">
-                  <div class="input-group-append" id="showPassword">
-                    <a class="input-group-text">
-                      <i class="fas fa-eye-slash"></i>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row my-2">
-              <div class="col">
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="isAdminInput">
-                  <label class="custom-control-label" for="isAdminInput">Admininistrator</label>
-                </div>
-              </div>
-            </div>
-            <div class="list-group" id="selectClassGroup">
-              <select data-live-search="true" multiple id="selectClass">
-              </select>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-          <button type="button" class="btn btn-primary" id="confirmUserAdd" data-dismiss="modal">Erstellen</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" tabindex="-1" role="dialog" id="addMultipleUsers">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Mehrere Benutzer hinzufügen</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form id="multipleUsersForm">
-            <div class="form-row align-items-center my-1">
-              <div class="col-auto">
-                <p>Erstelle</p>
-              </div>
-              <div class="col-auto">
-                <input class="form-control" type="number" min="1" max="3" step="1" value="1" name="userCount">
-              </div>
-            </div>
-            <div class="form-row align-items-center my-1">
-              <div class="col-auto">
-                <p>pro</p>
-              </div>
-              <div class="col-auto">
-                <select class="custom-select" name="classGrade">
-                  <option value="class">Klasse</option>
-                  <option value="grade">Stufe</option>
-                </select>
-              </div>
-            </div>
-          </form>
-          <div hidden class="spinner-border text-primary" role="status" id="generatedUsersSpinner">
-            <span class="sr-only">Loading...</span>
-          </div>
-          <table hidden class="table" id="generatedUsersTable">
-            <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Passwort</th>
-                <th scope="col">Klasse(n)</th>
-              </tr>
+<div class="container">
+    <div class="table-responsive-sm">
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Benutzername</th>
+                <th scope="col">Admin</th>
+                <th scope="col">Aktiviert</th>
+                <th scope="col">Klassen</th>
+                <th scope="col"></th>
+            </tr>
             </thead>
-            <tbody id="generatedUsersTableBody">
+            <tbody id="userTable">
             </tbody>
-          </table>
-        </div>
-        <div class="modal-footer">
-          <button type="reset" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
-          <button class="btn btn-primary" id="confirmMultipleUsersAdd">Erstellen</button>
-        </div>
-      </div>
+        </table>
     </div>
-  </div>
+</div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="deleteUser">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Wollen sie diesen Benutzer wirklich löschen?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-block" data-dismiss="modal"
+                        id="confirmationDelete">Ja
+                </button>
+                <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Nein</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
-  <script>
+<div class="modal fade" id="addUser" tabindex="-1" role="dialog" aria-labelledby="addUserLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserLabel">Benutzer hinzufügen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm" novalidate>
+                    <div class="form-row">
+                        <div class="col">
+                            <input type="text" name="username" id="usernameInput" class="form-control"
+                                   placeholder="Benutzername" min="2" required>
+                            <div class="invalid-feedback">
+                                Bitte einen Benutzernamen eingeben
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="input-group">
+                                <input type="password" name="password" id="passwordInput" class="form-control" required
+                                       placeholder="Passwort">
+                                <div class="input-group-append" id="showPassword">
+                                    <a class="input-group-text">
+                                        <i class="fas fa-eye-slash"></i>
+                                    </a>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Bitte ein Passwort eingeben
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col">
+                            <div class="custom-control custom-switch">
+                                <input formnovalidate type="checkbox" class="custom-control-input" name="administrator"
+                                       id="isAdminInput">
+                                <label class="custom-control-label" for="isAdminInput">Admininistrator</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group" id="selectClassGroup">
+                        <select data-live-search="true" multiple id="selectClass" name="classes">
+                        </select>
+                    </div>
+                </form>
+                <div hidden class="spinner-border text-primary" role="status" id="sendingUserSpinner">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="reset" form="userForm" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                <button type="submit" form="userForm" class="btn btn-primary" id="confirmUserAdd">Erstellen</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-  </script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
-  <script type="module" src="js/admin_interface.js" defer></script>
+<div class="modal fade" tabindex="-1" role="dialog" id="addMultipleUsers">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mehrere Benutzer hinzufügen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="multipleUsersForm">
+                    <div class="form-row align-items-center my-1">
+                        <div class="col-auto">
+                            <p>Erstelle</p>
+                        </div>
+                        <div class="col-auto">
+                            <input class="form-control" type="number" min="1" max="3" step="1" value="1"
+                                   name="userCount">
+                        </div>
+                    </div>
+                    <div class="form-row align-items-center my-1">
+                        <div class="col-auto">
+                            <p>pro</p>
+                        </div>
+                        <div class="col-auto">
+                            <select class="custom-select" name="classGrade">
+                                <option value="class">Klasse</option>
+                                <option value="grade">Stufe</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+                <div hidden class="spinner-border text-primary" role="status" id="generatedUsersSpinner">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <table hidden class="table" id="generatedUsersTable">
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Passwort</th>
+                        <th scope="col">Klasse(n)</th>
+                    </tr>
+                    </thead>
+                    <tbody id="generatedUsersTableBody">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="reset" form="multipleUsersForm" class="btn btn-secondary" data-dismiss="modal">Schließen
+                </button>
+                <button type="submit" form="multipleUsersForm" class="btn btn-primary" id="confirmMultipleUsersAdd">
+                    Erstellen
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+<script type="module" src="js/admin_interface.js" defer></script>
 </body>
 
 </html>
