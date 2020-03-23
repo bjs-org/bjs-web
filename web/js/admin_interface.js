@@ -1,4 +1,4 @@
-import {deleteUser, getAuth, getClasses, getUsers, patchUser, postPrivilege, postUser} from "./api.js"
+import {removeClassFromUser, deleteUser, getAuth, getClasses, getUsers, patchUser, postPrivilege, postUser} from "./api.js"
 
 const passwordInput = document.querySelector("#passwordInput");
 const usernameInput = document.querySelector("#usernameInput");
@@ -32,14 +32,23 @@ async function sendPrivileges(user, classes) {
     )
 }
 
+function setupSelectPicker(selector) {
+    $(selector).selectpicker();
+
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
+        $(selector).selectpicker('mobile');
+    }
+}
+
 async function addClassesToList() {
     const classes = await getClasses();
     console.log(classes);
     classes
-        .map(({ grade, className, _links }) => `<option value="${_links.self.href}">${grade}${className}</option>`)
+        .map(({grade, className, _links}) => `<option value="${_links.self.href}">${grade}${className}</option>`)
         .forEach((option) => selectClass.insertAdjacentHTML("beforeend", option));
 
-    $(selectClass).selectpicker();
+    setupSelectPicker(selectClass);
+
 }
 
 function randomString() {
@@ -103,18 +112,65 @@ async function updateUserTable() {
         tr.appendChild(enabled);
 
 
-        const { accessibleClasses } = user;
+        const {accessibleClasses} = user;
         const classesElement = document.createElement("td");
         if (!user.administrator) {
             classesElement.innerHTML = `
             <select multiple data-live-search="true">
-                ${classes.map(({ _links, grade, className }) =>
+                ${classes.map(({_links, grade, className}) =>
                 `<option value="${_links.self.href}">${grade}${className}</option>`)}
             </select>
             `;
             const selectField = classesElement.querySelector("select");
-            $(selectField).selectpicker("val", accessibleClasses.map(({ _links }) => _links.self.href.replace("{?projection}", "")));
-            selectField.addEventListener("change", (e) => {
+            $(selectField).selectpicker("val", accessibleClasses.map(({_links}) => _links.self.href.replace("{?projection}", "")));
+            setupSelectPicker(selectField);
+
+            Array.from(selectField.selectedOptions)
+                .forEach(option => option.dataset.synced = '');
+
+
+            selectField.addEventListener("change", async (e, data) => {
+
+
+                Array.from(selectField.selectedOptions)
+                    .filter(option => !option.dataset.hasOwnProperty("synced"))
+                    .forEach((option) => {
+                        option.disabled = true;
+                        $(selectField).selectpicker("refresh");
+
+                        option.dataset.synced = '';
+
+                        postPrivilege({
+                            accessibleClass: option.value,
+                            user: userUrl
+                        })
+                            .then(r => console.log(r))
+                            .then(() => {
+                                option.disabled = false;
+                                $(selectField).selectpicker("refresh");
+                            });
+                    });
+
+                Array.from(selectField.options)
+                    .filter(option => option.dataset.hasOwnProperty("synced"))
+                    .filter(option => !option.selected)
+                    .forEach(option => {
+                        delete option.dataset.synced;
+                        option.disabled = true;
+                        $(selectField).selectpicker("refresh");
+
+                        console.log(`DELETE ${option.value}`);
+                        removeClassFromUser({
+                            accessibleClass: option.value,
+                            user: userUrl,
+                        })
+                            .then(() => {
+                                option.disabled = false;
+                                $(selectField).selectpicker("refresh");
+                            });
+                    });
+
+
                 // Differentiate between delete and create
                 //sendPrivileges(userUrl, selectField.selectedOptions);
             });
@@ -242,7 +298,7 @@ multipleUsersForm.addEventListener("submit", async (e) => {
     if (classOrGrade === "class") {
         const createdUsers = [];
         for (let i = 0; i < userCount; i++) {
-            createdUsers.push(... await Promise.all(
+            createdUsers.push(...await Promise.all(
                 classes.map(async (schoolClass) => {
                     const newUser = {
                         username: randomString(),
@@ -280,7 +336,7 @@ multipleUsersForm.addEventListener("submit", async (e) => {
         const createdUsers = [];
 
         for (let i = 0; i < userCount; i++) {
-            createdUsers.push(... await Promise.all(
+            createdUsers.push(...await Promise.all(
                 Object.entries(classesByGrade).map(async ([grade, classes]) => {
                     console.log(`Stufe ${grade}`);
                     console.table(classes);

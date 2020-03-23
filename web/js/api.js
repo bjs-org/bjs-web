@@ -7,7 +7,6 @@ async function determineApiUrl() {
     if (!response.ok || response.status === 404) return default_url;
     return relative_url;
 }
-
 export async function postUser(user) {
     const response = await fetch(`${await api_url}/users`, {
         credentials: "include",
@@ -34,6 +33,41 @@ export async function postPrivilege(privilege) {
     return json;
 }
 
+async function deletePrivilege(priv) {
+    return await fetch(priv._links.self.href, {
+        credentials: "include",
+        method: "DELETE"
+    });
+}
+
+export async function removeClassFromUser({accessibleClass, user}) {
+
+    const response = await fetch(`${user}/userPrivileges`, {
+        credentials: "include"
+    });
+    const json = await response.json();
+    const privileges = json._embedded.user_privileges;
+
+    const privilegesAndClassesCombined = await Promise.all(
+        privileges
+            .map(async (privilege) => ({
+                privilege,
+                foundClass: await fetch(privilege._links.accessibleClass.href.replace("{?projection}", ""), {
+                    credentials: "include"
+                }).then(value => value.json())
+            }))
+    );
+
+    const deletedPrivileges = await Promise.all(
+        privilegesAndClassesCombined
+            .filter(({foundClass}) => foundClass._links.self.href === accessibleClass)
+            .map(async ({privilege}) => await deletePrivilege(privilege))
+    );
+
+    console.log(deletedPrivileges);
+
+}
+
 export async function patchUser(url, user) {
     const response = await fetch(url, {
         credentials: "include",
@@ -54,7 +88,7 @@ export async function getAccessibleClasses(user) {
     });
 
     const json = await response.json();
-    const { user_privileges } = json._embedded;
+    const {user_privileges} = json._embedded;
 
     const accessibleClasses = await Promise.all(user_privileges.map(userPrivilege => fetch(userPrivilege._links.accessibleClass.href, {
         credentials: "include"
@@ -88,7 +122,7 @@ export async function getClasses() {
     const json = await response.json();
     const classes = json._embedded.classes;
     classes.sort((a, b) => {
-        const compareGrade = a.grade.localeCompare(b.grade, undefined, { numeric: true });
+        const compareGrade = a.grade.localeCompare(b.grade, undefined, {numeric: true});
         if (compareGrade === 0) {
             return a.className.localeCompare(b.className);
         }
@@ -266,7 +300,7 @@ export async function deleteSportResult(sportResult) {
 
 
 export async function getAuth() {
-    const response = await fetch("http://raspberry-balena.gtdbqv7ic1ie9w3s.myfritz.net/api/v1/auth", { credentials: "include" });
+    const response = await fetch("http://raspberry-balena.gtdbqv7ic1ie9w3s.myfritz.net/api/v1/auth", {credentials: "include"});
     return await response.json();
 }
 export async function getTopStudents(grade) {
