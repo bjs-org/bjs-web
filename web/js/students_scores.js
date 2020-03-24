@@ -1,5 +1,4 @@
-import {getClass, getStudents} from "./api.js";
-import {getAuth} from "./api";
+import {getClass, getStudents, getAuth} from "./api.js";
 
 async function fetchApi() {
     const auth = await getAuth();

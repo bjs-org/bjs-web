@@ -30,31 +30,32 @@
     </nav>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page">Klassenübersicht</li>
+            <li class="breadcrumb-item active" aria-current="page">Punkteübersicht</li>
         </ol>
     </nav>
-    <div class="container text-center my-4">
-        <h1 class="display-4">Punkteübersicht</h1>
-    </div>
 </header>
 
-<div class="container">
-    <div id="error" class="alert alert-warning" role="alert" style="display: none">
-        Something went wrong ...
+<main>
+    <div class="container text-center my-4">
+        <h1 class="display-4">Punkte Übersicht</h1>
     </div>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th scope="col">Stufe</th>
-            <th scope="col">Klasse</th>
-            <th scope="col">Klassenlehrer</th>
-        </tr>
-        </thead>
-        <tbody id="class-tbody">
-        </tbody>
-    </table>
-</div>
-
+    <div class="container">
+        <div id="error" class="alert alert-warning" role="alert" style="display: none">
+            Something went wrong ...
+        </div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Stufe</th>
+                <th scope="col">Klasse</th>
+                <th scope="col">Klassenlehrer</th>
+            </tr>
+            </thead>
+            <tbody id="class-tbody">
+            </tbody>
+        </table>
+    </div>
+</main>
 
 <script type="module" src="js/scores.js" defer></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
