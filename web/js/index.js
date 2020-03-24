@@ -137,8 +137,8 @@ async function editSchoolClass(formData) {
 
 const openAgain = document.querySelector("#confirmationOpen");
 openAgain.addEventListener('click', async function () {
-    if (closeClassUrl) {
-        await patchClosed(closeClassUrl, {
+    if (classUrl) {
+        await patchClosed(classUrl, {
             classClosed: false
         });
         classUrl = null;
